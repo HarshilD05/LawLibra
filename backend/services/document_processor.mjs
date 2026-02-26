@@ -3,23 +3,21 @@
  * Extracts page-accurate text from PDF, DOCX, and TXT files.
  *
  * Key improvement over BidTrust:
- *   PDF uses pdfjs-dist which renders each page individually, giving exact
- *   page numbers. BidTrust used pdf-parse which approximates pages by
- *   splitting form-feed characters or dividing total text evenly — both
+ *   PDF uses pdfjs-dist (v5, native ESM) which renders each page individually,
+ *   giving exact page numbers. BidTrust used pdf-parse which approximates pages
+ *   by splitting form-feed characters or dividing total text evenly — both
  *   unreliable for legal documents where citation accuracy is critical.
  */
 
 import fs from 'fs/promises';
 import path from 'path';
 import mammoth from 'mammoth';
-import { createRequire } from 'module';
+import * as pdfjsLib from 'pdfjs-dist';
 
-// pdfjs-dist v3 ships a CommonJS legacy build. Use createRequire to load it
-// inside this ESM module — this avoids the DOM/Worker API requirements of the
-// browser-targeted ESM build.
-const require        = createRequire(import.meta.url);
-const pdfjsLib       = require('pdfjs-dist/legacy/build/pdf.js');
-pdfjsLib.GlobalWorkerOptions.workerSrc = false; // no web worker in Node.js
+// pdfjs-dist v5 ships native ESM — no legacy CJS build path exists.
+// Setting workerSrc to '' disables the browser web-worker; Node.js runs the
+// PDF parsing synchronously in the same thread, which is correct for a worker process.
+pdfjsLib.GlobalWorkerOptions.workerSrc = '';
 
 export const SUPPORTED_MIME_TYPES = {
     PDF:  'application/pdf',
