@@ -1,4 +1,5 @@
 import { Case } from '../models/case.model.mjs';
+import { getCaseDirPath, getDocumentDirPath, ensureDir, deleteDirRecursive } from '../utils/storage.utils.mjs';
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -43,6 +44,10 @@ export const createCase = async (req, res) => {
             title, status, clientName, courtName, caseNumber, metadata,
             createdBy: req.user.id,
         });
+
+        // Create the root folder in the data directory for this case
+        // Subfolders are created on-demand when documents are uploaded
+        await ensureDir(getDocumentDirPath(newCase.id, null)); // data/<caseId>/root/
 
         return res.status(201).json({ case: newCase.toSafeObject() });
     } catch (err) {
@@ -136,6 +141,11 @@ export const deleteCase = async (req, res) => {
         if (!deleted) {
             return res.status(404).json({ error: 'Case not found.' });
         }
+
+        // Delete all case files from disk (non-fatal — DB is the source of truth)
+        await deleteDirRecursive(getCaseDirPath(deleted.id)).catch((e) => {
+            console.warn(`[Cases] Could not delete data directory for case ${deleted.id}: ${e.message}`);
+        });
 
         return res.status(200).json({ message: 'Case deleted successfully.' });
     } catch (err) {

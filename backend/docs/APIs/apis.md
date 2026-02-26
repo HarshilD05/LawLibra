@@ -15,3 +15,5 @@ Authorization: Bearer <jwt_token>
 | :--- | :--- | :--- |
 | Authentication & Users | [auth.api.md](auth.api.md) | Register, login, profile, password, user management |
 | Cases & Assignments | [cases.api.md](cases.api.md) | Case CRUD and lawyer assignment management |
+| Folders | [folders.api.md](folders.api.md) | Virtual folder tree within a case |
+| Documents | [documents.api.md](documents.api.md) | Upload, list, status polling, delete + ingestion pipeline |

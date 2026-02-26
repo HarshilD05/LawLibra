@@ -69,11 +69,12 @@ CREATE TABLE documents (
     file_size_bytes BIGINT,
     page_count INTEGER DEFAULT 0,
     
-    is_processed BOOLEAN DEFAULT FALSE, -- Flag for background worker completion
-    processing_error TEXT,
+    processing_status TEXT NOT NULL DEFAULT 'PENDING'
+        CHECK (processing_status IN ('PENDING', 'PROCESSING', 'DONE', 'FAILED')),
+    processing_error TEXT, -- Populated when processing_status = 'FAILED'
     
     summary TEXT, -- LLM generated summary of the whole doc
-    doc_embedding vector(1536), -- Vector representation of the entire document summary (optional but useful)
+    doc_embedding vector(768), -- Vector representation of the entire document summary (Google text-embedding-004 / nomic-embed-text)
     tags TEXT[], -- Array of strings for tagging (e.g., "Affidavit", "Evidence")
     
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -92,7 +93,7 @@ CREATE TABLE doc_chunks (
     original_text TEXT NOT NULL, -- The actual text content
     keywords TEXT[], -- Extracted keywords for hybrid search
     
-    embedding vector(1536), -- 1536 dims for OpenAI, change to 768 or 384 for other models
+    embedding vector(768), -- 768 dims: Google text-embedding-004 / nomic-embed-text (swap with no schema migration)
     
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

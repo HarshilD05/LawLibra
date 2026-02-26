@@ -3,12 +3,23 @@
   "scripts": {
     "start": "node server.mjs",
     "dev": "node --watch server.mjs",
+    "worker": "node workers/doc_ingestion.worker.mjs",
+    "worker:dev": "node --watch workers/doc_ingestion.worker.mjs",
     "db:init": "node config/init/init_db.mjs"
   },
   "dependencies": {
+    "@langchain/core": "^1.1.28",
+    "@langchain/google-genai": "^2.1.20",
+    "@langchain/textsplitters": "^1.0.1",
+    "bullmq": "^5.70.1",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "ioredis": "^5.9.3",
     "jsonwebtoken": "^9.0.3",
+    "mammoth": "^1.11.0",
+    "multer": "^2.0.2",
+    "natural": "^8.1.0",
+    "pdfjs-dist": "^5.4.624",
     "pg": "^8.18.0"
   }
 }
