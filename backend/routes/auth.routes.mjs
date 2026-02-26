@@ -4,6 +4,7 @@ import {
     login,
     getMe,
     getAllUsers,
+    getUserById,
     changePassword,
     deleteUser,
 } from '../controllers/auth.controller.mjs';
@@ -25,6 +26,9 @@ router.patch('/change-password', authenticate, changePassword);
 
 // GET  /api/auth/users            — List all users with pagination (Admin only)
 router.get('/users', authenticate, authorizeAdmin, getAllUsers);
+
+// GET  /api/auth/users/:id        — Get a single user by ID (Admin only)
+router.get('/users/:id', authenticate, authorizeAdmin, getUserById);
 
 // DELETE /api/auth/users/:id      — Delete a user by ID (Admin only)
 router.delete('/users/:id', authenticate, authorizeAdmin, deleteUser);

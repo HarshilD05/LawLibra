@@ -1,0 +1,159 @@
+{
+  "info": {
+    "_postman_id": "d7a3c1e9-42fb-4e12-b8d0-93f1e5a0c2b7",
+    "name": "Documents",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "27931274"
+  },
+  "item": [
+    {
+      "name": "Upload Document",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "document",
+              "type": "file",
+              "src": "",
+              "description": "The file to upload (PDF, DOCX, DOC, or TXT — max 200 MB)"
+            },
+            {
+              "key": "caseId",
+              "value": "",
+              "type": "text",
+              "description": "UUID of the target case (required)"
+            },
+            {
+              "key": "folderId",
+              "value": "",
+              "type": "text",
+              "description": "UUID of a folder within the case (optional — leave empty for case root)"
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{baseURL}}/api/documents/upload",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "documents",
+            "upload"
+          ]
+        },
+        "description": "Uploads a document and immediately queues it for background ingestion via BullMQ. Returns 202 with documentId and jobId. Poll GET /api/documents/:id to track processing status (PENDING → PROCESSING → DONE | FAILED)."
+      },
+      "response": []
+    },
+    {
+      "name": "List Documents",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/api/documents?caseId=&folderId=&limit=20&offset=0",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "documents"
+          ],
+          "query": [
+            {
+              "key": "caseId",
+              "value": "",
+              "description": "UUID of the case (required)"
+            },
+            {
+              "key": "folderId",
+              "value": "",
+              "description": "UUID of a folder to filter by. Send 'null' (literal string) for root-only docs. Omit entirely for all folders."
+            },
+            {
+              "key": "limit",
+              "value": "20",
+              "description": "Max results to return (default 20, max 100)"
+            },
+            {
+              "key": "offset",
+              "value": "0",
+              "description": "Pagination offset (default 0)"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Document By Id",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/api/documents/:id",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "documents",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "",
+              "description": "UUID of the document. Use this endpoint to poll processingStatus after upload."
+            }
+          ]
+        },
+        "description": "Returns full document metadata including processingStatus: PENDING | PROCESSING | DONE | FAILED. If FAILED, processingError contains the reason."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Document",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/api/documents/:id",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "documents",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": "",
+              "description": "UUID of the document to delete"
+            }
+          ]
+        },
+        "description": "Permanently deletes the document record, all its ingestion chunks (CASCADE), and the physical file from disk. Requires EDIT or ADMIN access on the case."
+      },
+      "response": []
+    }
+  ]
+}

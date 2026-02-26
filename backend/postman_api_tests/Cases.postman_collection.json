@@ -1,0 +1,275 @@
+{
+  "info": {
+    "_postman_id": "cc3a02ac-0f0d-49d0-8d68-20e5ee952e2d",
+    "name": "Cases",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "27931274",
+    "_collection_link": "https://go.postman.co/collection/27931274-cc3a02ac-0f0d-49d0-8d68-20e5ee952e2d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create Case",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"State vs. Sharma 2026\",\r\n  \"status\": \"OPEN\",\r\n  \"clientName\": \"Rajesh Sharma\",\r\n  \"courtName\": \"Delhi High Court\",\r\n  \"caseNumber\": \"DHC/2026/1234\",\r\n  \"metadata\": {\r\n    \"judge\": \"Hon. Justice Kapoor\",\r\n    \"nextHearing\": \"2026-03-15\"\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/api/cases/",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "cases",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Cases",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/api/cases/",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "cases",
+            ""
+          ],
+          "query": [
+            {
+              "key": "limit",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "offset",
+              "value": null,
+              "disabled": true
+            },
+            {
+              "key": "status",
+              "value": null,
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Case By Id",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/api/cases/:id",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "cases",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Case Details",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"title\": \"Updated Title\",\r\n  \"status\": \"CLOSED\",\r\n  \"clientName\": \"New Client Name\",\r\n  \"courtName\": \"Supreme Court of India\",\r\n  \"caseNumber\": \"SCI/2026/999\",\r\n  \"metadata\": { \"judge\": \"New Judge\" }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/api/cases/:id",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "cases",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Case",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/api/cases/:id",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "cases",
+            ":id"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Assign Lawyer",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"lawyerId\": \"a1b2c3d4-...\",\r\n  \"accessLevel\": \"EDIT\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseURL}}/api/cases/:id/assignments",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "cases",
+            ":id",
+            "assignments"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Remove Lawyer from case",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/api/cases/:id/assignments/:lawyerId",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "cases",
+            ":id",
+            "assignments",
+            ":lawyerId"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            },
+            {
+              "key": "lawyerId",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Lawyers Assigned",
+      "request": {
+        "auth": {
+          "type": "bearer"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseURL}}/api/cases/:id/assignments",
+          "host": [
+            "{{baseURL}}"
+          ],
+          "path": [
+            "api",
+            "cases",
+            ":id",
+            "assignments"
+          ],
+          "variable": [
+            {
+              "key": "id",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

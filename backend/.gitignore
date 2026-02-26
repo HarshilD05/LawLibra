@@ -6,5 +6,12 @@ package-lock.json
 .vscode/
 
 # Environment
-.env 
+.env
+
+# Generated secrets — never commit
+config/init/password.txt
+
+# Uploaded files and processed data
+uploads/
+data/
 

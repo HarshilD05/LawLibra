@@ -148,6 +148,23 @@ export const changePassword = async (req, res) => {
 };
 
 /**
+ * GET /api/auth/users/:id
+ * Admin-only. Returns a single user's profile by ID.
+ */
+export const getUserById = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found.' });
+        }
+        return res.status(200).json({ user: user.toSafeObject() });
+    } catch (err) {
+        console.error('[Auth] getUserById error:', err.message);
+        return res.status(500).json({ error: 'Internal server error.' });
+    }
+};
+
+/**
  * DELETE /api/auth/users/:id
  * Admin-only. Permanently deletes a user account.
  * Prevents an admin from deleting their own account.
