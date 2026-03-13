@@ -10,6 +10,9 @@
   "dependencies": {
     "@langchain/core": "^1.1.28",
     "@langchain/google-genai": "^2.1.20",
+    "@langchain/groq": "^1.1.2",
+    "@langchain/ollama": "^1.2.4",
+    "@langchain/openai": "^1.2.10",
     "@langchain/textsplitters": "^1.0.1",
     "bullmq": "^5.70.1",
     "dotenv": "^17.3.1",

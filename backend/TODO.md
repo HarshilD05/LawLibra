@@ -1,10 +1,11 @@
 # LawLibra — Pending Security & Infrastructure TODOs
 
 ## RAG Pipeline (Chat)
-- [ ] **Implement `_generateAIResponse()` in `controllers/chat.controller.mjs`**
-  - The stub is clearly marked — replace only that function
-  - Steps: embed query → hybrid pgvector + keyword search (case-scoped) → build LLM prompt → call Gemini API → return `{ aiContent, citations }`
-  - See `docs/architecture/data_flow.md` (RAG Chat Query section) for the planned SQL and citation schema
+- [x] **Implement `_generateAIResponse()` in `controllers/chat.controller.mjs`** (patched 2026-02-26)
+  - Created `services/llm_factory.mjs` — multi-provider factory (gemini/groq/openai/anthropic/ollama) driven by `LLM_PROVIDER` + `{PROVIDER}_API_KEY` in .env
+  - Full RAG pipeline: embed query → similarity-thresholded pgvector search (case-scoped, max 10 sources) → SystemMessage + history + numbered sources → LLM → `{ aiContent, citations }`
+  - Similarity threshold configurable via `RAG_SIMILARITY_THRESHOLD` in .env (default: 0.65)
+  - Citations stored in `chat_messages.citations` JSONB as documented in `data_flow.md`
 
 ## Worker Safety
 - [ ] **Implement resource guards in the doc ingestion worker**

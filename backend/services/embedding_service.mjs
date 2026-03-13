@@ -13,12 +13,12 @@ const EXPECTED_DIMS = 768;
 
 class EmbeddingService {
     constructor() {
-        if (!process.env.GOOGLE_API_KEY) {
-            throw new Error('[EmbeddingService] GOOGLE_API_KEY is not set in .env');
+        if (!process.env.GOOGLE_EMBEDDER_API_KEY) {
+            throw new Error('[EmbeddingService] GOOGLE_EMBEDDER_API_KEY is not set in .env');
         }
 
         this.embedder = new GoogleGenerativeAIEmbeddings({
-            apiKey: process.env.GOOGLE_API_KEY,
+            apiKey: process.env.GOOGLE_EMBEDDER_API_KEY,
             modelName: 'text-embedding-004',  // 768-dim output
         });
 

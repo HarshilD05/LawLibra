@@ -12,13 +12,23 @@
  *
  * RAG Query (sendMessage):
  *   The AI response generation is isolated in _generateAIResponse().
- *   Currently returns a placeholder stub. When the RAG pipeline is ready,
- *   only that function needs to change — the surrounding transaction,
- *   message storage, and response shape all stay the same.
+ *   Full RAG pipeline: embed query → similarity-thresholded pgvector search
+ *   (case-scoped, up to 10 sources) → LLM via LLMFactory → citations stored
+ *   in DB. Surrounding transaction and response shape are unchanged.
  */
 
-import { ChatThread, ChatMessage } from '../models/chat.model.mjs';
-import { Case }                    from '../models/case.model.mjs';
+import { ChatThread, ChatMessage }                    from '../models/chat.model.mjs';
+import { Case }                                        from '../models/case.model.mjs';
+import { HumanMessage, AIMessage, SystemMessage }      from '@langchain/core/messages';
+import db                                              from '../config/db.mjs';
+import EmbeddingService                                from '../services/embedding_service.mjs';
+import { createLLM }                                   from '../services/llm_factory.mjs';
+
+// ─── RAG singletons (lazy-initialized on first chat request) ─────────────────
+// _llm is created lazily so the HTTP server starts even if the API key is
+// missing — the error surfaces only when a message is actually sent.
+let _llm                = null;
+const _embeddingService = new EmbeddingService();
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -31,18 +41,24 @@ async function resolveCaseAccess(caseId, reqUser) {
     return { kase, accessLevel };
 }
 
-// ─── RAG stub ─────────────────────────────────────────────────────────────────
+// ─── RAG pipeline ─────────────────────────────────────────────────────────────
 
 /**
- * Generates the AI response for a user message.
+ * Generates the AI response for a user message using the full RAG pipeline.
  *
- * TODO: Replace this stub with the actual RAG pipeline:
- *   1. Embed userContent → 768-dim query vector
- *   2. Hybrid search: pgvector cosine on doc_chunks (case-scoped) + keyword filter
- *   3. Retrieve top-K chunks with page numbers and document names
- *   4. Build LLM prompt: system prompt + retrieved chunks + conversationHistory + userContent
- *   5. Call Gemini API (streaming optional)
- *   6. Return { aiContent, citations }
+ * Steps:
+ *   1. Lazy-init the LLM singleton via LLMFactory (provider from .env)
+ *   2. Embed userContent → 768-dim query vector
+ *   3. Similarity-thresholded pgvector search on doc_chunks (case-scoped, top 10)
+ *   4. Guard: return graceful message if no chunks meet the threshold
+ *   5. Build LangChain messages: SystemMessage + history + numbered sources + question
+ *   6. Invoke LLM
+ *   7. Return { aiContent, citations }
+ *
+ * .env tunables:
+ *   LLM_PROVIDER              gemini | groq | openai | anthropic | ollama  (default: gemini)
+ *   LLM_MODEL                 optional model override
+ *   RAG_SIMILARITY_THRESHOLD  cosine similarity floor, 0–1  (default: 0.65)
  *
  * @param {string}        userContent
  * @param {string}        caseId
@@ -50,12 +66,108 @@ async function resolveCaseAccess(caseId, reqUser) {
  * @returns {Promise<{ aiContent: string, citations: object[]|null }>}
  */
 async function _generateAIResponse(userContent, caseId, conversationHistory) {
-    // ── STUB: replace this block entirely when RAG is implemented ─────────────
-    return {
-        aiContent:  `[RAG not yet implemented] Your question was: "${userContent}"`,
-        citations:  null,
-    };
-    // ─────────────────────────────────────────────────────────────────────────
+    // ── 1. Lazy-init LLM singleton ────────────────────────────────────────────
+    if (!_llm) {
+        _llm = await createLLM();
+    }
+
+    // ── 2. Embed the user query ───────────────────────────────────────────────
+    const queryVector = await _embeddingService.embedText(userContent);
+    const pgVector    = `[${queryVector.join(',')}]`;
+
+    // ── 3. Similarity-thresholded vector search — case-scoped, max 10 ─────────
+    // RAG_SIMILARITY_THRESHOLD: cosine similarity floor (0–1).
+    // Only chunks with similarity >= threshold are returned, capped at 10.
+    // Legal RAG benefits from broad, high-quality context — 10 sources at 0.65
+    // strikes the right balance between precision and recall.
+    const threshold = parseFloat(process.env.RAG_SIMILARITY_THRESHOLD ?? '0.65');
+
+    const { rows: chunks } = await db.query(
+        `SELECT
+             dc.id,
+             dc.original_text,
+             dc.page_number,
+             d.original_name,
+             d.id                                       AS document_id,
+             1 - (dc.embedding <=> $1::vector)          AS similarity
+         FROM doc_chunks dc
+         JOIN documents  d ON d.id = dc.document_id
+         WHERE d.case_id           = $2
+           AND d.processing_status = 'DONE'
+           AND 1 - (dc.embedding <=> $1::vector) >= $3
+         ORDER BY dc.embedding <=> $1::vector
+         LIMIT 10`,
+        [pgVector, caseId, threshold],
+    );
+
+    console.log(`[Chat RAG] Query matched ${chunks.length} chunks (threshold: ${threshold}, caseId: ${caseId})`);
+
+    // ── 4. Guard — no chunks above threshold ─────────────────────────────────
+    if (chunks.length === 0) {
+        return {
+            aiContent:
+                'No sufficiently relevant documents were found in this case to answer your question. ' +
+                'Please ensure the relevant documents have been uploaded and fully processed, ' +
+                'or try rephrasing your query with different keywords.',
+            citations: null,
+        };
+    }
+
+    // ── 5. Build LangChain messages array ─────────────────────────────────────
+    const systemPrompt =
+        'You are a precise legal AI assistant for a law firm.\n' +
+        'Your answers must be based ONLY on the numbered source excerpts provided in the user message.\n\n' +
+        'Rules:\n' +
+        '- Answer strictly from the provided sources. Do NOT use external knowledge or assumptions.\n' +
+        '- Every factual claim MUST be cited as [Doc: <document name>, Page <page number>].\n' +
+        '- If the sources do not contain enough information to fully answer, state that explicitly — do NOT guess or infer.\n' +
+        '- Be concise, professional, and precise. Legal accuracy is critical.';
+
+    // Map stored conversation history to LangChain message types
+    const historyMessages = conversationHistory.map(msg =>
+        msg.senderType === 'USER'
+            ? new HumanMessage(msg.content)
+            : new AIMessage(msg.content)
+    );
+
+    // Format all retrieved chunks as a numbered source list
+    const sourcesBlock = chunks
+        .map((c, i) =>
+            `[${i + 1}] "${c.original_name}" — Page ${c.page_number} ` +
+            `(similarity: ${parseFloat(c.similarity).toFixed(2)})\n${c.original_text}`
+        )
+        .join('\n\n---\n\n');
+
+    const finalUserMessage = new HumanMessage(
+        `SOURCES:\n${sourcesBlock}\n\nQUESTION: ${userContent}`
+    );
+
+    const messages = [
+        new SystemMessage(systemPrompt),
+        ...historyMessages,
+        finalUserMessage,
+    ];
+
+    // ── 6. Invoke LLM ─────────────────────────────────────────────────────────
+    const response  = await _llm.invoke(messages);
+
+    // Normalize content — some providers return structured parts instead of a plain string
+    const aiContent = typeof response.content === 'string'
+        ? response.content
+        : response.content
+            .map(part => (typeof part === 'string' ? part : (part.text ?? '')))
+            .join('');
+
+    // ── 7. Build citations array (stored in chat_messages.citations JSONB) ────
+    const citations = chunks.map(c => ({
+        chunkId:      c.id,
+        documentId:   c.document_id,
+        documentName: c.original_name,
+        pageNumber:   c.page_number,
+        similarity:   parseFloat(parseFloat(c.similarity).toFixed(4)),
+    }));
+
+    return { aiContent, citations };
 }
 
 // ─── Thread CRUD ──────────────────────────────────────────────────────────────
