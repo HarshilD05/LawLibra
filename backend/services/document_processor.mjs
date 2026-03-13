@@ -12,11 +12,11 @@
 import fs from 'fs/promises';
 import path from 'path';
 import mammoth from 'mammoth';
-import * as pdfjsLib from 'pdfjs-dist';
+// pdfjs-dist v5 default build targets browsers and requires DOM APIs (DOMMatrix etc.).
+// The 'legacy' build strips browser dependencies and works in plain Node.js.
+import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
 
-// pdfjs-dist v5 ships native ESM — no legacy CJS build path exists.
-// Setting workerSrc to '' disables the browser web-worker; Node.js runs the
-// PDF parsing synchronously in the same thread, which is correct for a worker process.
+// Disable the web-worker entirely — Node.js runs PDF parsing on the same thread.
 pdfjsLib.GlobalWorkerOptions.workerSrc = '';
 
 export const SUPPORTED_MIME_TYPES = {

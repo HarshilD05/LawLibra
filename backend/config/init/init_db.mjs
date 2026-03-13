@@ -18,8 +18,8 @@
  */
 
 // ─── Edit these before running ───────────────────────────────────────────────
-const PGSQL_USER     = 'postgres';
-const PGSQL_PASSWORD = 'yourpassword';
+const PGSQL_USER     = 'your_postgre_db_username';
+const PGSQL_PASSWORD = 'your_db_password';
 const DB_NAME        = 'lawlibra';
 
 // ─────────────────────────────────────────────────────────────────────────────

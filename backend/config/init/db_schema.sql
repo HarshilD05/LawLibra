@@ -1,13 +1,10 @@
--- Enable UUID extension for unique identifiers
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 -- Enable pgvector extension for vector embeddings (RAG)
 CREATE EXTENSION IF NOT EXISTS vector;
 
 -- 1. Users Table
 -- Stores all users of the system (Lawyers and Admins)
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email VARCHAR(255) UNIQUE NOT NULL,
     name VARCHAR(255) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
@@ -20,7 +17,7 @@ CREATE TABLE users (
 -- 2. Cases Table
 -- Stores the legal cases managed by the firm
 CREATE TABLE cases (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(255) NOT NULL, -- Added a title for easier identification
     status VARCHAR(50) NOT NULL CHECK (status IN ('OPEN', 'CLOSED', 'ARCHIVED')) DEFAULT 'OPEN',
     client_name VARCHAR(255), -- Renamed from 'plaintiff' to generally 'client' or 'party' depending on side, keeping 'client_name' is usually safer
@@ -46,7 +43,7 @@ CREATE TABLE case_assignments (
 -- 4. Folders Table (Virtual File System)
 -- Allows nesting of documents within a case, similar to a PC file system
 CREATE TABLE folders (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     case_id UUID REFERENCES cases(id) ON DELETE CASCADE,
     parent_folder_id UUID REFERENCES folders(id) ON DELETE CASCADE, -- Self-referencing for nesting
     name VARCHAR(255) NOT NULL,
@@ -57,7 +54,7 @@ CREATE TABLE folders (
 -- 5. Documents Table
 -- Metadata references to files stored in object storage (S3/MinIO/Disk)
 CREATE TABLE documents (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     case_id UUID REFERENCES cases(id) ON DELETE CASCADE,
     folder_id UUID REFERENCES folders(id) ON DELETE SET NULL, -- specific folder, null means root of case
     uploader_id UUID REFERENCES users(id),
@@ -84,7 +81,7 @@ CREATE TABLE documents (
 -- 6. Document Chunks Table (The "Brain" of RAG)
 -- Stores split text segments for granular search
 CREATE TABLE doc_chunks (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     document_id UUID REFERENCES documents(id) ON DELETE CASCADE,
     
     chunk_index INTEGER NOT NULL, -- To order chunks if needed
@@ -101,7 +98,7 @@ CREATE TABLE doc_chunks (
 -- 7. Chat Threads Table
 -- Stores conversation history for a case
 CREATE TABLE chat_threads (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     case_id UUID REFERENCES cases(id) ON DELETE CASCADE,
     user_id UUID REFERENCES users(id),
     title VARCHAR(255),
@@ -113,7 +110,7 @@ CREATE TABLE chat_threads (
 -- Even position_index (0, 2, 4...) = USER message
 -- Odd  position_index (1, 3, 5...) = AI message
 CREATE TABLE chat_messages (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     thread_id UUID REFERENCES chat_threads(id) ON DELETE CASCADE,
     position_index INTEGER NOT NULL,                               -- 0-based index within the thread (even=USER, odd=AI)
     sender_type VARCHAR(50) CHECK (sender_type IN ('USER', 'AI')),
