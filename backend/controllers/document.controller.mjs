@@ -22,7 +22,7 @@ import fs   from 'fs/promises';
 import Document, { PROCESSING_STATUS } from '../models/document.model.mjs';
 import { Case }                        from '../models/case.model.mjs';
 import Folder                          from '../models/folder.model.mjs';
-import { docIngestionQueue }           from '../config/queue.mjs';
+import { dispatchIngestion }            from '../services/ingestion_dispatcher.mjs';
 import {
     getDocumentDirPath,
     getStoragePath,
@@ -118,19 +118,25 @@ export const uploadDocument = async (req, res) => {
             fileSizeBytes: req.file.size,
         });
 
-        // ── Queue the BullMQ ingestion job ────────────────────────────────────
-        const job = await docIngestionQueue.add('ingest', {
+        // ── Dispatch ingestion job (method controlled by DOC_INGESTION_METHOD) ──
+        const { jobId, completed } = await dispatchIngestion({
             documentId: doc.id,
-            filePath:   finalFilePath,   // absolute path so worker can find it
+            filePath:   finalFilePath,
             mimeType:   req.file.mimetype,
             caseId,
         });
 
-        return res.status(202).json({
-            message:    'Document uploaded successfully. Ingestion has started in the background.',
+        const httpStatus     = completed ? 200 : 202;
+        const statusResponse = completed ? PROCESSING_STATUS.DONE : PROCESSING_STATUS.PENDING;
+        const message        = completed
+            ? 'Document uploaded and ingested successfully.'
+            : 'Document uploaded successfully. Ingestion has started in the background.';
+
+        return res.status(httpStatus).json({
+            message,
             documentId: doc.id,
-            jobId:      job.id,
-            status:     PROCESSING_STATUS.PENDING,
+            ...(jobId && { jobId }),
+            status: statusResponse,
         });
 
     } catch (err) {
