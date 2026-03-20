@@ -35,7 +35,7 @@ Stores all system accounts. A user is either a `LAWYER` or an `ADMIN`.
 | `created_at` | `TIMESTAMPTZ` | NO | `CURRENT_TIMESTAMP` | Account creation time |
 | `updated_at` | `TIMESTAMPTZ` | NO | `CURRENT_TIMESTAMP` | Last update time |
 
-**Constraints:** `role IN ('LAWYER', 'ADMIN')`, `UNIQUE(email)`
+**Constraints:** `role IN ("LAWYER", "ADMIN")`, `UNIQUE(email)`
 
 ---
 
@@ -47,16 +47,16 @@ Represents a legal case managed by the firm.
 | :--- | :--- | :--- | :--- | :--- |
 | `id` | `UUID` | NO | `uuid_generate_v4()` | Primary key |
 | `title` | `VARCHAR(255)` | NO | — | Human-readable case title |
-| `status` | `VARCHAR(50)` | NO | `'OPEN'` | `OPEN`, `CLOSED`, or `ARCHIVED` |
-| `client_name` | `VARCHAR(255)` | YES | — | Name of the firm's client |
+| `status` | `VARCHAR(50)` | NO | `"OPEN"` | `OPEN`, `CLOSED`, or `ARCHIVED` |
+| `client_name` | `VARCHAR(255)` | YES | — | Name of the firm"s client |
 | `court_name` | `VARCHAR(255)` | YES | — | Name of the court |
 | `case_number` | `VARCHAR(100)` | YES | — | Official court case number |
-| `metadata` | `JSONB` | YES | `'{}'` | Flexible extra fields (judge, hearings, etc.) |
+| `metadata` | `JSONB` | YES | `"{}"` | Flexible extra fields (judge, hearings, etc.) |
 | `created_by` | `UUID` | YES | — | FK → `users.id` |
 | `created_at` | `TIMESTAMPTZ` | NO | `CURRENT_TIMESTAMP` | — |
 | `updated_at` | `TIMESTAMPTZ` | NO | `CURRENT_TIMESTAMP` | — |
 
-**Constraints:** `status IN ('OPEN', 'CLOSED', 'ARCHIVED')`
+**Constraints:** `status IN ("OPEN", "CLOSED", "ARCHIVED")`
 
 ---
 
@@ -71,7 +71,7 @@ Junction table linking lawyers to cases with a specific access level. Controlled
 | `access_level` | `VARCHAR(50)` | NO | — | `VIEW`, `EDIT`, or `ADMIN` |
 | `assigned_at` | `TIMESTAMPTZ` | NO | `CURRENT_TIMESTAMP` | When the assignment was made |
 
-**Constraints:** `PRIMARY KEY (lawyer_id, case_id)`, `access_level IN ('VIEW', 'EDIT', 'ADMIN')`
+**Constraints:** `PRIMARY KEY (lawyer_id, case_id)`, `access_level IN ("VIEW", "EDIT", "ADMIN")`
 **Cascade:** Deleting a user or case removes their assignments.
 
 ---
@@ -168,7 +168,7 @@ Individual messages within a thread. Uses `BIGSERIAL` for strict ordering.
 | `citations` | `JSONB` | YES | — | Array of `{ chunkId, documentId, pageNumber, snippet }` |
 | `created_at` | `TIMESTAMPTZ` | NO | `CURRENT_TIMESTAMP` | — |
 
-**Constraints:** `UNIQUE(thread_id, position_index)`, `sender_type IN ('USER', 'AI')`
+**Constraints:** `UNIQUE(thread_id, position_index)`, `sender_type IN ("USER", "AI")`
 
 ---
 

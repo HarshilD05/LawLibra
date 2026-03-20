@@ -18,35 +18,35 @@
  */
 
 // ─── Edit these before running ───────────────────────────────────────────────
-const PGSQL_USER     = 'your_postgre_db_username';
-const PGSQL_PASSWORD = 'your_db_password';
-const DB_NAME        = 'lawlibra';
+const PGSQL_USER     = "your_postgre_db_username";
+const PGSQL_PASSWORD = "your_db_password";
+const DB_NAME        = "lawlibra";
 
 // ─────────────────────────────────────────────────────────────────────────────
 
-import pg                              from 'pg';
-import { readFile, writeFile }         from 'fs/promises';
-import { resolve, dirname }            from 'path';
-import { fileURLToPath }               from 'url';
-import crypto                          from 'crypto';
-import { generateSalt, hashPassword } from '../../utils/auth.utils.mjs';
+import pg                              from "pg";
+import { readFile, writeFile }         from "fs/promises";
+import { resolve, dirname }            from "path";
+import { fileURLToPath }               from "url";
+import crypto                          from "crypto";
+import { generateSalt, hashPassword } from "../../utils/auth.utils.mjs";
 
 const { Client } = pg;
 const __dirname  = dirname(fileURLToPath(import.meta.url));
 
-const SCHEMA_PATH   = resolve(__dirname, 'db_schema.sql');
-const PASSWORD_PATH = resolve(__dirname, 'password.txt');
-const PG_HOST     = 'localhost';
+const SCHEMA_PATH   = resolve(__dirname, "db_schema.sql");
+const PASSWORD_PATH = resolve(__dirname, "password.txt");
+const PG_HOST     = "localhost";
 const PG_PORT     = 5432;
 
-// ─── Step 1: Create the database if it doesn't exist ─────────────────────────
+// ─── Step 1: Create the database if it doesn"t exist ─────────────────────────
 async function createDatabaseIfNotExists() {
     const adminClient = new Client({
         host:     PG_HOST,
         port:     PG_PORT,
         user:     PGSQL_USER,
         password: PGSQL_PASSWORD,
-        database: 'postgres',       // connect to default DB to issue CREATE DATABASE
+        database: "postgres",       // connect to default DB to issue CREATE DATABASE
     });
 
     await adminClient.connect();
@@ -59,7 +59,7 @@ async function createDatabaseIfNotExists() {
 
     if (check.rowCount === 0) {
         // Identifiers cannot be parameterised — DB_NAME is a trusted constant set above
-        await adminClient.query(`CREATE DATABASE "${DB_NAME}"`);
+        await adminClient.query(`CREATE DATABASE '${DB_NAME}'`);
         console.log(`[Init] Database "${DB_NAME}" created.`);
     } else {
         console.log(`[Init] Database "${DB_NAME}" already exists. Skipping creation.`);
@@ -81,7 +81,7 @@ async function runSchema() {
     await schemaClient.connect();
     console.log(`[Init] Connected to "${DB_NAME}".`);
 
-    const sql = await readFile(SCHEMA_PATH, 'utf-8');
+    const sql = await readFile(SCHEMA_PATH, "utf-8");
     console.log(`[Init] Running schema from: ${SCHEMA_PATH}`);
 
     await schemaClient.query(sql);
@@ -93,7 +93,7 @@ async function runSchema() {
 // ─── Step 3: Seed the initial admin user (User0) ─────────────────────────────
 async function seedAdminUser() {
     // 15 random bytes → 20-character URL-safe base64 string (no +, /, = chars)
-    const plainPassword = crypto.randomBytes(15).toString('base64url');
+    const plainPassword = crypto.randomBytes(15).toString("base64url");
 
     const salt         = generateSalt();
     const passwordHash = await hashPassword(plainPassword, salt);
@@ -116,7 +116,7 @@ async function seedAdminUser() {
              SET password_hash = EXCLUDED.password_hash,
                  salt          = EXCLUDED.salt,
                  updated_at    = CURRENT_TIMESTAMP`,
-        ['User0', 'user0@lawlibra.local', passwordHash, salt],
+        ["User0", "user0@lawlibra.local", passwordHash, salt],
     );
 
     await userClient.end();
@@ -133,9 +133,9 @@ async function seedAdminUser() {
         ``,
         `Change this password immediately after first login.`,
         `Delete this file once the password has been stored securely.`,
-    ].join('\n');
+    ].join("\n");
 
-    await writeFile(PASSWORD_PATH, fileContent, 'utf-8');
+    await writeFile(PASSWORD_PATH, fileContent, "utf-8");
     console.log(`[Init] Credentials written to: ${PASSWORD_PATH}`);
 }
 

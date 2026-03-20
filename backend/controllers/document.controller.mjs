@@ -16,19 +16,19 @@
  *   - List / Get:      ADMIN or any case assignment (VIEW, EDIT, ADMIN)
  */
 
-import path from 'path';
-import fs   from 'fs/promises';
+import path from "path";
+import fs   from "fs/promises";
 
-import Document, { PROCESSING_STATUS } from '../models/document.model.mjs';
-import { Case }                        from '../models/case.model.mjs';
-import Folder                          from '../models/folder.model.mjs';
-import { dispatchIngestion }            from '../services/ingestion_dispatcher.mjs';
+import Document, { PROCESSING_STATUS } from "../models/document.model.mjs";
+import { Case }                        from "../models/case.model.mjs";
+import Folder                          from "../models/folder.model.mjs";
+import { dispatchIngestion }            from "../services/ingestion_dispatcher.mjs";
 import {
     getDocumentDirPath,
     getStoragePath,
     resolveAbsolutePath,
     ensureDir,
-} from '../utils/storage.utils.mjs';
+} from "../utils/storage.utils.mjs";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -40,7 +40,7 @@ async function resolveCaseAccess(caseId, reqUser) {
     const kase = await Case.findById(caseId);
     if (!kase) return null;
 
-    if (reqUser.role === 'ADMIN') return { kase, accessLevel: 'ADMIN' };
+    if (reqUser.role === "ADMIN") return { kase, accessLevel: "ADMIN" };
 
     const accessLevel = await Case.getLawyerAccessLevel(caseId, reqUser.id);
     if (!accessLevel) return null;
@@ -70,27 +70,27 @@ export const uploadDocument = async (req, res) => {
 
         // ── Validation ────────────────────────────────────────────────────────
         if (!caseId?.trim()) {
-            return res.status(400).json({ error: 'caseId is required.' });
+            return res.status(400).json({ error: "caseId is required." });
         }
 
         if (!req.file) {
-            return res.status(400).json({ error: 'No file provided. Use field name "document".' });
+            return res.status(400).json({ error: "No file provided. Use field name "document"." });
         }
 
         // ── Access check — EDIT or ADMIN required to upload ───────────────────
         const access = await resolveCaseAccess(caseId, req.user);
         if (!access) {
-            return res.status(404).json({ error: 'Case not found or access denied.' });
+            return res.status(404).json({ error: "Case not found or access denied." });
         }
-        if (access.accessLevel === 'VIEW') {
-            return res.status(403).json({ error: 'VIEW access is insufficient. EDIT or ADMIN required to upload documents.' });
+        if (access.accessLevel === "VIEW") {
+            return res.status(403).json({ error: "VIEW access is insufficient. EDIT or ADMIN required to upload documents." });
         }
 
         // ── Validate folderId belongs to this case ────────────────────────────
         if (folderId) {
             const folder = await Folder.findById(folderId);
             if (!folder || folder.caseId !== caseId) {
-                return res.status(400).json({ error: 'folderId does not belong to this case.' });
+                return res.status(400).json({ error: "folderId does not belong to this case." });
             }
         }
 
@@ -129,8 +129,8 @@ export const uploadDocument = async (req, res) => {
         const httpStatus     = completed ? 200 : 202;
         const statusResponse = completed ? PROCESSING_STATUS.DONE : PROCESSING_STATUS.PENDING;
         const message        = completed
-            ? 'Document uploaded and ingested successfully.'
-            : 'Document uploaded successfully. Ingestion has started in the background.';
+            ? "Document uploaded and ingested successfully."
+            : "Document uploaded successfully. Ingestion has started in the background.";
 
         return res.status(httpStatus).json({
             message,
@@ -146,12 +146,12 @@ export const uploadDocument = async (req, res) => {
         }
 
         // Multer file-filter errors arrive here with a non-5xx intent
-        if (err.message?.startsWith('Unsupported file type')) {
+        if (err.message?.startsWith("Unsupported file type")) {
             return res.status(400).json({ error: err.message });
         }
 
-        console.error('[Documents] uploadDocument error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Documents] uploadDocument error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -168,19 +168,19 @@ export const getDocuments = async (req, res) => {
         const { caseId, folderId: rawFolderId } = req.query;
 
         if (!caseId) {
-            return res.status(400).json({ error: 'caseId query parameter is required.' });
+            return res.status(400).json({ error: "caseId query parameter is required." });
         }
 
         const access = await resolveCaseAccess(caseId, req.user);
         if (!access) {
-            return res.status(404).json({ error: 'Case not found or access denied.' });
+            return res.status(404).json({ error: "Case not found or access denied." });
         }
 
         const limit  = Math.min(parseInt(req.query.limit)  || 20, 100);
         const offset = Math.max(parseInt(req.query.offset) || 0,  0);
 
-        // 'null' string from query param → JS null (root); undefined → all folders
-        const folderId = rawFolderId === 'null'
+        // "null" string from query param → JS null (root); undefined → all folders
+        const folderId = rawFolderId === "null"
             ? null
             : rawFolderId ?? undefined;
 
@@ -189,8 +189,8 @@ export const getDocuments = async (req, res) => {
         return res.status(200).json({ data: documents, total, limit, offset });
 
     } catch (err) {
-        console.error('[Documents] getDocuments error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Documents] getDocuments error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -204,19 +204,19 @@ export const getDocumentById = async (req, res) => {
     try {
         const doc = await Document.findById(req.params.id);
         if (!doc) {
-            return res.status(404).json({ error: 'Document not found.' });
+            return res.status(404).json({ error: "Document not found." });
         }
 
         const access = await resolveCaseAccess(doc.caseId, req.user);
         if (!access) {
-            return res.status(403).json({ error: 'Access denied.' });
+            return res.status(403).json({ error: "Access denied." });
         }
 
         return res.status(200).json({ document: doc });
 
     } catch (err) {
-        console.error('[Documents] getDocumentById error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Documents] getDocumentById error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -232,16 +232,16 @@ export const deleteDocument = async (req, res) => {
     try {
         const doc = await Document.findById(req.params.id);
         if (!doc) {
-            return res.status(404).json({ error: 'Document not found.' });
+            return res.status(404).json({ error: "Document not found." });
         }
 
         // Access check
         const access = await resolveCaseAccess(doc.caseId, req.user);
         if (!access) {
-            return res.status(403).json({ error: 'Access denied.' });
+            return res.status(403).json({ error: "Access denied." });
         }
-        if (access.accessLevel === 'VIEW') {
-            return res.status(403).json({ error: 'VIEW access is insufficient. EDIT or ADMIN required to delete documents.' });
+        if (access.accessLevel === "VIEW") {
+            return res.status(403).json({ error: "VIEW access is insufficient. EDIT or ADMIN required to delete documents." });
         }
 
         // Delete file from disk (non-fatal if already missing)
@@ -253,10 +253,10 @@ export const deleteDocument = async (req, res) => {
         // Delete DB record — doc_chunks cascade via FK
         await Document.deleteById(req.params.id);
 
-        return res.status(200).json({ message: 'Document deleted successfully.' });
+        return res.status(200).json({ message: "Document deleted successfully." });
 
     } catch (err) {
-        console.error('[Documents] deleteDocument error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Documents] deleteDocument error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };

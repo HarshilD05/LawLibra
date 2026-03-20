@@ -15,12 +15,12 @@
  *   currently running jobs to finish, then exits cleanly.
  */
 
-import 'dotenv/config';
-import { Worker } from 'bullmq';
+import "dotenv/config";
+import { Worker } from "bullmq";
 
-import { redisConnection }   from '../config/redis.mjs';
-import { DOC_INGESTION_QUEUE } from '../config/queue.mjs';
-import DocIngestionService   from '../services/doc_ingestion_service.mjs';
+import { redisConnection }   from "../config/redis.mjs";
+import { DOC_INGESTION_QUEUE } from "../config/queue.mjs";
+import DocIngestionService   from "../services/doc_ingestion_service.mjs";
 
 // ── Worker Instance ────────────────────────────────────────────────────────────
 const worker = new Worker(
@@ -42,22 +42,22 @@ const worker = new Worker(
 );
 
 // ── Event Listeners (for observability) ───────────────────────────────────────
-worker.on('completed', (job) => {
+worker.on("completed", (job) => {
     console.log(`[Worker] ✓ Job ${job.id} completed (document: ${job.data.documentId})`);
 });
 
-worker.on('failed', (job, err) => {
-    const attempts = job?.attemptsMade ?? '?';
+worker.on("failed", (job, err) => {
+    const attempts = job?.attemptsMade ?? "?";
     console.error(`[Worker] ✗ Job ${job?.id} failed (attempt ${attempts}): ${err.message}`);
 });
 
-worker.on('progress', (job, progress) => {
+worker.on("progress", (job, progress) => {
     console.log(`[Worker] Job ${job.id} progress: ${progress}%`);
 });
 
-worker.on('error', (err) => {
+worker.on("error", (err) => {
     // Emitted for worker-level errors (Redis disconnect, etc.), not job failures
-    console.error('[Worker] Worker error:', err.message);
+    console.error("[Worker] Worker error:", err.message);
 });
 
 console.log(`[Worker] Started. Listening on queue "${DOC_INGESTION_QUEUE}" (concurrency: 2)`);
@@ -66,9 +66,9 @@ console.log(`[Worker] Started. Listening on queue "${DOC_INGESTION_QUEUE}" (conc
 async function shutdown(signal) {
     console.log(`\n[Worker] ${signal} received — shutting down gracefully...`);
     await worker.close(); // stop accepting new jobs, wait for active jobs to finish
-    console.log('[Worker] All active jobs finished. Exiting.');
+    console.log("[Worker] All active jobs finished. Exiting.");
     process.exit(0);
 }
 
-process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT',  () => shutdown('SIGINT'));
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT",  () => shutdown("SIGINT"));

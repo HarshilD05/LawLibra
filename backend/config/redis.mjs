@@ -9,20 +9,20 @@
  * same connection config, but each process gets its own TCP connection.
  */
 
-import { Redis } from 'ioredis';
-import 'dotenv/config';
+import { Redis } from "ioredis";
+import "dotenv/config";
 
 export const redisConnection = new Redis({
-    host:     process.env.REDIS_HOST     || 'localhost',
-    port:     parseInt(process.env.REDIS_PORT || '6379', 10),
+    host:     process.env.REDIS_HOST     || "localhost",
+    port:     parseInt(process.env.REDIS_PORT || "6379", 10),
     password: process.env.REDIS_PASSWORD || undefined,
     maxRetriesPerRequest: null, // required by BullMQ — do NOT remove
 });
 
-redisConnection.on('error', (err) => {
-    console.error('[Redis] Connection error:', err.message);
+redisConnection.on("error", (err) => {
+    console.error("[Redis] Connection error:", err.message);
 });
 
-redisConnection.on('connect', () => {
-    console.log(`[Redis] Connected to ${process.env.REDIS_HOST || 'localhost'}:${process.env.REDIS_PORT || 6379}`);
+redisConnection.on("connect", () => {
+    console.log(`[Redis] Connected to ${process.env.REDIS_HOST || "localhost"}:${process.env.REDIS_PORT || 6379}`);
 });

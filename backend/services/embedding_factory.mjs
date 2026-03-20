@@ -17,7 +17,7 @@
  *   external    external_embedding_service.mjs   EXTERNAL_EMBEDDING_ENDPOINT
  */
 
-const EMBEDDING_METHOD = (process.env.EMBEDDING_METHOD || 'google').toLowerCase();
+const EMBEDDING_METHOD = (process.env.EMBEDDING_METHOD || "google").toLowerCase();
 
 /**
  * Creates and returns the configured Embedding Service instance.
@@ -31,21 +31,21 @@ export async function createEmbeddingService() {
 
     try {
         switch (EMBEDDING_METHOD) {
-            case 'local': {
-                const { default: LocalEmbeddingService } = await import('./local_embedding_service.mjs');
+            case "local": {
+                const { default: LocalEmbeddingService } = await import("./local_embedding_service.mjs");
                 return new LocalEmbeddingService();
             }
 
-            case 'external': {
-                const { default: ExternalEmbeddingService } = await import('./external_embedding_service.mjs');
+            case "external": {
+                const { default: ExternalEmbeddingService } = await import("./external_embedding_service.mjs");
                 return new ExternalEmbeddingService();
             }
 
-            case 'google':
+            case "google":
             default: {
                 // Currently resides in embedding_service.mjs
                 // NOTE: If you rename it to google_embedding_service.mjs later, update this import!
-                const { default: GoogleEmbeddingService } = await import('./embedding_service.mjs');
+                const { default: GoogleEmbeddingService } = await import("./embedding_service.mjs");
                 return new GoogleEmbeddingService();
             }
         }

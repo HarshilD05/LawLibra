@@ -1,4 +1,4 @@
-import { verifyToken } from '../utils/jwt.utils.mjs';
+import { verifyToken } from "../utils/jwt.utils.mjs";
 
 /**
  * Middleware: Verifies Bearer JWT in Authorization header.
@@ -7,17 +7,17 @@ import { verifyToken } from '../utils/jwt.utils.mjs';
 export const authenticate = (req, res, next) => {
     const header = req.headers.authorization;
 
-    if (!header || !header.startsWith('Bearer ')) {
-        return res.status(401).json({ error: 'Unauthorized. No token provided.' });
+    if (!header || !header.startsWith("Bearer ")) {
+        return res.status(401).json({ error: "Unauthorized. No token provided." });
     }
 
-    const token = header.split(' ')[1];
+    const token = header.split(" ")[1];
 
     try {
         req.user = verifyToken(token); // { id, role, iat, exp }
         next();
     } catch (err) {
-        return res.status(401).json({ error: 'Invalid or expired token.' });
+        return res.status(401).json({ error: "Invalid or expired token." });
     }
 };
 
@@ -26,8 +26,8 @@ export const authenticate = (req, res, next) => {
  * Must be used after authenticate().
  */
 export const authorizeAdmin = (req, res, next) => {
-    if (req.user?.role !== 'ADMIN') {
-        return res.status(403).json({ error: 'Forbidden. Admin access required.' });
+    if (req.user?.role !== "ADMIN") {
+        return res.status(403).json({ error: "Forbidden. Admin access required." });
     }
     next();
 };

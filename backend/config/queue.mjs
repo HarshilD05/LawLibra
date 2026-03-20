@@ -9,17 +9,17 @@
  * Both sides share the same queue name so BullMQ routes jobs correctly.
  */
 
-import { Queue } from 'bullmq';
-import { redisConnection } from './redis.mjs';
+import { Queue } from "bullmq";
+import { redisConnection } from "./redis.mjs";
 
-export const DOC_INGESTION_QUEUE = 'doc-ingestion';
+export const DOC_INGESTION_QUEUE = "doc-ingestion";
 
 export const docIngestionQueue = new Queue(DOC_INGESTION_QUEUE, {
     connection: redisConnection,
     defaultJobOptions: {
         attempts: 3,
         backoff: {
-            type:  'exponential',
+            type:  "exponential",
             delay: 5000,   // 5s → 25s → 125s between retries
         },
         removeOnComplete: { count: 100 }, // keep last 100 completed for debugging
@@ -27,6 +27,6 @@ export const docIngestionQueue = new Queue(DOC_INGESTION_QUEUE, {
     },
 });
 
-docIngestionQueue.on('error', (err) => {
-    console.error('[Queue] doc-ingestion error:', err.message);
+docIngestionQueue.on("error", (err) => {
+    console.error("[Queue] doc-ingestion error:", err.message);
 });

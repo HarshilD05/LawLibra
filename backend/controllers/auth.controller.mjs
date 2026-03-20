@@ -1,6 +1,6 @@
-import { generateSalt, hashPassword, verifyPassword } from '../utils/auth.utils.mjs';
-import { signToken } from '../utils/jwt.utils.mjs';
-import { User } from '../models/user.model.mjs';
+import { generateSalt, hashPassword, verifyPassword } from "../utils/auth.utils.mjs";
+import { signToken } from "../utils/jwt.utils.mjs";
+import { User } from "../models/user.model.mjs";
 
 /**
  * POST /api/auth/register
@@ -11,15 +11,15 @@ export const register = async (req, res) => {
         const { name, email, password, role } = req.body;
 
         if (!name || !email || !password) {
-            return res.status(400).json({ error: 'Name, email, and password are required.' });
+            return res.status(400).json({ error: "Name, email, and password are required." });
         }
 
         // Role defaults to LAWYER; only allow explicit ADMIN role if caller is an ADMIN
-        const requestedRole = role === 'ADMIN' ? 'ADMIN' : 'LAWYER';
+        const requestedRole = role === "ADMIN" ? "ADMIN" : "LAWYER";
 
         const existing = await User.findByEmail(email);
         if (existing) {
-            return res.status(409).json({ error: 'An account with this email already exists.' });
+            return res.status(409).json({ error: "An account with this email already exists." });
         }
 
         const salt         = generateSalt();
@@ -30,8 +30,8 @@ export const register = async (req, res) => {
 
         return res.status(201).json({ user: newUser.toSafeObject(), token });
     } catch (err) {
-        console.error('[Auth] register error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Auth] register error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -44,43 +44,43 @@ export const login = async (req, res) => {
         const { email, password } = req.body;
 
         if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required.' });
+            return res.status(400).json({ error: "Email and password are required." });
         }
 
         const user = await User.findByEmail(email);
         // Use a generic error message to prevent user enumeration
         if (!user) {
-            return res.status(401).json({ error: 'Invalid email or password.' });
+            return res.status(401).json({ error: "Invalid email or password." });
         }
 
         const isValid = await verifyPassword(password, user.getSalt(), user.getPasswordHash());
         if (!isValid) {
-            return res.status(401).json({ error: 'Invalid email or password.' });
+            return res.status(401).json({ error: "Invalid email or password." });
         }
 
         const token = signToken({ id: user.id, role: user.role });
 
         return res.status(200).json({ user: user.toSafeObject(), token });
     } catch (err) {
-        console.error('[Auth] login error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Auth] login error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
 /**
  * GET /api/auth/me
- * Returns the logged-in user's profile. Requires a valid JWT.
+ * Returns the logged-in user"s profile. Requires a valid JWT.
  */
 export const getMe = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
         if (!user) {
-            return res.status(404).json({ error: 'User not found.' });
+            return res.status(404).json({ error: "User not found." });
         }
         return res.status(200).json({ user: user.toSafeObject() });
     } catch (err) {
-        console.error('[Auth] getMe error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Auth] getMe error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -102,8 +102,8 @@ export const getAllUsers = async (req, res) => {
             offset,
         });
     } catch (err) {
-        console.error('[Auth] getAllUsers error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Auth] getAllUsers error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -117,10 +117,10 @@ export const changePassword = async (req, res) => {
         const { currentPassword, newPassword } = req.body;
 
         if (!currentPassword || !newPassword) {
-            return res.status(400).json({ error: 'currentPassword and newPassword are required.' });
+            return res.status(400).json({ error: "currentPassword and newPassword are required." });
         }
         if (newPassword.length < 8) {
-            return res.status(400).json({ error: 'New password must be at least 8 characters.' });
+            return res.status(400).json({ error: "New password must be at least 8 characters." });
         }
 
         // Fetch with credentials to verify the current password
@@ -128,39 +128,39 @@ export const changePassword = async (req, res) => {
             (await User.findById(req.user.id))?.email
         );
         if (!user) {
-            return res.status(404).json({ error: 'User not found.' });
+            return res.status(404).json({ error: "User not found." });
         }
 
         const isValid = await verifyPassword(currentPassword, user.getSalt(), user.getPasswordHash());
         if (!isValid) {
-            return res.status(401).json({ error: 'Current password is incorrect.' });
+            return res.status(401).json({ error: "Current password is incorrect." });
         }
 
         const newSalt         = generateSalt();
         const newPasswordHash = await hashPassword(newPassword, newSalt);
         await User.changePassword(req.user.id, newPasswordHash, newSalt);
 
-        return res.status(200).json({ message: 'Password updated successfully.' });
+        return res.status(200).json({ message: "Password updated successfully." });
     } catch (err) {
-        console.error('[Auth] changePassword error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Auth] changePassword error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
 /**
  * GET /api/auth/users/:id
- * Admin-only. Returns a single user's profile by ID.
+ * Admin-only. Returns a single user"s profile by ID.
  */
 export const getUserById = async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (!user) {
-            return res.status(404).json({ error: 'User not found.' });
+            return res.status(404).json({ error: "User not found." });
         }
         return res.status(200).json({ user: user.toSafeObject() });
     } catch (err) {
-        console.error('[Auth] getUserById error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Auth] getUserById error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -174,17 +174,17 @@ export const deleteUser = async (req, res) => {
         const { id } = req.params;
 
         if (id === req.user.id) {
-            return res.status(400).json({ error: 'You cannot delete your own account.' });
+            return res.status(400).json({ error: "You cannot delete your own account." });
         }
 
         const deleted = await User.deleteById(id);
         if (!deleted) {
-            return res.status(404).json({ error: 'User not found.' });
+            return res.status(404).json({ error: "User not found." });
         }
 
-        return res.status(200).json({ message: 'User deleted successfully.' });
+        return res.status(200).json({ message: "User deleted successfully." });
     } catch (err) {
-        console.error('[Auth] deleteUser error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Auth] deleteUser error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };

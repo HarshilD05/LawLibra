@@ -10,14 +10,14 @@
  *                                            → FAILED  (error stored in processing_error)
  */
 
-import db from '../config/db.mjs';
+import db from "../config/db.mjs";
 
 // ─── Job Status Constants ──────────────────────────────────────────────────────
 export const PROCESSING_STATUS = {
-    PENDING:    'PENDING',
-    PROCESSING: 'PROCESSING',
-    DONE:       'DONE',
-    FAILED:     'FAILED',
+    PENDING:    "PENDING",
+    PROCESSING: "PROCESSING",
+    DONE:       "DONE",
+    FAILED:     "FAILED",
 };
 
 // ─── Document Class ────────────────────────────────────────────────────────────
@@ -70,7 +70,7 @@ class Document {
      */
     static async findById(id) {
         const { rows } = await db.query(
-            'SELECT * FROM documents WHERE id = $1',
+            "SELECT * FROM documents WHERE id = $1",
             [id],
         );
         return rows[0] ? new Document(rows[0]) : null;
@@ -85,15 +85,15 @@ class Document {
      * @returns {Promise<{ documents: Document[], total: number }>}
      */
     static async findByCaseId(caseId, { limit = 20, offset = 0, folderId = undefined } = {}) {
-        const conditions = ['case_id = $1'];
+        const conditions = ["case_id = $1"];
         const params     = [caseId];
 
         if (folderId !== undefined) {
             params.push(folderId);
-            conditions.push(`folder_id ${folderId === null ? 'IS NULL' : `= $${params.length}`}`);
+            conditions.push(`folder_id ${folderId === null ? "IS NULL" : `= $${params.length}`}`);
         }
 
-        const where = conditions.join(' AND ');
+        const where = conditions.join(" AND ");
 
         const [dataRes, countRes] = await Promise.all([
             db.query(
@@ -118,7 +118,7 @@ class Document {
      * Pass `error` string when status is FAILED.
      *
      * @param {string} id
-     * @param {'PENDING'|'PROCESSING'|'DONE'|'FAILED'} status
+     * @param {"PENDING"|"PROCESSING"|"DONE"|"FAILED"} status
      * @param {string|null} error
      */
     static async updateProcessingStatus(id, status, error = null) {
@@ -170,7 +170,7 @@ class Document {
 
         const client = await db.connect();
         try {
-            await client.query('BEGIN');
+            await client.query("BEGIN");
 
             for (let i = 0; i < chunks.length; i++) {
                 const { text, pageNo, keywords, embedding } = chunks[i];
@@ -189,9 +189,9 @@ class Document {
                 );
             }
 
-            await client.query('COMMIT');
+            await client.query("COMMIT");
         } catch (err) {
-            await client.query('ROLLBACK');
+            await client.query("ROLLBACK");
             throw err;
         } finally {
             client.release();
@@ -206,7 +206,7 @@ class Document {
      */
     static async deleteById(id) {
         const { rows } = await db.query(
-            'DELETE FROM documents WHERE id = $1 RETURNING *',
+            "DELETE FROM documents WHERE id = $1 RETURNING *",
             [id],
         );
         return rows[0] ? new Document(rows[0]) : null;

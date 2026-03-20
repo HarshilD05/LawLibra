@@ -13,8 +13,8 @@
  * POST   /api/chat/threads/:id/messages         — Send a message + receive AI reply
  */
 
-import { Router }       from 'express';
-import { authenticate } from '../middleware/auth.middleware.mjs';
+import { Router }       from "express";
+import { authenticate } from "../middleware/auth.middleware.mjs";
 import {
     createThread,
     getThreads,
@@ -23,21 +23,21 @@ import {
     deleteThread,
     getMessages,
     sendMessage,
-} from '../controllers/chat.controller.mjs';
+} from "../controllers/chat.controller.mjs";
 
 const router = Router();
 
 router.use(authenticate);
 
 // Thread CRUD
-router.post('/',     createThread);
-router.get('/',      getThreads);
-router.get('/:id',   getThreadById);
-router.patch('/:id', renameThread);
-router.delete('/:id', deleteThread);
+router.post("/",     createThread);
+router.get("/",      getThreads);
+router.get("/:id",   getThreadById);
+router.patch("/:id", renameThread);
+router.delete("/:id", deleteThread);
 
 // Messages — nested under thread
-router.get('/:id/messages',  getMessages);
-router.post('/:id/messages', sendMessage);
+router.get("/:id/messages",  getMessages);
+router.post("/:id/messages", sendMessage);
 
 export default router;

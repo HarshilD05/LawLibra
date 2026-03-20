@@ -1,8 +1,8 @@
-import { Ollama } from 'ollama';
+import { Ollama } from "ollama";
 
 const EXPECTED_DIMS = 768; // E.g., nomic-embed-text
-const DEFAULT_OLLAMA_URL = 'http://localhost:11434';
-const DEFAULT_MODEL = 'nomic-embed-text';
+const DEFAULT_OLLAMA_URL = "http://localhost:11434";
+const DEFAULT_MODEL = "nomic-embed-text";
 
 /**
  * LocalEmbeddingService
@@ -52,23 +52,23 @@ class LocalEmbeddingService {
      * @returns {Promise<number[]>} 768-dimensional vector
      */
     async embedText(text) {
-        if (!text?.trim()) throw new Error('[LocalEmbeddingService] embedText: text must be a non-empty string');
+        if (!text?.trim()) throw new Error("[LocalEmbeddingService] embedText: text must be a non-empty string");
         
         const vectors = await this.embedBatch([text]);
         return vectors[0];
     }
 
     /**
-     * Embed an array of texts in one call using Ollama's batch embedding endpoint.
+     * Embed an array of texts in one call using Ollama"s batch embedding endpoint.
      * @param {string[]} texts
      * @returns {Promise<number[][]>} Array of 768-dimensional vectors
      */
     async embedBatch(texts) {
         if (!Array.isArray(texts) || texts.length === 0) {
-            throw new Error('[LocalEmbeddingService] embedBatch: texts must be a non-empty array');
+            throw new Error("[LocalEmbeddingService] embedBatch: texts must be a non-empty array");
         }
 
-        const valid = texts.filter(t => typeof t === 'string' && t.trim());
+        const valid = texts.filter(t => typeof t === "string" && t.trim());
         if (valid.length !== texts.length) {
             console.warn(`[LocalEmbeddingService] embedBatch: skipped ${texts.length - valid.length} empty items`);
         }
@@ -110,7 +110,7 @@ class LocalEmbeddingService {
      */
     async embedChunks(chunks) {
         if (!Array.isArray(chunks) || chunks.length === 0) {
-            throw new Error('[LocalEmbeddingService] embedChunks: chunks must be a non-empty array');
+            throw new Error("[LocalEmbeddingService] embedChunks: chunks must be a non-empty array");
         }
 
         const texts = chunks.map((c, i) => {
@@ -128,7 +128,7 @@ class LocalEmbeddingService {
     _validateDims(vector, label) {
         if (!Array.isArray(vector) || vector.length !== EXPECTED_DIMS) {
             throw new Error(
-                `[LocalEmbeddingService] ${label}: expected ${EXPECTED_DIMS} dims, got ${vector?.length ?? 'invalid'}`
+                `[LocalEmbeddingService] ${label}: expected ${EXPECTED_DIMS} dims, got ${vector?.length ?? "invalid"}`
             );
         }
     }

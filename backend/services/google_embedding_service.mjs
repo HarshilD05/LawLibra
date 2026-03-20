@@ -2,38 +2,38 @@
  * EmbeddingService
  * Wraps Google text-embedding-004 (768-dim) with correct task types per use case.
  *
- * Google's embedding API optimises vector geometry depending on task type.
+ * Google"s embedding API optimises vector geometry depending on task type.
  * For a RAG pipeline two different task types are required:
  *
  *   RETRIEVAL_DOCUMENT — chunks stored in the vector DB during ingestion.
  *                        Optimised so stored vectors are retrievable by queries.
  *
- *   QUESTION_ANSWERING — the user's chat / Q&A query at runtime.
+ *   QUESTION_ANSWERING — the user"s chat / Q&A query at runtime.
  *                        Optimised for finding documents that answer the question.
  *
  * These task types MUST match at both index and query time or recall degrades.
- * LangChain's GoogleGenerativeAIEmbeddings bakes taskType into the instance, so
+ * LangChain"s GoogleGenerativeAIEmbeddings bakes taskType into the instance, so
  * we keep two separate instances rather than one shared one.
  *
  * Designed for zero-friction swap to local nomic-embed-text via Ollama —
  * both output 768 dimensions, so no schema migration is needed.
  */
 
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI } from "@google/genai";
 
 const EXPECTED_DIMS = 768;
 const EMBEDDING_BATCH_SIZE = 100;
-const MODEL_NAME    = 'gemini-embedding-2-preview';
+const MODEL_NAME    = "gemini-embedding-2-preview";
 
 // Task type string constants as defined by the Google Gemini Embeddings API.
 // See: https://ai.google.dev/gemini-api/docs/embeddings#supported-task-types
-const TASK_RETRIEVAL_DOCUMENT = 'RETRIEVAL_DOCUMENT';
-const TASK_QUESTION_ANSWERING = 'QUESTION_ANSWERING';
+const TASK_RETRIEVAL_DOCUMENT = "RETRIEVAL_DOCUMENT";
+const TASK_QUESTION_ANSWERING = "QUESTION_ANSWERING";
 
 class EmbeddingService {
     constructor() {
         if (!process.env.GOOGLE_EMBEDDER_API_KEY) {
-            throw new Error('[EmbeddingService] GOOGLE_EMBEDDER_API_KEY is not set in .env');
+            throw new Error("[EmbeddingService] GOOGLE_EMBEDDER_API_KEY is not set in .env");
         }
 
         // Initialize the new Google GenAI client
@@ -54,7 +54,7 @@ class EmbeddingService {
      * @returns {Promise<number[]>} 768-dimensional vector
      */
     async embedText(text) {
-        if (!text?.trim()) throw new Error('[EmbeddingService] embedText: text must be a non-empty string');
+        if (!text?.trim()) throw new Error("[EmbeddingService] embedText: text must be a non-empty string");
 
         const response = await this.ai.models.embedContent({
             model: MODEL_NAME,
@@ -66,7 +66,7 @@ class EmbeddingService {
         });
         
         const vector = response.embeddings[0].values;
-        this._validateDims(vector, 'embedText');
+        this._validateDims(vector, "embedText");
         return vector;
     }
 
@@ -78,10 +78,10 @@ class EmbeddingService {
      */
     async embedBatch(texts) {
         if (!Array.isArray(texts) || texts.length === 0) {
-            throw new Error('[EmbeddingService] embedBatch: texts must be a non-empty array');
+            throw new Error("[EmbeddingService] embedBatch: texts must be a non-empty array");
         }
 
-        const valid = texts.filter(t => typeof t === 'string' && t.trim());
+        const valid = texts.filter(t => typeof t === "string" && t.trim());
         if (valid.length !== texts.length) {
             console.warn(`[EmbeddingService] embedBatch: skipped ${texts.length - valid.length} empty items`);
         }
@@ -89,7 +89,7 @@ class EmbeddingService {
         console.log(`[EmbeddingService] Embedding batch of ${valid.length} document chunks (${TASK_RETRIEVAL_DOCUMENT})...`);
 
         try {
-            // Google's batchEmbedContents typically limits requests to 100 chunks at a time.
+            // Google"s batchEmbedContents typically limits requests to 100 chunks at a time.
             // We batch the chunks to avoid hitting payload or batch size limits.
             const vectors = [];
             
@@ -134,13 +134,13 @@ class EmbeddingService {
 
     /**
      * Attach embeddings to an array of chunk objects.
-     * Extracts the 'text' field, runs a single batch call, then merges back.
+     * Extracts the "text" field, runs a single batch call, then merges back.
      * @param {Array<{text: string, [key: string]: any}>} chunks
      * @returns {Promise<Array<{embedding: number[], [key: string]: any}>>}
      */
     async embedChunks(chunks) {
         if (!Array.isArray(chunks) || chunks.length === 0) {
-            throw new Error('[EmbeddingService] embedChunks: chunks must be a non-empty array');
+            throw new Error("[EmbeddingService] embedChunks: chunks must be a non-empty array");
         }
 
         const texts = chunks.map((c, i) => {
@@ -158,7 +158,7 @@ class EmbeddingService {
     _validateDims(vector, label) {
         if (!Array.isArray(vector) || vector.length !== EXPECTED_DIMS) {
             throw new Error(
-                `[EmbeddingService] ${label}: expected ${EXPECTED_DIMS} dims, got ${vector?.length ?? 'invalid'}`,
+                `[EmbeddingService] ${label}: expected ${EXPECTED_DIMS} dims, got ${vector?.length ?? "invalid"}`,
             );
         }
     }
@@ -192,7 +192,7 @@ class EmbeddingService {
         } catch (fallbackErr) {
             throw new Error(
                 `[EmbeddingService] Embedding failed completely. ` +
-                `Batch error: ${batchError?.message || 'none'}. ` +
+                `Batch error: ${batchError?.message || "none"}. ` +
                 `Fallback error: ${fallbackErr.message}. ` +
                 `Check GOOGLE_EMBEDDER_API_KEY, model availability, API restrictions, and quota in Google AI Studio.`,
             );
@@ -201,7 +201,7 @@ class EmbeddingService {
 
     getModelInfo() {
         return {
-            provider:        'Google Generative AI',
+            provider:        "Google Generative AI",
             model:           MODEL_NAME,
             dimensions:      EXPECTED_DIMS,
             docTaskType:     TASK_RETRIEVAL_DOCUMENT,

@@ -12,19 +12,19 @@
  *   - Legal-specific stop word expansion added to the base English list.
  */
 
-import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
-import { createRequire } from 'module';
+import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
+import { createRequire } from "module";
 
-// natural's TfIdf is CJS; load via createRequire inside ESM
+// natural"s TfIdf is CJS; load via createRequire inside ESM
 const require     = createRequire(import.meta.url);
-const { TfIdf }   = require('natural');
+const { TfIdf }   = require("natural");
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 const CHUNK_CONFIG = {
     chunkSize:    900,
     chunkOverlap: 150,
-    separators:   ['\n\n', '\n', '. ', ' ', ''],
+    separators:   ["\n\n", "\n", ". ", " ", ""],
 };
 
 const MAX_KEYWORDS = 8;
@@ -34,23 +34,23 @@ const MAX_KEYWORDS = 8;
 // Base English + legal boilerplate that appears in virtually every legal doc
 const STOP_WORDS = new Set([
     // Common English
-    'the','a','an','and','or','but','in','on','at','to','for','of','with',
-    'by','from','as','is','was','are','were','be','been','being','have',
-    'has','had','do','does','did','will','would','should','could','may',
-    'might','must','can','this','that','these','those','it','its','they',
-    'them','their','there','here','all','any','each','some','such','than',
-    'then','when','where','which','who','whom','not','also','into','over',
-    'after','before','about','between','through','during','within','under',
-    'above','below','both','own','other','same','more','most','very',
+    "the","a","an","and","or","but","in","on","at","to","for","of","with",
+    "by","from","as","is","was","are","were","be","been","being","have",
+    "has","had","do","does","did","will","would","should","could","may",
+    "might","must","can","this","that","these","those","it","its","they",
+    "them","their","there","here","all","any","each","some","such","than",
+    "then","when","where","which","who","whom","not","also","into","over",
+    "after","before","about","between","through","during","within","under",
+    "above","below","both","own","other","same","more","most","very",
     // Legal boilerplate
-    'whereas','hereinafter','herein','hereby','hereto','hereof',
-    'aforesaid','aforementioned','pursuant','thereto','therein','thereof',
-    'whereby','notwithstanding','provided','shall','upon','said',
-    'above','below','order','court','matter','case','dated','date',
-    'petition','petitioner','respondent','applicant','plaintiff',
-    'defendant','counsel','section','clause','article','para','page',
-    'annexure','exhibit','schedule','appendix','statement','per',
-    'ref','regard','subject','kind','dear','sir','madam',
+    "whereas","hereinafter","herein","hereby","hereto","hereof",
+    "aforesaid","aforementioned","pursuant","thereto","therein","thereof",
+    "whereby","notwithstanding","provided","shall","upon","said",
+    "above","below","order","court","matter","case","dated","date",
+    "petition","petitioner","respondent","applicant","plaintiff",
+    "defendant","counsel","section","clause","article","para","page",
+    "annexure","exhibit","schedule","appendix","statement","per",
+    "ref","regard","subject","kind","dear","sir","madam",
 ]);
 
 // ─── DocumentUtils ────────────────────────────────────────────────────────────
@@ -63,7 +63,7 @@ class DocumentUtils {
      * @returns {string}
      */
     static cleanText(text) {
-        if (!text || typeof text !== 'string') return '';
+        if (!text || typeof text !== "string") return "";
 
         let cleaned = text;
 
@@ -76,10 +76,10 @@ class DocumentUtils {
         });
 
         // Remove separator lines (rows of dots, dashes, underscores)
-        cleaned = cleaned.replace(/\n[\.\-_ ]{5,}\n/g, '\n');
+        cleaned = cleaned.replace(/\n[\.\-_ ]{5,}\n/g, "\n");
 
         // Collapse repetitive punctuation (table borders, separators)
-        cleaned = cleaned.replace(/[\.\-_]{2,}/g, ' ');
+        cleaned = cleaned.replace(/[\.\-_]{2,}/g, " ");
 
         // Restore protected patterns
         numericCache.forEach((val, idx) => {
@@ -87,7 +87,7 @@ class DocumentUtils {
         });
 
         // Normalize whitespace
-        cleaned = cleaned.replace(/\n+/g, '\n').replace(/ +/g, ' ').trim();
+        cleaned = cleaned.replace(/\n+/g, "\n").replace(/ +/g, " ").trim();
 
         return cleaned;
     }
@@ -101,7 +101,7 @@ class DocumentUtils {
      */
     static async chunkTextWithMetadata(pageTexts) {
         if (!Array.isArray(pageTexts) || pageTexts.length === 0) {
-            throw new Error('chunkTextWithMetadata: pageTexts must be a non-empty array');
+            throw new Error("chunkTextWithMetadata: pageTexts must be a non-empty array");
         }
 
         const splitter = new RecursiveCharacterTextSplitter({
@@ -117,7 +117,7 @@ class DocumentUtils {
             if (!text?.trim()) continue;
 
             // Normalise whitespace before splitting
-            const normalised = text.replace(/\n{3,}/g, '\n\n').replace(/ {2,}/g, ' ');
+            const normalised = text.replace(/\n{3,}/g, "\n\n").replace(/ {2,}/g, " ");
             const parts      = await splitter.splitText(normalised);
 
             for (const part of parts) {
@@ -136,7 +136,7 @@ class DocumentUtils {
 
     /**
      * Runs TF-IDF across ALL chunks of a document in a single pass.
-     * Returns the same chunks array with a 'keywords' field added.
+     * Returns the same chunks array with a "keywords" field added.
      *
      * Why bulk TF-IDF is correct here:
      *   IDF is calculated across all chunks of this document. A word like
@@ -182,7 +182,7 @@ class DocumentUtils {
      */
     static async processDocument(pageTexts) {
         if (!Array.isArray(pageTexts) || pageTexts.length === 0) {
-            throw new Error('processDocument: pageTexts must be a non-empty array');
+            throw new Error("processDocument: pageTexts must be a non-empty array");
         }
 
         // Step 1 — clean each page

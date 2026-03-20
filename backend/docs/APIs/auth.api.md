@@ -109,7 +109,7 @@ Authenticates a user and returns a JWT.
 
 ## 3. `GET /me`
 
-Returns the authenticated user's own profile.
+Returns the authenticated user"s own profile.
 
 ### Headers
 

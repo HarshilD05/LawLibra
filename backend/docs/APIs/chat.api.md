@@ -138,7 +138,7 @@ Returns metadata for a single thread. Does **not** include messages — use [`GE
 
 | Status | Error | Cause |
 | :--- | :--- | :--- |
-| `403` | `Access denied.` | Requester has no assignment on the thread's case |
+| `403` | `Access denied.` | Requester has no assignment on the thread"s case |
 | `404` | `Thread not found.` | No thread with that ID |
 | `500` | `Internal server error.` | Unexpected failure |
 
@@ -146,7 +146,7 @@ Returns metadata for a single thread. Does **not** include messages — use [`GE
 
 ## 4. `PATCH /:id`
 
-Renames a thread. Only the thread's **creator** or a **System Admin** may rename it — other assigned lawyers receive a `403`.
+Renames a thread. Only the thread"s **creator** or a **System Admin** may rename it — other assigned lawyers receive a `403`.
 
 ### Request Body
 
@@ -188,7 +188,7 @@ Renames a thread. Only the thread's **creator** or a **System Admin** may rename
 
 ## 5. `DELETE /:id`
 
-Permanently deletes the thread and all its messages (cascades via FK). Only the thread's **creator** or a **System Admin** may delete it.
+Permanently deletes the thread and all its messages (cascades via FK). Only the thread"s **creator** or a **System Admin** may delete it.
 
 **This operation is irreversible.**
 
@@ -271,7 +271,7 @@ Returns the message history for a thread ordered by `position_index` ascending (
 
 | Status | Error | Cause |
 | :--- | :--- | :--- |
-| `403` | `Access denied.` | Requester has no assignment on the thread's case |
+| `403` | `Access denied.` | Requester has no assignment on the thread"s case |
 | `404` | `Thread not found.` | No thread with that ID |
 | `500` | `Internal server error.` | Unexpected failure |
 

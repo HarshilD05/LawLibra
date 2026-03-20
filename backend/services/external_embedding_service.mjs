@@ -7,7 +7,7 @@ class ExternalEmbeddingService {
     constructor() {
         this.endpoint = process.env.EXTERNAL_EMBEDDING_ENDPOINT;
         this.apiKey = process.env.EXTERNAL_EMBEDDING_API_KEY;
-        this.expectedDims = parseInt(process.env.EMBEDDING_DIMENSIONS || '768', 10);
+        this.expectedDims = parseInt(process.env.EMBEDDING_DIMENSIONS || "768", 10);
         
         if (!this.endpoint) {
             throw new Error(`[ExternalEmbeddingService] EXTERNAL_EMBEDDING_ENDPOINT is not defined in .env`);
@@ -22,7 +22,7 @@ class ExternalEmbeddingService {
      * @returns {Promise<number[]>}
      */
     async embedText(text) {
-        if (!text?.trim()) throw new Error('[ExternalEmbeddingService] embedText: text must be a non-empty string');
+        if (!text?.trim()) throw new Error("[ExternalEmbeddingService] embedText: text must be a non-empty string");
         
         const vectors = await this.embedBatch([text]);
         return vectors[0];
@@ -41,10 +41,10 @@ class ExternalEmbeddingService {
      */
     async embedBatch(texts) {
         if (!Array.isArray(texts) || texts.length === 0) {
-            throw new Error('[ExternalEmbeddingService] embedBatch: texts must be a non-empty array');
+            throw new Error("[ExternalEmbeddingService] embedBatch: texts must be a non-empty array");
         }
 
-        const valid = texts.filter(t => typeof t === 'string' && t.trim());
+        const valid = texts.filter(t => typeof t === "string" && t.trim());
         if (valid.length !== texts.length) {
             console.warn(`[ExternalEmbeddingService] embedBatch: skipped ${texts.length - valid.length} empty items`);
         }
@@ -53,8 +53,8 @@ class ExternalEmbeddingService {
 
         try {
             const headers = { 
-                'Content-Type': 'application/json',
-                ...(this.apiKey && { 'Authorization': `Bearer ${this.apiKey}` })
+                "Content-Type": "application/json",
+                ...(this.apiKey && { "Authorization": `Bearer ${this.apiKey}` })
             };
 
             // Common payloads: HuggingFace uses { inputs }, OpenAI uses { input }
@@ -62,7 +62,7 @@ class ExternalEmbeddingService {
             const body = JSON.stringify({ inputs: valid });
 
             const response = await fetch(this.endpoint, {
-                method: 'POST',
+                method: "POST",
                 headers,
                 body
             });
@@ -109,7 +109,7 @@ class ExternalEmbeddingService {
      */
     async embedChunks(chunks) {
         if (!Array.isArray(chunks) || chunks.length === 0) {
-            throw new Error('[ExternalEmbeddingService] embedChunks: chunks must be a non-empty array');
+            throw new Error("[ExternalEmbeddingService] embedChunks: chunks must be a non-empty array");
         }
 
         const texts = chunks.map((c, i) => {
@@ -127,7 +127,7 @@ class ExternalEmbeddingService {
     _validateDims(vector, label) {
         if (!Array.isArray(vector) || vector.length !== this.expectedDims) {
             throw new Error(
-                `[ExternalEmbeddingService] ${label}: expected ${this.expectedDims} dims, got ${vector?.length ?? 'invalid'}`
+                `[ExternalEmbeddingService] ${label}: expected ${this.expectedDims} dims, got ${vector?.length ?? "invalid"}`
             );
         }
     }

@@ -20,14 +20,14 @@
  * so you can run the server without Redis in all other modes.
  */
 
-import path         from 'path';
-import { fork }     from 'child_process';
-import { fileURLToPath } from 'url';
+import path         from "path";
+import { fork }     from "child_process";
+import { fileURLToPath } from "url";
 
-import DocIngestionService from './doc_ingestion_service.mjs';
+import DocIngestionService from "./doc_ingestion_service.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const METHOD    = (process.env.DOC_INGESTION_METHOD || 'sync').toLowerCase();
+const METHOD    = (process.env.DOC_INGESTION_METHOD || "sync").toLowerCase();
 
 // ── Job shim ───────────────────────────────────────────────────────────────────
 
@@ -57,10 +57,10 @@ export async function dispatchIngestion({ documentId, filePath, mimeType, caseId
     switch (METHOD) {
 
         // ── BullMQ (Redis-backed queue) ─────────────────────────────────────────
-        case 'bullmq': {
+        case "bullmq": {
             // Lazily imported — Redis is only initialised when this mode is active
-            const { docIngestionQueue } = await import('../config/queue.mjs');
-            const job = await docIngestionQueue.add('ingest', {
+            const { docIngestionQueue } = await import("../config/queue.mjs");
+            const job = await docIngestionQueue.add("ingest", {
                 documentId, filePath, mimeType, caseId,
             });
             console.log(`[Dispatcher] Enqueued BullMQ job ${job.id} for document ${documentId}`);
@@ -68,8 +68,8 @@ export async function dispatchIngestion({ documentId, filePath, mimeType, caseId
         }
 
         // ── Spawn (one-shot child process) ──────────────────────────────────────
-        case 'spawn': {
-            const workerPath = path.resolve(__dirname, '../workers/ingest_once.mjs');
+        case "spawn": {
+            const workerPath = path.resolve(__dirname, "../workers/ingest_once.mjs");
             const child = fork(workerPath, [], {
                 env:      { ...process.env },
                 execArgv: [], // do NOT inherit --watch or other parent flags
@@ -77,7 +77,7 @@ export async function dispatchIngestion({ documentId, filePath, mimeType, caseId
 
             child.send({ documentId, filePath, mimeType });
 
-            child.on('exit', (code) => {
+            child.on("exit", (code) => {
                 if (code !== 0) {
                     console.error(
                         `[Dispatcher] ingest_once exited with code ${code} for document ${documentId}`,
@@ -85,7 +85,7 @@ export async function dispatchIngestion({ documentId, filePath, mimeType, caseId
                 }
             });
 
-            child.on('error', (err) => {
+            child.on("error", (err) => {
                 console.error(`[Dispatcher] fork error for document ${documentId}:`, err.message);
             });
 
@@ -95,7 +95,7 @@ export async function dispatchIngestion({ documentId, filePath, mimeType, caseId
         }
 
         // ── Sync (inline, blocking) ─────────────────────────────────────────────
-        case 'sync':
+        case "sync":
         default: {
             console.log(`[Dispatcher] Running sync ingestion for document ${documentId}`);
             const job = makeJobShim(documentId, filePath, mimeType);

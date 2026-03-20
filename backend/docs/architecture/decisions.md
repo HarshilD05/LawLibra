@@ -21,7 +21,7 @@ Use a single PostgreSQL instance with the `pgvector` extension. All relational d
 - ✅ One infrastructure piece to run, back up, and monitor
 - ✅ Joins between relational data and vector results are native SQL (no cross-DB coordination)
 - ✅ Case-scoped search is a simple `WHERE d.case_id = $1` clause — no equivalent in standalone vector DBs
-- ✅ HNSW index provides sub-millisecond ANN search sufficient for a single law firm's document volume
+- ✅ HNSW index provides sub-millisecond ANN search sufficient for a single law firm"s document volume
 - ⚠️ Does not scale to billions of vectors — acceptable for this use case; can migrate to Qdrant later if needed
 
 ---
@@ -32,7 +32,7 @@ Use a single PostgreSQL instance with the `pgvector` extension. All relational d
 **Status:** Accepted
 
 ### Context
-OpenAI's `text-embedding-3-small` uses 1536 dimensions. Local Ollama models (`nomic-embed-text`, `mxbai-embed-large`) use 768 dimensions. Changing vector dimensions after deployment requires dropping and recreating the HNSW index and re-embedding all documents.
+OpenAI"s `text-embedding-3-small` uses 1536 dimensions. Local Ollama models (`nomic-embed-text`, `mxbai-embed-large`) use 768 dimensions. Changing vector dimensions after deployment requires dropping and recreating the HNSW index and re-embedding all documents.
 
 ### Decision
 Standardise on **768 dimensions** now, using Google `text-embedding-004` for the prototype phase. The vector columns (`doc_chunks.embedding`, `documents.doc_embedding`) are defined as `vector(768)`.
@@ -106,7 +106,7 @@ Folders in LawLibra are nested (a folder can have sub-folders). Two storage path
 - ✅ Renaming a folder requires zero disk operations — only a DB `UPDATE folders SET name = $2`
 - ✅ Re-parenting (moving) a folder in the future requires only a DB `UPDATE folders SET parent_folder_id = $2` — zero disk ops
 - ✅ `storage_path` becomes a clean, short S3 key — no ancestor-chain resolution required for object storage migration
-- ✅ Finding a file's absolute path is a single function call: `path.join(DATA_DIR, storagePath)`
+- ✅ Finding a file"s absolute path is a single function call: `path.join(DATA_DIR, storagePath)`
 - ⚠️ The directory layout in `data/` does not visually reflect the folder hierarchy — acceptable since files are always accessed through the API, not by direct filesystem browsing
 
 ---

@@ -1,4 +1,4 @@
-import pool from '../config/db.mjs';
+import pool from "../config/db.mjs";
 
 /**
  * Case Model
@@ -53,7 +53,7 @@ export class Case {
      * @param {{ title, status, clientName, courtName, caseNumber, metadata, createdBy }}
      * @returns {Promise<Case>}
      */
-    static async create({ title, status = 'OPEN', clientName, courtName, caseNumber, metadata = {}, createdBy }) {
+    static async create({ title, status = "OPEN", clientName, courtName, caseNumber, metadata = {}, createdBy }) {
         const result = await pool.query(
             `INSERT INTO cases (title, status, client_name, court_name, case_number, metadata, created_by)
              VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -70,7 +70,7 @@ export class Case {
      */
     static async findById(id) {
         const result = await pool.query(
-            'SELECT * FROM cases WHERE id = $1',
+            "SELECT * FROM cases WHERE id = $1",
             [id]
         );
         return result.rows[0] ? new Case(result.rows[0]) : null;
@@ -90,7 +90,7 @@ export class Case {
             conditions.push(`status = $${params.length}`);
         }
 
-        const where = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+        const where = conditions.length ? `WHERE ${conditions.join(" AND ")}` : "";
 
         const [dataResult, countResult] = await Promise.all([
             pool.query(
@@ -113,7 +113,7 @@ export class Case {
      * @returns {Promise<{ cases: Case[], total: number }>}
      */
     static async getByLawyerId(lawyerId, { limit = 20, offset = 0, status } = {}) {
-        const conditions = ['ca.lawyer_id = $1'];
+        const conditions = ["ca.lawyer_id = $1"];
         const params     = [lawyerId];
 
         if (status) {
@@ -121,7 +121,7 @@ export class Case {
             conditions.push(`c.status = $${params.length}`);
         }
 
-        const where = `WHERE ${conditions.join(' AND ')}`;
+        const where = `WHERE ${conditions.join(" AND ")}`;
 
         const [dataResult, countResult] = await Promise.all([
             pool.query(
@@ -163,12 +163,12 @@ export class Case {
             }
         };
 
-        set('title',       title);
-        set('status',      status);
-        set('client_name', clientName);
-        set('court_name',  courtName);
-        set('case_number', caseNumber);
-        set('metadata',    metadata);
+        set("title",       title);
+        set("status",      status);
+        set("client_name", clientName);
+        set("court_name",  courtName);
+        set("case_number", caseNumber);
+        set("metadata",    metadata);
 
         if (fields.length === 0) return null;
 
@@ -176,7 +176,7 @@ export class Case {
         params.push(id);
 
         const result = await pool.query(
-            `UPDATE cases SET ${fields.join(', ')} WHERE id = $${params.length} RETURNING *`,
+            `UPDATE cases SET ${fields.join(", ")} WHERE id = $${params.length} RETURNING *`,
             params
         );
         return result.rows[0] ? new Case(result.rows[0]) : null;
@@ -188,7 +188,7 @@ export class Case {
      * @returns {Promise<boolean>}
      */
     static async deleteById(id) {
-        const result = await pool.query('DELETE FROM cases WHERE id = $1', [id]);
+        const result = await pool.query("DELETE FROM cases WHERE id = $1", [id]);
         return result.rowCount > 0;
     }
 
@@ -199,7 +199,7 @@ export class Case {
      * already assigned, the access level is updated (upsert).
      * @param {string} caseId
      * @param {string} lawyerId
-     * @param {'VIEW'|'EDIT'|'ADMIN'} accessLevel
+     * @param {"VIEW"|"EDIT"|"ADMIN"} accessLevel
      * @returns {Promise<object>} The assignment row
      */
     static async assignLawyer(caseId, lawyerId, accessLevel) {
@@ -215,14 +215,14 @@ export class Case {
     }
 
     /**
-     * Removes a lawyer's assignment from a case.
+     * Removes a lawyer"s assignment from a case.
      * @param {string} caseId
      * @param {string} lawyerId
      * @returns {Promise<boolean>}
      */
     static async removeAssignment(caseId, lawyerId) {
         const result = await pool.query(
-            'DELETE FROM case_assignments WHERE case_id = $1 AND lawyer_id = $2',
+            "DELETE FROM case_assignments WHERE case_id = $1 AND lawyer_id = $2",
             [caseId, lawyerId]
         );
         return result.rowCount > 0;
@@ -249,11 +249,11 @@ export class Case {
      * Returns the access level of a specific lawyer on a case, or null if not assigned.
      * @param {string} caseId
      * @param {string} lawyerId
-     * @returns {Promise<'VIEW'|'EDIT'|'ADMIN'|null>}
+     * @returns {Promise<"VIEW"|"EDIT"|"ADMIN"|null>}
      */
     static async getLawyerAccessLevel(caseId, lawyerId) {
         const result = await pool.query(
-            'SELECT access_level FROM case_assignments WHERE case_id = $1 AND lawyer_id = $2',
+            "SELECT access_level FROM case_assignments WHERE case_id = $1 AND lawyer_id = $2",
             [caseId, lawyerId]
         );
         return result.rows[0]?.access_level ?? null;

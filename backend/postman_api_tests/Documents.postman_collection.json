@@ -78,7 +78,7 @@
             {
               "key": "folderId",
               "value": "",
-              "description": "UUID of a folder to filter by. Send 'null' (literal string) for root-only docs. Omit entirely for all folders."
+              "description": "UUID of a folder to filter by. Send "null" (literal string) for root-only docs. Omit entirely for all folders."
             },
             {
               "key": "limit",

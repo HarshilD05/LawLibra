@@ -12,7 +12,7 @@
  * index sequence stays consistent even under concurrent requests.
  */
 
-import db from '../config/db.mjs';
+import db from "../config/db.mjs";
 
 // ─── ChatThread ───────────────────────────────────────────────────────────────
 
@@ -55,7 +55,7 @@ export class ChatThread {
             `INSERT INTO chat_threads (case_id, user_id, title)
              VALUES ($1, $2, $3)
              RETURNING *`,
-            [caseId, userId, title?.trim() || 'New Thread'],
+            [caseId, userId, title?.trim() || "New Thread"],
         );
         return new ChatThread(rows[0]);
     }
@@ -67,7 +67,7 @@ export class ChatThread {
      */
     static async findById(id) {
         const { rows } = await db.query(
-            'SELECT * FROM chat_threads WHERE id = $1',
+            "SELECT * FROM chat_threads WHERE id = $1",
             [id],
         );
         return rows[0] ? new ChatThread(rows[0]) : null;
@@ -96,7 +96,7 @@ export class ChatThread {
                 [caseId, limit, offset],
             ),
             db.query(
-                'SELECT COUNT(*) FROM chat_threads WHERE case_id = $1',
+                "SELECT COUNT(*) FROM chat_threads WHERE case_id = $1",
                 [caseId],
             ),
         ]);
@@ -134,7 +134,7 @@ export class ChatThread {
      */
     static async deleteById(id) {
         const { rows } = await db.query(
-            'DELETE FROM chat_threads WHERE id = $1 RETURNING *',
+            "DELETE FROM chat_threads WHERE id = $1 RETURNING *",
             [id],
         );
         return rows[0] ? new ChatThread(rows[0]) : null;
@@ -186,7 +186,7 @@ export class ChatMessage {
                 [threadId, limit, offset],
             ),
             db.query(
-                'SELECT COUNT(*) FROM chat_messages WHERE thread_id = $1',
+                "SELECT COUNT(*) FROM chat_messages WHERE thread_id = $1",
                 [threadId],
             ),
         ]);
@@ -228,25 +228,25 @@ export class ChatMessage {
      * on position_index when concurrent requests hit the same thread.
      *
      * @param {string}   threadId
-     * @param {string}   userContent    The user's question
-     * @param {string}   aiContent      The AI's response
+     * @param {string}   userContent    The user"s question
+     * @param {string}   aiContent      The AI"s response
      * @param {object[]|null} citations Array of citation objects to attach to AI message
      * @returns {Promise<{ userMessage: ChatMessage, aiMessage: ChatMessage }>}
      */
     static async addExchange(threadId, userContent, aiContent, citations = null) {
         const client = await db.connect();
         try {
-            await client.query('BEGIN');
+            await client.query("BEGIN");
 
             // Lock the thread row to serialise concurrent inserts
             await client.query(
-                'SELECT id FROM chat_threads WHERE id = $1 FOR UPDATE',
+                "SELECT id FROM chat_threads WHERE id = $1 FOR UPDATE",
                 [threadId],
             );
 
             // Determine next position_index
             const { rows: maxRows } = await client.query(
-                'SELECT COALESCE(MAX(position_index), -1) AS max_idx FROM chat_messages WHERE thread_id = $1',
+                "SELECT COALESCE(MAX(position_index), -1) AS max_idx FROM chat_messages WHERE thread_id = $1",
                 [threadId],
             );
             const nextIdx = parseInt(maxRows[0].max_idx, 10) + 1;
@@ -267,14 +267,14 @@ export class ChatMessage {
                 [threadId, nextIdx + 1, aiContent, citations ? JSON.stringify(citations) : null],
             );
 
-            await client.query('COMMIT');
+            await client.query("COMMIT");
 
             return {
                 userMessage: new ChatMessage(userRows[0]),
                 aiMessage:   new ChatMessage(aiRows[0]),
             };
         } catch (err) {
-            await client.query('ROLLBACK');
+            await client.query("ROLLBACK");
             throw err;
         } finally {
             client.release();

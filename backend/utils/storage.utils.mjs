@@ -16,18 +16,18 @@
  *   <caseId>/<folderId>/<uuid>.docx
  */
 
-import fs   from 'fs/promises';
-import path from 'path';
+import fs   from "fs/promises";
+import path from "path";
 
 // ─── Root directory ────────────────────────────────────────────────────────────
 // Resolve once at module load. DATA_DIR may be relative (resolved from CWD)
 // or absolute.
-const DATA_DIR = path.resolve(process.env.DATA_DIR || 'data');
+const DATA_DIR = path.resolve(process.env.DATA_DIR || "data");
 
 // ─── Path builders ─────────────────────────────────────────────────────────────
 
 /**
- * Absolute path to a case's root directory.
+ * Absolute path to a case"s root directory.
  * Created when a case is created; deleted when a case is deleted.
  *
  * @param {string} caseId
@@ -39,14 +39,14 @@ export function getCaseDirPath(caseId) {
 
 /**
  * Absolute path to the directory where a document should be stored.
- * folderId = null → maps to the 'root' subdirectory of the case.
+ * folderId = null → maps to the "root" subdirectory of the case.
  *
  * @param {string}      caseId
  * @param {string|null} folderId
  * @returns {string}
  */
 export function getDocumentDirPath(caseId, folderId) {
-    const folderSegment = folderId ?? 'root';
+    const folderSegment = folderId ?? "root";
     return path.join(DATA_DIR, caseId, folderSegment);
 }
 
@@ -60,7 +60,7 @@ export function getDocumentDirPath(caseId, folderId) {
  * @returns {string}  e.g. "abc-case-id/root/uuid.pdf"
  */
 export function getStoragePath(caseId, folderId, fileName) {
-    const folderSegment = folderId ?? 'root';
+    const folderSegment = folderId ?? "root";
     return path.join(caseId, folderSegment, fileName);
 }
 
@@ -78,7 +78,7 @@ export function resolveAbsolutePath(storagePath) {
 // ─── Filesystem helpers ────────────────────────────────────────────────────────
 
 /**
- * Creates a directory (and all parents) if it doesn't already exist.
+ * Creates a directory (and all parents) if it doesn"t already exist.
  */
 export async function ensureDir(dirPath) {
     await fs.mkdir(dirPath, { recursive: true });

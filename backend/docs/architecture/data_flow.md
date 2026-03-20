@@ -20,7 +20,7 @@ From the moment a user uploads a file to when its chunks are searchable in RAG q
 > 3. HTTP Server → PostgreSQL : validate caseId access + folderId ownership
 > 4. HTTP Server → Disk : `fs.rename` — move file to `data/<caseId>/<folderId>/`
 > 5. HTTP Server → PostgreSQL : `INSERT INTO documents` (status=PENDING)
-> 6. HTTP Server → Redis : `queue.add('ingest', { documentId, filePath, mimeType })`
+> 6. HTTP Server → Redis : `queue.add("ingest", { documentId, filePath, mimeType })`
 > 7. HTTP Server →→ Client : `202 Accepted { documentId, jobId, status: PENDING }`
 > 8. *(dashed separator line: "Background — Worker Process")*
 > 9. Redis → BullMQ Worker : dequeue job
@@ -86,7 +86,7 @@ SELECT
 FROM doc_chunks dc
 JOIN documents d ON d.id = dc.document_id
 WHERE d.case_id = $caseId          -- CRITICAL: case-scoped isolation
-  AND d.processing_status = 'DONE'
+  AND d.processing_status = "DONE"
 ORDER BY dc.embedding <=> $queryVector   -- HNSW cosine search
 LIMIT 5;
 ```

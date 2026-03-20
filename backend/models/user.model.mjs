@@ -1,4 +1,4 @@
-import pool from '../config/db.mjs';
+import pool from "../config/db.mjs";
 
 /**
  * User Model
@@ -6,7 +6,7 @@ import pool from '../config/db.mjs';
  * Represents a single user in the system.
  *
  * Usage:
- *   const user = await User.findByEmail('a@b.com');
+ *   const user = await User.findByEmail("a@b.com");
  *   if (user) console.log(user.toSafeObject());
  *
  *   const newUser = await User.create({ name, email, passwordHash, salt, role });
@@ -73,7 +73,7 @@ export class User {
      */
     static async findByEmail(email) {
         const result = await pool.query(
-            'SELECT * FROM users WHERE email = $1',
+            "SELECT * FROM users WHERE email = $1",
             [email]
         );
         return result.rows[0] ? new User(result.rows[0]) : null;
@@ -87,7 +87,7 @@ export class User {
      */
     static async findById(id) {
         const result = await pool.query(
-            'SELECT id, name, email, role, created_at, updated_at FROM users WHERE id = $1',
+            "SELECT id, name, email, role, created_at, updated_at FROM users WHERE id = $1",
             [id]
         );
         return result.rows[0] ? new User(result.rows[0]) : null;
@@ -123,7 +123,7 @@ export class User {
                  LIMIT $1 OFFSET $2`,
                 [limit, offset]
             ),
-            pool.query('SELECT COUNT(*) FROM users'),
+            pool.query("SELECT COUNT(*) FROM users"),
         ]);
         return {
             users: dataResult.rows.map((row) => new User(row)),
@@ -156,7 +156,7 @@ export class User {
      */
     static async deleteById(id) {
         const result = await pool.query(
-            'DELETE FROM users WHERE id = $1',
+            "DELETE FROM users WHERE id = $1",
             [id]
         );
         return result.rowCount > 0;

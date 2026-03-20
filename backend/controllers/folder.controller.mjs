@@ -18,15 +18,15 @@
  *   their documents automatically.
  */
 
-import Folder                    from '../models/folder.model.mjs';
-import { Case }                  from '../models/case.model.mjs';
+import Folder                    from "../models/folder.model.mjs";
+import { Case }                  from "../models/case.model.mjs";
 import {
     getDocumentDirPath,
     resolveAbsolutePath,
     ensureDir,
     deleteDirRecursive,
-} from '../utils/storage.utils.mjs';
-import fs from 'fs/promises';
+} from "../utils/storage.utils.mjs";
+import fs from "fs/promises";
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -38,7 +38,7 @@ async function resolveCaseAccess(caseId, reqUser) {
     const kase = await Case.findById(caseId);
     if (!kase) return null;
 
-    if (reqUser.role === 'ADMIN') return { kase, accessLevel: 'ADMIN' };
+    if (reqUser.role === "ADMIN") return { kase, accessLevel: "ADMIN" };
 
     const accessLevel = await Case.getLawyerAccessLevel(caseId, reqUser.id);
     if (!accessLevel) return null;
@@ -61,21 +61,21 @@ export const createFolder = async (req, res) => {
         const { caseId, name, parentFolderId: rawParent } = req.body;
         const parentFolderId = rawParent?.trim() || null;
 
-        if (!caseId?.trim()) return res.status(400).json({ error: 'caseId is required.' });
-        if (!name?.trim())   return res.status(400).json({ error: 'Folder name is required.' });
+        if (!caseId?.trim()) return res.status(400).json({ error: "caseId is required." });
+        if (!name?.trim())   return res.status(400).json({ error: "Folder name is required." });
 
         // Access: need EDIT or ADMIN
         const access = await resolveCaseAccess(caseId, req.user);
-        if (!access) return res.status(404).json({ error: 'Case not found or access denied.' });
-        if (access.accessLevel === 'VIEW') {
-            return res.status(403).json({ error: 'VIEW access is insufficient to create folders.' });
+        if (!access) return res.status(404).json({ error: "Case not found or access denied." });
+        if (access.accessLevel === "VIEW") {
+            return res.status(403).json({ error: "VIEW access is insufficient to create folders." });
         }
 
         // Validate parentFolderId belongs to the same case
         if (parentFolderId) {
             const parent = await Folder.findById(parentFolderId);
             if (!parent || parent.caseId !== caseId) {
-                return res.status(400).json({ error: 'parentFolderId does not belong to this case.' });
+                return res.status(400).json({ error: "parentFolderId does not belong to this case." });
             }
         }
 
@@ -92,8 +92,8 @@ export const createFolder = async (req, res) => {
         return res.status(201).json({ folder: folder.toObject() });
 
     } catch (err) {
-        console.error('[Folders] createFolder error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Folders] createFolder error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -102,24 +102,24 @@ export const createFolder = async (req, res) => {
 /**
  * GET /api/folders/tree?caseId=
  *
- * Returns the full nested folder tree for a case. The 'root' level (documents
+ * Returns the full nested folder tree for a case. The "root" level (documents
  * with folderId = null) is not represented here — it is implicit. Clients
  * should render it as a fixed "Root" node alongside this tree.
  */
 export const getFolderTree = async (req, res) => {
     try {
         const { caseId } = req.query;
-        if (!caseId) return res.status(400).json({ error: 'caseId query parameter is required.' });
+        if (!caseId) return res.status(400).json({ error: "caseId query parameter is required." });
 
         const access = await resolveCaseAccess(caseId, req.user);
-        if (!access) return res.status(404).json({ error: 'Case not found or access denied.' });
+        if (!access) return res.status(404).json({ error: "Case not found or access denied." });
 
         const tree = await Folder.getTreeByCaseId(caseId);
         return res.status(200).json({ tree });
 
     } catch (err) {
-        console.error('[Folders] getFolderTree error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Folders] getFolderTree error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -131,16 +131,16 @@ export const getFolderTree = async (req, res) => {
 export const getFolderById = async (req, res) => {
     try {
         const folder = await Folder.findById(req.params.id);
-        if (!folder) return res.status(404).json({ error: 'Folder not found.' });
+        if (!folder) return res.status(404).json({ error: "Folder not found." });
 
         const access = await resolveCaseAccess(folder.caseId, req.user);
-        if (!access) return res.status(403).json({ error: 'Access denied.' });
+        if (!access) return res.status(403).json({ error: "Access denied." });
 
         return res.status(200).json({ folder: folder.toObject() });
 
     } catch (err) {
-        console.error('[Folders] getFolderById error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Folders] getFolderById error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -155,23 +155,23 @@ export const getFolderById = async (req, res) => {
 export const renameFolder = async (req, res) => {
     try {
         const { name } = req.body;
-        if (!name?.trim()) return res.status(400).json({ error: 'New folder name is required.' });
+        if (!name?.trim()) return res.status(400).json({ error: "New folder name is required." });
 
         const folder = await Folder.findById(req.params.id);
-        if (!folder) return res.status(404).json({ error: 'Folder not found.' });
+        if (!folder) return res.status(404).json({ error: "Folder not found." });
 
         const access = await resolveCaseAccess(folder.caseId, req.user);
-        if (!access) return res.status(403).json({ error: 'Access denied.' });
-        if (access.accessLevel === 'VIEW') {
-            return res.status(403).json({ error: 'VIEW access is insufficient to rename folders.' });
+        if (!access) return res.status(403).json({ error: "Access denied." });
+        if (access.accessLevel === "VIEW") {
+            return res.status(403).json({ error: "VIEW access is insufficient to rename folders." });
         }
 
         const updated = await Folder.rename(req.params.id, name.trim());
         return res.status(200).json({ folder: updated.toObject() });
 
     } catch (err) {
-        console.error('[Folders] renameFolder error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Folders] renameFolder error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -191,12 +191,12 @@ export const renameFolder = async (req, res) => {
 export const deleteFolder = async (req, res) => {
     try {
         const folder = await Folder.findById(req.params.id);
-        if (!folder) return res.status(404).json({ error: 'Folder not found.' });
+        if (!folder) return res.status(404).json({ error: "Folder not found." });
 
         const access = await resolveCaseAccess(folder.caseId, req.user);
-        if (!access) return res.status(403).json({ error: 'Access denied.' });
-        if (access.accessLevel === 'VIEW') {
-            return res.status(403).json({ error: 'VIEW access is insufficient to delete folders.' });
+        if (!access) return res.status(403).json({ error: "Access denied." });
+        if (access.accessLevel === "VIEW") {
+            return res.status(403).json({ error: "VIEW access is insufficient to delete folders." });
         }
 
         // ── Step 1: Collect all file paths before the cascade wipes the DB rows ──
@@ -227,14 +227,14 @@ export const deleteFolder = async (req, res) => {
         await Promise.allSettled(diskCleanup);
 
         return res.status(200).json({
-            message:          'Folder deleted successfully.',
+            message:          "Folder deleted successfully.",
             filesRemoved:     storagePaths.length,
             foldersRemoved:   descendantIds.length,
         });
 
     } catch (err) {
-        console.error('[Folders] deleteFolder error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Folders] deleteFolder error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 

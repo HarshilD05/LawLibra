@@ -45,7 +45,7 @@ Creates a new case. **Admin only.**
 | :--- | :--- | :--- | :--- |
 | `title` | string | Yes | Human-readable case name |
 | `status` | string | No | `OPEN` (default), `CLOSED`, or `ARCHIVED` |
-| `clientName` | string | No | Name of the firm's client |
+| `clientName` | string | No | Name of the firm"s client |
 | `courtName` | string | No | Court where the case is filed |
 | `caseNumber` | string | No | Official court-assigned number |
 | `metadata` | object | No | Any additional key-value data |
@@ -310,7 +310,7 @@ Assigns a lawyer to a case with a specific access level. If the lawyer is alread
 
 ## 7. `DELETE /:id/assignments/:lawyerId`
 
-Removes a lawyer's assignment from a case. **Admin only.**
+Removes a lawyer"s assignment from a case. **Admin only.**
 
 ### URL Parameters
 

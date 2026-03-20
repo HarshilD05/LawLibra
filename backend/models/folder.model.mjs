@@ -12,7 +12,7 @@
  *   clients receive a ready-to-render nested structure.
  */
 
-import db from '../config/db.mjs';
+import db from "../config/db.mjs";
 
 class Folder {
     constructor(row) {
@@ -61,7 +61,7 @@ class Folder {
      */
     static async findById(id) {
         const { rows } = await db.query(
-            'SELECT * FROM folders WHERE id = $1',
+            "SELECT * FROM folders WHERE id = $1",
             [id],
         );
         return rows[0] ? new Folder(rows[0]) : null;
@@ -111,7 +111,7 @@ class Folder {
      */
     static async getFlatByCaseId(caseId) {
         const { rows } = await db.query(
-            'SELECT * FROM folders WHERE case_id = $1 ORDER BY name',
+            "SELECT * FROM folders WHERE case_id = $1 ORDER BY name",
             [caseId],
         );
         return rows.map(r => new Folder(r));
@@ -154,7 +154,7 @@ class Folder {
      */
     static async deleteById(id) {
         const { rows } = await db.query(
-            'DELETE FROM folders WHERE id = $1 RETURNING *',
+            "DELETE FROM folders WHERE id = $1 RETURNING *",
             [id],
         );
         return rows[0] ? new Folder(rows[0]) : null;

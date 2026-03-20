@@ -8,16 +8,16 @@
  * Do NOT run this file directly. It is invoked via child_process.fork() only.
  */
 
-import 'dotenv/config';
-import DocIngestionService from '../services/doc_ingestion_service.mjs';
+import "dotenv/config";
+import DocIngestionService from "../services/doc_ingestion_service.mjs";
 
 // Safety net: exit if the parent never sends a message (e.g. IPC setup error)
 const timeout = setTimeout(() => {
-    console.error('[IngestOnce] Timed out waiting for job data. Exiting.');
+    console.error("[IngestOnce] Timed out waiting for job data. Exiting.");
     process.exit(1);
 }, 30_000);
 
-process.on('message', async ({ documentId, filePath, mimeType }) => {
+process.on("message", async ({ documentId, filePath, mimeType }) => {
     clearTimeout(timeout);
 
     const job = {

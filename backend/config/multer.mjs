@@ -7,7 +7,7 @@
  *   2. Moving the file to its final destination (data/<caseId>/<folderId>/)
  *   3. Cleaning up the temp file if anything fails after the move
  *
- * This separation keeps multer config simple and ensures the file's final
+ * This separation keeps multer config simple and ensures the file"s final
  * location is determined by the controller (which has full request context),
  * not by the multer middleware (which runs before body validation).
  *
@@ -15,22 +15,22 @@
  * Accepted types: PDF, DOCX, DOC, TXT
  */
 
-import multer from 'multer';
-import path   from 'path';
-import fs     from 'fs';
-import { randomUUID } from 'crypto';
+import multer from "multer";
+import path   from "path";
+import fs     from "fs";
+import { randomUUID } from "crypto";
 
-const UPLOAD_TEMP_DIR = process.env.UPLOAD_TEMP_DIR || 'uploads/tmp';
+const UPLOAD_TEMP_DIR = process.env.UPLOAD_TEMP_DIR || "uploads/tmp";
 
 // Ensure the temp directory exists at module load time (synchronous is fine here)
 fs.mkdirSync(path.resolve(UPLOAD_TEMP_DIR), { recursive: true });
 
 // ─── Accepted MIME types ───────────────────────────────────────────────────────
 const ACCEPTED_MIME_TYPES = new Set([
-    'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
-    'application/msword',                                                       // .doc
-    'text/plain',
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+    "application/msword",                                                       // .doc
+    "text/plain",
 ]);
 
 // ─── Storage engine ────────────────────────────────────────────────────────────

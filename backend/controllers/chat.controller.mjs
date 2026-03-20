@@ -5,7 +5,7 @@
  *
  * Access rules:
  *   - Create thread / Send message : any case assignment (VIEW, EDIT, ADMIN)
- *     (Lawyers with VIEW access can still ask questions — they just can't upload)
+ *     (Lawyers with VIEW access can still ask questions — they just can"t upload)
  *   - List / Get thread / Get messages : any case assignment
  *   - Rename thread : thread owner OR Admin
  *   - Delete thread : thread owner OR Admin
@@ -17,12 +17,12 @@
  *   in DB. Surrounding transaction and response shape are unchanged.
  */
 
-import { ChatThread, ChatMessage }                    from '../models/chat.model.mjs';
-import { Case }                                        from '../models/case.model.mjs';
-import { HumanMessage, AIMessage, SystemMessage }      from '@langchain/core/messages';
-import db                                              from '../config/db.mjs';
-import { createEmbeddingService }                      from '../services/embedding_factory.mjs';
-import { createLLM }                                   from '../services/llm_factory.mjs';
+import { ChatThread, ChatMessage }                    from "../models/chat.model.mjs";
+import { Case }                                        from "../models/case.model.mjs";
+import { HumanMessage, AIMessage, SystemMessage }      from "@langchain/core/messages";
+import db                                              from "../config/db.mjs";
+import { createEmbeddingService }                      from "../services/embedding_factory.mjs";
+import { createLLM }                                   from "../services/llm_factory.mjs";
 
 // ─── RAG singletons (lazy-initialized on first chat request) ─────────────────
 // _llm is created lazily so the HTTP server starts even if the API key is
@@ -35,7 +35,7 @@ let _embeddingService   = null;
 async function resolveCaseAccess(caseId, reqUser) {
     const kase = await Case.findById(caseId);
     if (!kase) return null;
-    if (reqUser.role === 'ADMIN') return { kase, accessLevel: 'ADMIN' };
+    if (reqUser.role === "ADMIN") return { kase, accessLevel: "ADMIN" };
     const accessLevel = await Case.getLawyerAccessLevel(caseId, reqUser.id);
     if (!accessLevel) return null;
     return { kase, accessLevel };
@@ -76,14 +76,14 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
         _embeddingService = await createEmbeddingService();
     }
     const queryVector = await _embeddingService.embedText(userContent);
-    const pgVector    = `[${queryVector.join(',')}]`;
+    const pgVector    = `[${queryVector.join(",")}]`;
 
     // ── 3. Similarity-thresholded vector search — case-scoped, max 10 ─────────
     // RAG_SIMILARITY_THRESHOLD: cosine similarity floor (0–1).
     // Only chunks with similarity >= threshold are returned, capped at 10.
     // Legal RAG benefits from broad, high-quality context — 10 sources at 0.65
     // strikes the right balance between precision and recall.
-    const threshold = parseFloat(process.env.RAG_SIMILARITY_THRESHOLD ?? '0.65');
+    const threshold = parseFloat(process.env.RAG_SIMILARITY_THRESHOLD ?? "0.65");
 
     const { rows: chunks } = await db.query(
         `SELECT
@@ -109,26 +109,26 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
     if (chunks.length === 0) {
         return {
             aiContent:
-                'No sufficiently relevant documents were found in this case to answer your question. ' +
-                'Please ensure the relevant documents have been uploaded and fully processed, ' +
-                'or try rephrasing your query with different keywords.',
+                "No sufficiently relevant documents were found in this case to answer your question. " +
+                "Please ensure the relevant documents have been uploaded and fully processed, " +
+                "or try rephrasing your query with different keywords.",
             citations: null,
         };
     }
 
     // ── 5. Build LangChain messages array ─────────────────────────────────────
     const systemPrompt =
-        'You are a precise legal AI assistant for a law firm.\n' +
-        'Your answers must be based ONLY on the numbered source excerpts provided in the user message.\n\n' +
-        'Rules:\n' +
-        '- Answer strictly from the provided sources. Do NOT use external knowledge or assumptions.\n' +
-        '- Every factual claim MUST be cited as [Doc: <document name>, Page <page number>].\n' +
-        '- If the sources do not contain enough information to fully answer, state that explicitly — do NOT guess or infer.\n' +
-        '- Be concise, professional, and precise. Legal accuracy is critical.';
+        "You are a precise legal AI assistant for a law firm.\n" +
+        "Your answers must be based ONLY on the numbered source excerpts provided in the user message.\n\n" +
+        "Rules:\n" +
+        "- Answer strictly from the provided sources. Do NOT use external knowledge or assumptions.\n" +
+        "- Every factual claim MUST be cited as [Doc: <document name>, Page <page number>].\n" +
+        "- If the sources do not contain enough information to fully answer, state that explicitly — do NOT guess or infer.\n" +
+        "- Be concise, professional, and precise. Legal accuracy is critical.";
 
     // Map stored conversation history to LangChain message types
     const historyMessages = conversationHistory.map(msg =>
-        msg.senderType === 'USER'
+        msg.senderType === "USER"
             ? new HumanMessage(msg.content)
             : new AIMessage(msg.content)
     );
@@ -139,7 +139,7 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
             `[${i + 1}] "${c.original_name}" — Page ${c.page_number} ` +
             `(similarity: ${parseFloat(c.similarity).toFixed(2)})\n${c.original_text}`
         )
-        .join('\n\n---\n\n');
+        .join("\n\n---\n\n");
 
     const finalUserMessage = new HumanMessage(
         `SOURCES:\n${sourcesBlock}\n\nQUESTION: ${userContent}`
@@ -155,11 +155,11 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
     const response  = await _llm.invoke(messages);
 
     // Normalize content — some providers return structured parts instead of a plain string
-    const aiContent = typeof response.content === 'string'
+    const aiContent = typeof response.content === "string"
         ? response.content
         : response.content
-            .map(part => (typeof part === 'string' ? part : (part.text ?? '')))
-            .join('');
+            .map(part => (typeof part === "string" ? part : (part.text ?? "")))
+            .join("");
 
     // ── 7. Build citations array (stored in chat_messages.citations JSONB) ────
     const citations = chunks.map(c => ({
@@ -183,17 +183,17 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
 export const createThread = async (req, res) => {
     try {
         const { caseId, title } = req.body;
-        if (!caseId?.trim()) return res.status(400).json({ error: 'caseId is required.' });
+        if (!caseId?.trim()) return res.status(400).json({ error: "caseId is required." });
 
         const access = await resolveCaseAccess(caseId, req.user);
-        if (!access) return res.status(404).json({ error: 'Case not found or access denied.' });
+        if (!access) return res.status(404).json({ error: "Case not found or access denied." });
 
         const thread = await ChatThread.create({ caseId, userId: req.user.id, title });
         return res.status(201).json({ thread: thread.toObject() });
 
     } catch (err) {
-        console.error('[Chat] createThread error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Chat] createThread error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -205,10 +205,10 @@ export const createThread = async (req, res) => {
 export const getThreads = async (req, res) => {
     try {
         const { caseId } = req.query;
-        if (!caseId) return res.status(400).json({ error: 'caseId query parameter is required.' });
+        if (!caseId) return res.status(400).json({ error: "caseId query parameter is required." });
 
         const access = await resolveCaseAccess(caseId, req.user);
-        if (!access) return res.status(404).json({ error: 'Case not found or access denied.' });
+        if (!access) return res.status(404).json({ error: "Case not found or access denied." });
 
         const limit  = Math.min(parseInt(req.query.limit)  || 20, 100);
         const offset = Math.max(parseInt(req.query.offset) || 0,  0);
@@ -221,8 +221,8 @@ export const getThreads = async (req, res) => {
         });
 
     } catch (err) {
-        console.error('[Chat] getThreads error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Chat] getThreads error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -233,16 +233,16 @@ export const getThreads = async (req, res) => {
 export const getThreadById = async (req, res) => {
     try {
         const thread = await ChatThread.findById(req.params.id);
-        if (!thread) return res.status(404).json({ error: 'Thread not found.' });
+        if (!thread) return res.status(404).json({ error: "Thread not found." });
 
         const access = await resolveCaseAccess(thread.caseId, req.user);
-        if (!access) return res.status(403).json({ error: 'Access denied.' });
+        if (!access) return res.status(403).json({ error: "Access denied." });
 
         return res.status(200).json({ thread: thread.toObject() });
 
     } catch (err) {
-        console.error('[Chat] getThreadById error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Chat] getThreadById error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -254,25 +254,25 @@ export const getThreadById = async (req, res) => {
 export const renameThread = async (req, res) => {
     try {
         const { title } = req.body;
-        if (!title?.trim()) return res.status(400).json({ error: 'title is required.' });
+        if (!title?.trim()) return res.status(400).json({ error: "title is required." });
 
         const thread = await ChatThread.findById(req.params.id);
-        if (!thread) return res.status(404).json({ error: 'Thread not found.' });
+        if (!thread) return res.status(404).json({ error: "Thread not found." });
 
         const access = await resolveCaseAccess(thread.caseId, req.user);
-        if (!access) return res.status(403).json({ error: 'Access denied.' });
+        if (!access) return res.status(403).json({ error: "Access denied." });
 
-        // Only the thread's creator or an Admin may rename it
-        if (req.user.role !== 'ADMIN' && thread.userId !== req.user.id) {
-            return res.status(403).json({ error: 'Only the thread owner or an Admin can rename this thread.' });
+        // Only the thread"s creator or an Admin may rename it
+        if (req.user.role !== "ADMIN" && thread.userId !== req.user.id) {
+            return res.status(403).json({ error: "Only the thread owner or an Admin can rename this thread." });
         }
 
         const updated = await ChatThread.updateTitle(req.params.id, title.trim());
         return res.status(200).json({ thread: updated.toObject() });
 
     } catch (err) {
-        console.error('[Chat] renameThread error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Chat] renameThread error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -283,21 +283,21 @@ export const renameThread = async (req, res) => {
 export const deleteThread = async (req, res) => {
     try {
         const thread = await ChatThread.findById(req.params.id);
-        if (!thread) return res.status(404).json({ error: 'Thread not found.' });
+        if (!thread) return res.status(404).json({ error: "Thread not found." });
 
         const access = await resolveCaseAccess(thread.caseId, req.user);
-        if (!access) return res.status(403).json({ error: 'Access denied.' });
+        if (!access) return res.status(403).json({ error: "Access denied." });
 
-        if (req.user.role !== 'ADMIN' && thread.userId !== req.user.id) {
-            return res.status(403).json({ error: 'Only the thread owner or an Admin can delete this thread.' });
+        if (req.user.role !== "ADMIN" && thread.userId !== req.user.id) {
+            return res.status(403).json({ error: "Only the thread owner or an Admin can delete this thread." });
         }
 
         await ChatThread.deleteById(req.params.id);
-        return res.status(200).json({ message: 'Thread deleted successfully.' });
+        return res.status(200).json({ message: "Thread deleted successfully." });
 
     } catch (err) {
-        console.error('[Chat] deleteThread error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Chat] deleteThread error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -310,10 +310,10 @@ export const deleteThread = async (req, res) => {
 export const getMessages = async (req, res) => {
     try {
         const thread = await ChatThread.findById(req.params.id);
-        if (!thread) return res.status(404).json({ error: 'Thread not found.' });
+        if (!thread) return res.status(404).json({ error: "Thread not found." });
 
         const access = await resolveCaseAccess(thread.caseId, req.user);
-        if (!access) return res.status(403).json({ error: 'Access denied.' });
+        if (!access) return res.status(403).json({ error: "Access denied." });
 
         const limit  = Math.min(parseInt(req.query.limit)  || 50, 200);
         const offset = Math.max(parseInt(req.query.offset) || 0,  0);
@@ -326,8 +326,8 @@ export const getMessages = async (req, res) => {
         });
 
     } catch (err) {
-        console.error('[Chat] getMessages error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Chat] getMessages error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };
 
@@ -336,7 +336,7 @@ export const getMessages = async (req, res) => {
  * Body: { content }
  * Any assigned user.
  *
- * Stores the user's message, calls _generateAIResponse(), stores the AI reply,
+ * Stores the user"s message, calls _generateAIResponse(), stores the AI reply,
  * and returns both in one response. The entire exchange is atomic — both
  * messages are written in a single DB transaction.
  *
@@ -345,13 +345,13 @@ export const getMessages = async (req, res) => {
 export const sendMessage = async (req, res) => {
     try {
         const { content } = req.body;
-        if (!content?.trim()) return res.status(400).json({ error: 'Message content is required.' });
+        if (!content?.trim()) return res.status(400).json({ error: "Message content is required." });
 
         const thread = await ChatThread.findById(req.params.id);
-        if (!thread) return res.status(404).json({ error: 'Thread not found.' });
+        if (!thread) return res.status(404).json({ error: "Thread not found." });
 
         const access = await resolveCaseAccess(thread.caseId, req.user);
-        if (!access) return res.status(403).json({ error: 'Access denied.' });
+        if (!access) return res.status(403).json({ error: "Access denied." });
 
         // Fetch recent history for multi-turn LLM context (last 10 messages)
         const history = await ChatMessage.getRecentHistory(req.params.id, 10);
@@ -377,7 +377,7 @@ export const sendMessage = async (req, res) => {
         });
 
     } catch (err) {
-        console.error('[Chat] sendMessage error:', err.message);
-        return res.status(500).json({ error: 'Internal server error.' });
+        console.error("[Chat] sendMessage error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
     }
 };

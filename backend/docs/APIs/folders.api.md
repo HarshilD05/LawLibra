@@ -149,7 +149,7 @@ Returns metadata for a single folder.
 
 | Status | Error | Cause |
 | :--- | :--- | :--- |
-| `403` | `Access denied.` | Requester has no assignment on the folder's case |
+| `403` | `Access denied.` | Requester has no assignment on the folder"s case |
 | `404` | `Folder not found.` | No folder with that ID |
 | `500` | `Internal server error.` | Unexpected failure |
 

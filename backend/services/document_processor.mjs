@@ -9,22 +9,22 @@
  *   unreliable for legal documents where citation accuracy is critical.
  */
 
-import fs from 'fs/promises';
-import path from 'path';
-import mammoth from 'mammoth';
+import fs from "fs/promises";
+import path from "path";
+import mammoth from "mammoth";
 // pdfjs-dist v5 default build targets browsers and requires DOM APIs (DOMMatrix etc.).
-// The 'legacy' build strips browser dependencies and works in plain Node.js.
-import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
+// The "legacy" build strips browser dependencies and works in plain Node.js.
+import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
 
 // In Node.js, the legacy build disables real web workers internally and falls
-// back to pdfjs's built-in fake-worker path. Do not overwrite workerSrc here:
+// back to pdfjs"s built-in fake-worker path. Do not overwrite workerSrc here:
 // setting it to an empty string breaks the internal fallback resolution.
 
 export const SUPPORTED_MIME_TYPES = {
-    PDF:  'application/pdf',
-    DOCX: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    DOC:  'application/msword',
-    TXT:  'text/plain',
+    PDF:  "application/pdf",
+    DOCX: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    DOC:  "application/msword",
+    TXT:  "text/plain",
 };
 
 class DocumentProcessor {
@@ -35,7 +35,7 @@ class DocumentProcessor {
      * @returns {Promise<Array<{text: string, pageNo: number}>>}
      */
     static async extractPageTexts(filePath, mimeType) {
-        if (!filePath || !mimeType) throw new Error('filePath and mimeType are required');
+        if (!filePath || !mimeType) throw new Error("filePath and mimeType are required");
 
         try {
             await fs.access(filePath);
@@ -53,7 +53,7 @@ class DocumentProcessor {
                 return this._extractFromTXT(filePath);
             default:
                 throw new Error(
-                    `Unsupported file type: ${mimeType}. Supported: ${this.getSupportedExtensions().join(', ')}`
+                    `Unsupported file type: ${mimeType}. Supported: ${this.getSupportedExtensions().join(", ")}`
                 );
         }
     }
@@ -78,12 +78,12 @@ class DocumentProcessor {
             const page        = await pdfDoc.getPage(pageNo);
             const textContent = await page.getTextContent();
 
-            // Each TextItem has a 'str' field. Items on the same line are
+            // Each TextItem has a "str" field. Items on the same line are
             // separate objects; we join them with a space and insert newlines
             // when the vertical position changes significantly.
             let lastY   = null;
             let lines   = [];
-            let current = '';
+            let current = "";
 
             for (const item of textContent.items) {
                 const y = item.transform[5]; // vertical position
@@ -93,13 +93,13 @@ class DocumentProcessor {
                     if (current.trim()) lines.push(current.trim());
                     current = item.str;
                 } else {
-                    current += (current ? ' ' : '') + item.str;
+                    current += (current ? " " : "") + item.str;
                 }
                 lastY = y;
             }
             if (current.trim()) lines.push(current.trim());
 
-            const pageText = lines.join('\n').trim();
+            const pageText = lines.join("\n").trim();
 
             if (pageText) {
                 pageTexts.push({ text: pageText, pageNo });
@@ -138,7 +138,7 @@ class DocumentProcessor {
             pageTexts             = [];
 
             for (let i = 0; i < paragraphs.length; i += PARAS_PER_PAGE) {
-                const pageText = paragraphs.slice(i, i + PARAS_PER_PAGE).join('\n\n').trim();
+                const pageText = paragraphs.slice(i, i + PARAS_PER_PAGE).join("\n\n").trim();
                 if (pageText) pageTexts.push({ text: pageText, pageNo: Math.floor(i / PARAS_PER_PAGE) + 1 });
             }
         }
@@ -160,7 +160,7 @@ class DocumentProcessor {
     static async _extractFromTXT(filePath) {
         console.log(`[DocumentProcessor] TXT: ${path.basename(filePath)}`);
 
-        const text     = await fs.readFile(filePath, 'utf-8');
+        const text     = await fs.readFile(filePath, "utf-8");
         const sections = text.split(/\n{4,}/).filter(s => s.trim());
 
         let pageTexts;
@@ -169,7 +169,7 @@ class DocumentProcessor {
             pageTexts = sections.map((text, i) => ({ text: text.trim(), pageNo: i + 1 }));
         } else {
             const MAX_CHARS = 3000;
-            const lines     = text.split('\n');
+            const lines     = text.split("\n");
             pageTexts       = [];
             let current     = [];
             let charCount   = 0;
@@ -179,12 +179,12 @@ class DocumentProcessor {
                 current.push(line);
                 charCount += line.length;
                 if (charCount >= MAX_CHARS) {
-                    pageTexts.push({ text: current.join('\n').trim(), pageNo: pageNo++ });
+                    pageTexts.push({ text: current.join("\n").trim(), pageNo: pageNo++ });
                     current   = [];
                     charCount = 0;
                 }
             }
-            if (current.length) pageTexts.push({ text: current.join('\n').trim(), pageNo });
+            if (current.length) pageTexts.push({ text: current.join("\n").trim(), pageNo });
         }
 
         if (pageTexts.length === 0 && text.trim()) {
@@ -200,10 +200,10 @@ class DocumentProcessor {
     static getMimeTypeFromFilename(filename) {
         const ext = path.extname(filename).toLowerCase();
         return {
-            '.pdf':  SUPPORTED_MIME_TYPES.PDF,
-            '.docx': SUPPORTED_MIME_TYPES.DOCX,
-            '.doc':  SUPPORTED_MIME_TYPES.DOC,
-            '.txt':  SUPPORTED_MIME_TYPES.TXT,
+            ".pdf":  SUPPORTED_MIME_TYPES.PDF,
+            ".docx": SUPPORTED_MIME_TYPES.DOCX,
+            ".doc":  SUPPORTED_MIME_TYPES.DOC,
+            ".txt":  SUPPORTED_MIME_TYPES.TXT,
         }[ext] ?? null;
     }
 
@@ -212,7 +212,7 @@ class DocumentProcessor {
     }
 
     static getSupportedExtensions() {
-        return ['.pdf', '.docx', '.doc', '.txt'];
+        return [".pdf", ".docx", ".doc", ".txt"];
     }
 }
 

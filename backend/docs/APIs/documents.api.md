@@ -175,7 +175,7 @@ Returns full metadata for a single document, including current processing status
 
 | Status | Error | Cause |
 | :--- | :--- | :--- |
-| `403` | `Access denied.` | No assignment on the document's case |
+| `403` | `Access denied.` | No assignment on the document"s case |
 | `404` | `Document not found.` | No document with that ID |
 | `500` | `Internal server error.` | Unexpected failure |
 

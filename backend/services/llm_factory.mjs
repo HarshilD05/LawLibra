@@ -9,7 +9,7 @@
  *                         Default: gemini
  *
  *   LLM_MODEL             Optional model name override.
- *                         Falls back to the provider's built-in default.
+ *                         Falls back to the provider"s built-in default.
  *
  *   {PROVIDER}_API_KEY    e.g. GEMINI_API_KEY, GROQ_API_KEY, OPENAI_API_KEY,
  *                         ANTHROPIC_API_KEY. Not required for ollama.
@@ -32,37 +32,37 @@
 
 const PROVIDER_CONFIG = {
     gemini: {
-        pkg:          '@langchain/google-genai',
-        className:    'ChatGoogleGenerativeAI',
-        defaultModel: 'gemini-2.0-flash',
-        apiKeyEnv:    'GEMINI_API_KEY',
+        pkg:          "@langchain/google-genai",
+        className:    "ChatGoogleGenerativeAI",
+        defaultModel: "gemini-2.0-flash",
+        apiKeyEnv:    "GEMINI_API_KEY",
         buildArgs:    (apiKey, model) => ({ apiKey, model }),
     },
     groq: {
-        pkg:          '@langchain/groq',
-        className:    'ChatGroq',
-        defaultModel: 'llama-3.3-70b-versatile',
-        apiKeyEnv:    'GROQ_API_KEY',
+        pkg:          "@langchain/groq",
+        className:    "ChatGroq",
+        defaultModel: "llama-3.3-70b-versatile",
+        apiKeyEnv:    "GROQ_API_KEY",
         buildArgs:    (apiKey, model) => ({ apiKey, model }),
     },
     openai: {
-        pkg:          '@langchain/openai',
-        className:    'ChatOpenAI',
-        defaultModel: 'gpt-4o-mini',
-        apiKeyEnv:    'OPENAI_API_KEY',
+        pkg:          "@langchain/openai",
+        className:    "ChatOpenAI",
+        defaultModel: "gpt-4o-mini",
+        apiKeyEnv:    "OPENAI_API_KEY",
         buildArgs:    (apiKey, model) => ({ openAIApiKey: apiKey, modelName: model }),
     },
     anthropic: {
-        pkg:          '@langchain/anthropic',
-        className:    'ChatAnthropic',
-        defaultModel: 'claude-3-5-haiku-20241022',
-        apiKeyEnv:    'ANTHROPIC_API_KEY',
+        pkg:          "@langchain/anthropic",
+        className:    "ChatAnthropic",
+        defaultModel: "claude-3-5-haiku-20241022",
+        apiKeyEnv:    "ANTHROPIC_API_KEY",
         buildArgs:    (apiKey, model) => ({ anthropicApiKey: apiKey, model }),
     },
     ollama: {
-        pkg:          '@langchain/ollama',
-        className:    'ChatOllama',
-        defaultModel: 'llama3.2',
+        pkg:          "@langchain/ollama",
+        className:    "ChatOllama",
+        defaultModel: "llama3.2",
         apiKeyEnv:    null,          // no API key needed for local Ollama
         buildArgs:    (_key, model) => ({ model }),
     },
@@ -75,7 +75,7 @@ const PROVIDER_CONFIG = {
  * Provider and model name are resolved from .env unless overridden.
  *
  * @param {{ provider?: string, model?: string }} [opts]
- * @returns {Promise<import('@langchain/core/language_models/chat_models').BaseChatModel>}
+ * @returns {Promise<import("@langchain/core/language_models/chat_models").BaseChatModel>}
  *
  * @example
  * // Reads LLM_PROVIDER + LLM_MODEL from .env automatically
@@ -83,16 +83,16 @@ const PROVIDER_CONFIG = {
  *
  * @example
  * // Explicit override
- * const llm = await createLLM({ provider: 'groq', model: 'llama-3.3-70b-versatile' });
+ * const llm = await createLLM({ provider: "groq", model: "llama-3.3-70b-versatile" });
  */
 export async function createLLM({ provider, model } = {}) {
-    const providerName = (provider || process.env.LLM_PROVIDER || 'gemini').toLowerCase();
+    const providerName = (provider || process.env.LLM_PROVIDER || "gemini").toLowerCase();
     const config       = PROVIDER_CONFIG[providerName];
 
     if (!config) {
         throw new Error(
             `[LLMFactory] Unknown provider: "${providerName}". ` +
-            `Supported: ${Object.keys(PROVIDER_CONFIG).join(', ')}`
+            `Supported: ${Object.keys(PROVIDER_CONFIG).join(", ")}`
         );
     }
 

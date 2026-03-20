@@ -18,16 +18,16 @@
  * so BullMQ can apply its retry/backoff policy.
  */
 
-import Document, { PROCESSING_STATUS } from '../models/document.model.mjs';
-import DocumentProcessor              from './document_processor.mjs';
-import DocumentUtils                  from './document_utils.mjs';
-import { createEmbeddingService }     from './embedding_factory.mjs';
+import Document, { PROCESSING_STATUS } from "../models/document.model.mjs";
+import DocumentProcessor              from "./document_processor.mjs";
+import DocumentUtils                  from "./document_utils.mjs";
+import { createEmbeddingService }     from "./embedding_factory.mjs";
 
 class DocIngestionService {
     /**
      * Main entry point called by the BullMQ worker.
      *
-     * @param {import('bullmq').Job} job
+     * @param {import("bullmq").Job} job
      *   job.data must contain: { documentId, filePath, mimeType }
      */
     static async process(job) {
@@ -51,7 +51,7 @@ class DocIngestionService {
             await job.updateProgress(30);
 
             if (!pageTexts || pageTexts.length === 0) {
-                throw new Error('No text could be extracted from the document.');
+                throw new Error("No text could be extracted from the document.");
             }
 
             const pageCount = pageTexts.length;
@@ -62,7 +62,7 @@ class DocIngestionService {
             await job.updateProgress(50);
 
             if (!chunks || chunks.length === 0) {
-                throw new Error('Document produced no chunks after processing.');
+                throw new Error("Document produced no chunks after processing.");
             }
 
             // ── Step 4: Generate embeddings ───────────────────────────────────────
@@ -92,7 +92,7 @@ class DocIngestionService {
                 documentId,
                 PROCESSING_STATUS.FAILED,
                 err.message,
-            ).catch(() => {}); // don't mask the original error
+            ).catch(() => {}); // don"t mask the original error
 
             throw err; // re-throw so BullMQ applies retry/backoff
 
@@ -105,12 +105,12 @@ class DocIngestionService {
 
 /**
  * Small helper to update only the page_count field.
- * Avoids touching summary/embedding which aren't ready yet at this stage.
+ * Avoids touching summary/embedding which aren"t ready yet at this stage.
  */
 async function db_updatePageCount(documentId, pageCount) {
-    const db = (await import('../config/db.mjs')).default;
+    const db = (await import("../config/db.mjs")).default;
     await db.query(
-        'UPDATE documents SET page_count = $2, updated_at = CURRENT_TIMESTAMP WHERE id = $1',
+        "UPDATE documents SET page_count = $2, updated_at = CURRENT_TIMESTAMP WHERE id = $1",
         [documentId, pageCount],
     );
 }

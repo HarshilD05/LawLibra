@@ -10,15 +10,15 @@
  * DELETE /api/folders/:id              — Delete folder + all descendants + their files
  */
 
-import { Router }       from 'express';
-import { authenticate } from '../middleware/auth.middleware.mjs';
+import { Router }       from "express";
+import { authenticate } from "../middleware/auth.middleware.mjs";
 import {
     createFolder,
     getFolderTree,
     getFolderById,
     renameFolder,
     deleteFolder,
-} from '../controllers/folder.controller.mjs';
+} from "../controllers/folder.controller.mjs";
 
 const router = Router();
 
@@ -26,11 +26,11 @@ router.use(authenticate);
 
 // NOTE: /tree must be defined BEFORE /:id or Express will try to match
 // the string "tree" as a folder UUID and return 404.
-router.get('/tree', getFolderTree);
+router.get("/tree", getFolderTree);
 
-router.post('/',    createFolder);
-router.get('/:id',  getFolderById);
-router.patch('/:id', renameFolder);
-router.delete('/:id', deleteFolder);
+router.post("/",    createFolder);
+router.get("/:id",  getFolderById);
+router.patch("/:id", renameFolder);
+router.delete("/:id", deleteFolder);
 
 export default router;

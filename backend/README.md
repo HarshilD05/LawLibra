@@ -49,9 +49,9 @@ JWT_EXPIRES_IN=8h
 Open `config/init/init_db.mjs` and set the three constants at the top to match your Postgres credentials:
 
 ```js
-const PGSQL_USER     = 'postgres';
-const PGSQL_PASSWORD = 'yourpassword';
-const DB_NAME        = 'lawlibra';
+const PGSQL_USER     = "postgres";
+const PGSQL_PASSWORD = "yourpassword";
+const DB_NAME        = "lawlibra";
 ```
 
 Then run:
