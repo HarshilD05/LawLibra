@@ -21,7 +21,7 @@
 import Document, { PROCESSING_STATUS } from '../models/document.model.mjs';
 import DocumentProcessor              from './document_processor.mjs';
 import DocumentUtils                  from './document_utils.mjs';
-import EmbeddingService               from './embedding_service.mjs';
+import { createEmbeddingService }     from './embedding_factory.mjs';
 
 class DocIngestionService {
     /**
@@ -67,7 +67,7 @@ class DocIngestionService {
 
             // ── Step 4: Generate embeddings ───────────────────────────────────────
             console.log(`[Ingestion] Embedding ${chunks.length} chunks`);
-            const embeddingService = new EmbeddingService();
+            const embeddingService = await createEmbeddingService();
             const embeddedChunks   = await embeddingService.embedChunks(chunks);
             await job.updateProgress(80);
 

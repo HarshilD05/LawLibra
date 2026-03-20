@@ -8,6 +8,7 @@
     "db:init": "node config/init/init_db.mjs"
   },
   "dependencies": {
+    "@google/genai": "^1.45.0",
     "@langchain/core": "^1.1.28",
     "@langchain/google-genai": "^2.1.20",
     "@langchain/groq": "^1.1.2",
@@ -22,6 +23,7 @@
     "mammoth": "^1.11.0",
     "multer": "^2.0.2",
     "natural": "^8.1.0",
+    "ollama": "^0.6.3",
     "pdfjs-dist": "^5.4.624",
     "pg": "^8.18.0"
   }

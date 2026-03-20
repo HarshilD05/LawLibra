@@ -1,8 +1,11 @@
+import 'dotenv/config';
 import express from 'express';
-import dotenv from 'dotenv';
+
+import { initOllama } from './config/ollama.mjs';
+await initOllama();
+
 import mainRouter from './routes/main_router.mjs';
 
-dotenv.config();
 
 const app  = express();
 const PORT = process.env.PORT || 3000;

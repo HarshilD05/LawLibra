@@ -16,8 +16,9 @@ import mammoth from 'mammoth';
 // The 'legacy' build strips browser dependencies and works in plain Node.js.
 import * as pdfjsLib from 'pdfjs-dist/legacy/build/pdf.mjs';
 
-// Disable the web-worker entirely — Node.js runs PDF parsing on the same thread.
-pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+// In Node.js, the legacy build disables real web workers internally and falls
+// back to pdfjs's built-in fake-worker path. Do not overwrite workerSrc here:
+// setting it to an empty string breaks the internal fallback resolution.
 
 export const SUPPORTED_MIME_TYPES = {
     PDF:  'application/pdf',

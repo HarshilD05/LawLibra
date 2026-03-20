@@ -28,9 +28,6 @@
  * that provider is actually requested.
  */
 
-import dotenv from 'dotenv';
-dotenv.config();
-
 // ─── Provider registry ────────────────────────────────────────────────────────
 
 const PROVIDER_CONFIG = {

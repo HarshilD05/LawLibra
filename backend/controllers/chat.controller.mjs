@@ -21,14 +21,14 @@ import { ChatThread, ChatMessage }                    from '../models/chat.model
 import { Case }                                        from '../models/case.model.mjs';
 import { HumanMessage, AIMessage, SystemMessage }      from '@langchain/core/messages';
 import db                                              from '../config/db.mjs';
-import EmbeddingService                                from '../services/embedding_service.mjs';
+import { createEmbeddingService }                      from '../services/embedding_factory.mjs';
 import { createLLM }                                   from '../services/llm_factory.mjs';
 
 // ─── RAG singletons (lazy-initialized on first chat request) ─────────────────
 // _llm is created lazily so the HTTP server starts even if the API key is
 // missing — the error surfaces only when a message is actually sent.
 let _llm                = null;
-const _embeddingService = new EmbeddingService();
+let _embeddingService   = null;
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -72,6 +72,9 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
     }
 
     // ── 2. Embed the user query ───────────────────────────────────────────────
+    if (!_embeddingService) {
+        _embeddingService = await createEmbeddingService();
+    }
     const queryVector = await _embeddingService.embedText(userContent);
     const pgVector    = `[${queryVector.join(',')}]`;
 
