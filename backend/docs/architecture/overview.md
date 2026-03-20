@@ -45,7 +45,7 @@ A crash in the worker never affects the HTTP server. They share the same Postgre
 | Vector index | HNSW (pgvector) | Sub-millisecond approximate nearest-neighbour search at moderate scale |
 | Job queue | BullMQ + Redis | Persistent jobs, retries, backoff, worker isolation |
 | Auth | JWT + PBKDF2-SHA512 | Stateless tokens; strong password hashing via Node built-ins (no extra lib) |
-| Embeddings | Google text-embedding-004 | 768 dims — matches Ollama `nomic-embed-text` for a zero-schema-migration local swap |
+| Embeddings | Configurable (Google Gemini, Local Ollama, External APIs) | 768 dims — factory pattern supports zero-schema-migration swapping between providers (e.g., from Google to Ollama nomic-embed-text). Unified .embed() interface simplifies integration. |
 | PDF extraction | pdfjs-dist | Page-accurate extraction (critical for legal citations) |
 | DOCX extraction | mammoth | Clean raw text from Word documents |
 | Keyword extraction | TF-IDF (`natural`) | Hybrid search keywords at zero API cost |

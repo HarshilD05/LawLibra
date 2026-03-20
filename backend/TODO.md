@@ -7,8 +7,11 @@
   - Investigate CPU starvation protection for regex/chunking on malicious documents (e.g., `AbortController` or worker_threads with a timeout)
   - Consider running `pdfjs-dist` extraction inside a `worker_thread` so a crash/hang doesn"t kill the BullMQ worker process itself
 
+## Documentation
+- [ ] **Create Documentation for Redis and Bull MQ Setup guide**
+
 ## Embeddings
-- [ ] **Migrate from Google text-embedding-004 to local Ollama (nomic-embed-text)**
+- [x] **Migrate from Google text-embedding-004 to local Ollama (nomic-embed-text)**
   - Both use 768 dimensions — schema migration is NOT required
   - Only change needed: swap the `EmbeddingService` constructor (`GoogleGenerativeAIEmbeddings` → `OllamaEmbeddings`)
   - Ensure Ollama is running as a local service before switching

@@ -4,17 +4,17 @@
  * Creates the appropriate embedding service instance based on the .env configuration.
  *
  * ─── Required .env vars ────────────────────────────────────────────────────────
- *   EMBEDDING_METHOD    google | external | local
+ *   EMBEDDING_METHOD    google | external | ollama_local
  *                       Default: google
  *
  *   EMBEDDING_DIMENSIONS Expected dimensions (default 768)
  *
  * ─── Provider configurations ───────────────────────────────────────────────────
- *   Method      File                             Required Env
- *   ─────────── ──────────────────────────────── ────────────────────────────────
- *   google      embedding_service.mjs            GOOGLE_EMBEDDER_API_KEY
- *   local       local_embedding_service.mjs      OLLAMA_BASE_URL (optional)
- *   external    external_embedding_service.mjs   EXTERNAL_EMBEDDING_ENDPOINT
+ *   Method       File                             Required Env
+ *   ──────────── ──────────────────────────────── ────────────────────────────────
+ *   google       embedding_service.mjs            GOOGLE_EMBEDDER_API_KEY
+ *   ollama_local local_embedding_service.mjs      OLLAMA_BASE_URL (optional)
+ *   external     external_embedding_service.mjs   EXTERNAL_EMBEDDING_ENDPOINT
  */
 
 const EMBEDDING_METHOD = (process.env.EMBEDDING_METHOD || "google").toLowerCase();

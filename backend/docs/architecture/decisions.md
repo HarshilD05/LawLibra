@@ -26,22 +26,22 @@ Use a single PostgreSQL instance with the `pgvector` extension. All relational d
 
 ---
 
-## ADR-002: 768-dimensional embeddings with Google text-embedding-004
+## ADR-002: Configurable 768-dimensional embedding providers
 
-**Date:** 2026-02  
+**Date:** 2026-03  
 **Status:** Accepted
 
 ### Context
 OpenAI"s `text-embedding-3-small` uses 1536 dimensions. Local Ollama models (`nomic-embed-text`, `mxbai-embed-large`) use 768 dimensions. Changing vector dimensions after deployment requires dropping and recreating the HNSW index and re-embedding all documents.
 
 ### Decision
-Standardise on **768 dimensions** now, using Google `text-embedding-004` for the prototype phase. The vector columns (`doc_chunks.embedding`, `documents.doc_embedding`) are defined as `vector(768)`.
+Standardise on **768 dimensions** now. An Embedding Factory allows configuring the embedding service (`google`, `ollama_local` for Ollama, or `external` API) freely via the `.env` without triggering a database schema rebuild.
 
 ### Consequences
-- ✅ Migrating to Ollama `nomic-embed-text` (local, zero API cost) requires changing only `EmbeddingService` constructor — **zero schema migration**
+- ✅ A unified `embed(texts, isQuery)` interface ensures that Google Gemini models gracefully switch between `RETRIEVAL_DOCUMENT` and `QUESTION_ANSWERING` task types.
+- ✅ Migrating to Ollama `nomic-embed-text` (local, zero API cost) requires changing only `.env` settings (`EMBEDDING_METHOD=ollama_local`) — **zero schema migration**
 - ✅ Google API provides high quality embeddings during development without requiring local GPU
-- ⚠️ Google API key required and incurs cost per token until local migration happens
-- 📋 See [TODO.md](../../TODO.md) for the Ollama migration checklist
+- ⚠️ Google API key continues to incur costs per token when selected as the primary provider method
 
 ---
 

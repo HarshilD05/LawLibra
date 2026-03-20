@@ -29,20 +29,8 @@ npm install
 cp .env.example .env
 ```
 
-Open `.env` and fill in your values:
+Open `.env` and fill in your values. For detailed information on configuring the Database, LLM, Embeddings, and ingestion methods, please read the [Environment Configuration Guide](docs/ENV_Configuration.md).
 
-```env
-PORT=3000
-
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=lawlibra
-DB_USER=postgres
-DB_PASSWORD=yourpassword
-
-JWT_SECRET=your_super_secret_key_minimum_32_chars
-JWT_EXPIRES_IN=8h
-```
 
 ### 3. Initialise the Database
 
@@ -78,5 +66,6 @@ The server will be available at `http://localhost:3000`.
 
 ## Documentation
 
+- [Environment Configuration Guide](docs/ENV_Configuration.md) — Detailed `.env` setup instructions
 - [Data Models](docs/data_models.md) — Database schema in tabular format
 - [API Reference](docs/APIs/apis.md) — All REST API endpoints
