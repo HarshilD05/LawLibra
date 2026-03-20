@@ -169,7 +169,7 @@ class DocumentUtils {
 
     /**
      * Master pipeline: clean → chunk → TF-IDF keywords.
-     * Returns chunks ready to be passed to EmbeddingService.embedChunks().
+     * Returns chunks ready to be passed to embedding service.
      *
      * @param {Array<{text: string, pageNo: number}>} pageTexts
      *   Raw output from DocumentProcessor.extractPageTexts()

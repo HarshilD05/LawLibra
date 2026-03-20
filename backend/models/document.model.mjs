@@ -163,7 +163,7 @@ class Document {
      *   { text, pageNo, keywords: string[], embedding: number[] }
      *
      * @param {string}   documentId
-     * @param {Array}    chunks       Output of EmbeddingService.embedChunks()
+     * @param {Array}    chunks       Output of embedding service mapped onto chunks
      */
     static async insertChunks(documentId, chunks) {
         if (!chunks || chunks.length === 0) return;

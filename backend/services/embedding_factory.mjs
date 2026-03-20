@@ -31,7 +31,7 @@ export async function createEmbeddingService() {
 
     try {
         switch (EMBEDDING_METHOD) {
-            case "local": {
+            case "ollama_local": {
                 const { default: LocalEmbeddingService } = await import("./local_embedding_service.mjs");
                 return new LocalEmbeddingService();
             }
@@ -43,9 +43,9 @@ export async function createEmbeddingService() {
 
             case "google":
             default: {
-                // Currently resides in embedding_service.mjs
-                // NOTE: If you rename it to google_embedding_service.mjs later, update this import!
-                const { default: GoogleEmbeddingService } = await import("./embedding_service.mjs");
+                // Currently resides in google_embedding_service.mjs
+                // NOTE: If you rename it later, update this import!
+                const { default: GoogleEmbeddingService } = await import("./google_embedding_service.mjs");
                 return new GoogleEmbeddingService();
             }
         }

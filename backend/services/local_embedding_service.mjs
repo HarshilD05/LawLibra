@@ -47,36 +47,26 @@ class LocalEmbeddingService {
     }
 
     /**
-     * Embed a single query/text string.
-     * @param {string} text
-     * @returns {Promise<number[]>} 768-dimensional vector
-     */
-    async embedText(text) {
-        if (!text?.trim()) throw new Error("[LocalEmbeddingService] embedText: text must be a non-empty string");
-        
-        const vectors = await this.embedBatch([text]);
-        return vectors[0];
-    }
-
-    /**
-     * Embed an array of texts in one call using Ollama"s batch embedding endpoint.
+     * Embed an array of texts.
      * @param {string[]} texts
+     * @param {boolean} isQuery - Determines task type. For local ollama models, this parameter might be ignored
+     *                            or mapped later if specific models require different prompts.
      * @returns {Promise<number[][]>} Array of 768-dimensional vectors
      */
-    async embedBatch(texts) {
+    async embed(texts, isQuery = false) {
         if (!Array.isArray(texts) || texts.length === 0) {
-            throw new Error("[LocalEmbeddingService] embedBatch: texts must be a non-empty array");
+            throw new Error("[LocalEmbeddingService] embed: texts must be a non-empty array");
         }
 
         const valid = texts.filter(t => typeof t === "string" && t.trim());
         if (valid.length !== texts.length) {
-            console.warn(`[LocalEmbeddingService] embedBatch: skipped ${texts.length - valid.length} empty items`);
+            console.warn(`[LocalEmbeddingService] embed: skipped ${texts.length - valid.length} empty items`);
         }
 
         // Before sending the payload, aggressively check if the service is up
         await this.checkConnection();
 
-        console.log(`[LocalEmbeddingService] Embedding batch of ${valid.length} chunks via Ollama...`);
+        console.log(`[LocalEmbeddingService] Embedding batch of ${valid.length} chunks via Ollama (isQuery: ${isQuery})...`);
 
         try {
             // Using the official Ollama JS package
@@ -98,29 +88,9 @@ class LocalEmbeddingService {
             return embeddings;
 
         } catch (err) {
-            console.error(`[LocalEmbeddingService] embedBatch failed:`, err.message);
+            console.error(`[LocalEmbeddingService] embed failed:`, err.message);
             throw err;
         }
-    }
-
-    /**
-     * Attach embeddings to an array of chunk objects.
-     * @param {Array<{text: string, [key: string]: any}>} chunks
-     * @returns {Promise<Array<{embedding: number[], [key: string]: any}>>}
-     */
-    async embedChunks(chunks) {
-        if (!Array.isArray(chunks) || chunks.length === 0) {
-            throw new Error("[LocalEmbeddingService] embedChunks: chunks must be a non-empty array");
-        }
-
-        const texts = chunks.map((c, i) => {
-            if (!c.text?.trim()) throw new Error(`[LocalEmbeddingService] chunk[${i}] has no valid text`);
-            return c.text;
-        });
-
-        const vectors = await this.embedBatch(texts);
-
-        return chunks.map((chunk, i) => ({ ...chunk, embedding: vectors[i] }));
     }
 
     // ─── Private Helpers ─────────────────────────────────────────────────────────

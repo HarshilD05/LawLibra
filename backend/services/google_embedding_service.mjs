@@ -22,7 +22,7 @@
 import { GoogleGenAI } from "@google/genai";
 
 const EXPECTED_DIMS = 768;
-const EMBEDDING_BATCH_SIZE = 100;
+const EMBEDDING_BATCH_SIZE = parseInt(process.env.EMBEDDING_BATCH_SIZE || "100", 10);
 const MODEL_NAME    = "gemini-embedding-2-preview";
 
 // Task type string constants as defined by the Google Gemini Embeddings API.
@@ -48,45 +48,23 @@ class EmbeddingService {
     }
 
     /**
-     * Embed a single chat / Q&A query.
-     * Uses QUESTION_ANSWERING task type — optimised for finding documents that answer the question.
-     * @param {string} text
-     * @returns {Promise<number[]>} 768-dimensional vector
-     */
-    async embedText(text) {
-        if (!text?.trim()) throw new Error("[EmbeddingService] embedText: text must be a non-empty string");
-
-        const response = await this.ai.models.embedContent({
-            model: MODEL_NAME,
-            contents: text,
-            config: {
-                taskType: TASK_QUESTION_ANSWERING,
-                outputDimensionality: EXPECTED_DIMS
-            }
-        });
-        
-        const vector = response.embeddings[0].values;
-        this._validateDims(vector, "embedText");
-        return vector;
-    }
-
-    /**
-     * Embed an array of document chunk texts in a single batched API call.
-     * Uses RETRIEVAL_DOCUMENT task type — optimised for indexing into the vector DB.
+     * Embed an array of texts.
      * @param {string[]} texts
+     * @param {boolean} isQuery - Determines taskType: true -> QUESTION_ANSWERING, false -> RETRIEVAL_DOCUMENT
      * @returns {Promise<number[][]>} Array of 768-dimensional vectors
      */
-    async embedBatch(texts) {
+    async embed(texts, isQuery = false) {
         if (!Array.isArray(texts) || texts.length === 0) {
-            throw new Error("[EmbeddingService] embedBatch: texts must be a non-empty array");
+            throw new Error("[EmbeddingService] embed: texts must be a non-empty array");
         }
 
         const valid = texts.filter(t => typeof t === "string" && t.trim());
         if (valid.length !== texts.length) {
-            console.warn(`[EmbeddingService] embedBatch: skipped ${texts.length - valid.length} empty items`);
+            console.warn(`[EmbeddingService] embed: skipped ${texts.length - valid.length} empty items`);
         }
 
-        console.log(`[EmbeddingService] Embedding batch of ${valid.length} document chunks (${TASK_RETRIEVAL_DOCUMENT})...`);
+        const taskType = isQuery ? TASK_QUESTION_ANSWERING : TASK_RETRIEVAL_DOCUMENT;
+        console.log(`[EmbeddingService] Embedding batch of ${valid.length} items (Task: ${taskType})...`);
 
         try {
             // Google"s batchEmbedContents typically limits requests to 100 chunks at a time.
@@ -101,7 +79,7 @@ class EmbeddingService {
                     model: MODEL_NAME,
                     contents: batch,
                     config: {
-                        taskType: TASK_RETRIEVAL_DOCUMENT,
+                        taskType: taskType,
                         outputDimensionality: EXPECTED_DIMS
                     }
                 });
@@ -126,31 +104,10 @@ class EmbeddingService {
 
         } catch (err) {
             console.warn(
-                `[EmbeddingService] embedDocuments failed (${err.message}). Falling back to per-text calls.`,
+                `[EmbeddingService] embed failed (${err.message}). Falling back to per-text calls.`,
             );
-            return await this._embedOneByOne(valid, err);
+            return await this._embedOneByOne(valid, taskType, err);
         }
-    }
-
-    /**
-     * Attach embeddings to an array of chunk objects.
-     * Extracts the "text" field, runs a single batch call, then merges back.
-     * @param {Array<{text: string, [key: string]: any}>} chunks
-     * @returns {Promise<Array<{embedding: number[], [key: string]: any}>>}
-     */
-    async embedChunks(chunks) {
-        if (!Array.isArray(chunks) || chunks.length === 0) {
-            throw new Error("[EmbeddingService] embedChunks: chunks must be a non-empty array");
-        }
-
-        const texts = chunks.map((c, i) => {
-            if (!c.text?.trim()) throw new Error(`[EmbeddingService] chunk[${i}] has no valid text`);
-            return c.text;
-        });
-
-        const vectors = await this.embedBatch(texts);
-
-        return chunks.map((chunk, i) => ({ ...chunk, embedding: vectors[i] }));
     }
 
     // ─── Private Helpers ─────────────────────────────────────────────────────────
@@ -166,18 +123,16 @@ class EmbeddingService {
     /**
      * Fallback: embed documents one-by-one using single embedContent calls
      * when the batch API fails or returns empty vectors.
-     * Still uses RETRIEVAL_DOCUMENT task type (docEmbedder).
      */
-    async _embedOneByOne(texts, batchError = null) {
+    async _embedOneByOne(texts, taskType, batchError = null) {
         try {
             const vectors = [];
             for (let i = 0; i < texts.length; i++) {
-                // embedContent still uses RETRIEVAL_DOCUMENT task type for fallback
                 const response = await this.ai.models.embedContent({
                     model: MODEL_NAME,
                     contents: texts[i],
                     config: {
-                        taskType: TASK_RETRIEVAL_DOCUMENT,
+                        taskType: taskType,
                         outputDimensionality: EXPECTED_DIMS
                     }
                 });

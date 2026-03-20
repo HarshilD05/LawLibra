@@ -68,7 +68,11 @@ class DocIngestionService {
             // ── Step 4: Generate embeddings ───────────────────────────────────────
             console.log(`[Ingestion] Embedding ${chunks.length} chunks`);
             const embeddingService = await createEmbeddingService();
-            const embeddedChunks   = await embeddingService.embedChunks(chunks);
+            
+            const chunkTexts = chunks.map(c => c.text);
+            const vectors = await embeddingService.embed(chunkTexts, false); // false for RETRIEVAL_DOCUMENT
+            const embeddedChunks = chunks.map((chunk, i) => ({ ...chunk, embedding: vectors[i] }));
+            
             await job.updateProgress(80);
 
             // ── Step 5: Store chunks in DB ────────────────────────────────────────

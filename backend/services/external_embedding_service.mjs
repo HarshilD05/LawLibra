@@ -17,39 +17,22 @@ class ExternalEmbeddingService {
     }
 
     /**
-     * Embed a single query/text string.
-     * @param {string} text
-     * @returns {Promise<number[]>}
-     */
-    async embedText(text) {
-        if (!text?.trim()) throw new Error("[ExternalEmbeddingService] embedText: text must be a non-empty string");
-        
-        const vectors = await this.embedBatch([text]);
-        return vectors[0];
-    }
-
-    /**
-     * Embed an array of texts in one call using the external API.
-     * 
-     * NOTE: The payload payload formatting may vary depending on the 
-     * external service (OpenAI-compatible vs HuggingFace vs custom Colab).
-     * This implementation assumes a generic { inputs: [...] } or { input: [...] } structure
-     * returning { embeddings: [...] } or a flat array of arrays.
-     * 
+     * Embed an array of texts.
      * @param {string[]} texts
+     * @param {boolean} isQuery - Query flag. Can be mapped to specific prompt variables depending on external service.
      * @returns {Promise<number[][]>}
      */
-    async embedBatch(texts) {
+    async embed(texts, isQuery = false) {
         if (!Array.isArray(texts) || texts.length === 0) {
-            throw new Error("[ExternalEmbeddingService] embedBatch: texts must be a non-empty array");
+            throw new Error("[ExternalEmbeddingService] embed: texts must be a non-empty array");
         }
 
         const valid = texts.filter(t => typeof t === "string" && t.trim());
         if (valid.length !== texts.length) {
-            console.warn(`[ExternalEmbeddingService] embedBatch: skipped ${texts.length - valid.length} empty items`);
+            console.warn(`[ExternalEmbeddingService] embed: skipped ${texts.length - valid.length} empty items`);
         }
 
-        console.log(`[ExternalEmbeddingService] Embedding batch of ${valid.length} chunks via External API...`);
+        console.log(`[ExternalEmbeddingService] Embedding batch of ${valid.length} chunks via External API (isQuery: ${isQuery})...`);
 
         try {
             const headers = { 
@@ -58,7 +41,7 @@ class ExternalEmbeddingService {
             };
 
             // Common payloads: HuggingFace uses { inputs }, OpenAI uses { input }
-            // Feel free to modify the body structure based on your specific backend.
+            // Modify if external backend handles isQuery or taskType specifics
             const body = JSON.stringify({ inputs: valid });
 
             const response = await fetch(this.endpoint, {
@@ -97,29 +80,9 @@ class ExternalEmbeddingService {
             return embeddings;
 
         } catch (err) {
-            console.error(`[ExternalEmbeddingService] embedBatch failed:`, err.message);
+            console.error(`[ExternalEmbeddingService] embed failed:`, err.message);
             throw err;
         }
-    }
-
-    /**
-     * Attach embeddings to an array of chunk objects.
-     * @param {Array<{text: string, [key: string]: any}>} chunks
-     * @returns {Promise<Array<{embedding: number[], [key: string]: any}>>}
-     */
-    async embedChunks(chunks) {
-        if (!Array.isArray(chunks) || chunks.length === 0) {
-            throw new Error("[ExternalEmbeddingService] embedChunks: chunks must be a non-empty array");
-        }
-
-        const texts = chunks.map((c, i) => {
-            if (!c.text?.trim()) throw new Error(`[ExternalEmbeddingService] chunk[${i}] has no valid text`);
-            return c.text;
-        });
-
-        const vectors = await this.embedBatch(texts);
-
-        return chunks.map((chunk, i) => ({ ...chunk, embedding: vectors[i] }));
     }
 
     // ─── Private Helpers ─────────────────────────────────────────────────────────

@@ -75,7 +75,7 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
     if (!_embeddingService) {
         _embeddingService = await createEmbeddingService();
     }
-    const queryVector = await _embeddingService.embedText(userContent);
+    const [queryVector] = await _embeddingService.embed([userContent], true); // true for QUESTION_ANSWERING
     const pgVector    = `[${queryVector.join(",")}]`;
 
     // ── 3. Similarity-thresholded vector search — case-scoped, max 10 ─────────
