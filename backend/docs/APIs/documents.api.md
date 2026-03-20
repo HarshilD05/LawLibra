@@ -22,7 +22,8 @@ The HTTP response for upload is always `202 Accepted` — check `GET /:id` to po
 | POST | [`/upload`](#1-post-upload) | EDIT \| ADMIN | Upload a document and queue ingestion |
 | GET | [`/`](#2-get-) | VIEW+ | List documents for a case |
 | GET | [`/:id`](#3-get-id) | VIEW+ | Get a single document + processing status |
-| DELETE | [`/:id`](#4-delete-id) | EDIT \| ADMIN | Delete document, file, and all chunks |
+| GET | [`/:id/chunks`](#4-get-idchunks) | VIEW+ | Get all semantic chunks extracted from the document |
+| DELETE | [`/:id`](#5-delete-id) | EDIT \| ADMIN | Delete document, file, and all chunks |
 
 ---
 
@@ -181,7 +182,50 @@ Returns full metadata for a single document, including current processing status
 
 ---
 
-## 4. `DELETE /:id`
+## 4. `GET /:id/chunks`
+
+Returns all semantic chunks extracted from a specific document. The response includes text, keywords, and page numbers, but excludes the full dimension vector arrays for performance. 
+
+This endpoint is particularly useful for debugging extraction quality, checking which keywords were assigned via TF-IDF, or manually tracing RAG mapping.
+
+### Success Response — `200 OK`
+
+```json
+{
+  "chunks": [
+    {
+      "id": "abc123d4-...",
+      "document_id": "d1e2f3g4-...",
+      "chunk_index": 0,
+      "page_number": 1,
+      "original_text": "This is the first segment of text pulled from the document...",
+      "keywords": ["plaintiff", "testimony", "affidavit"],
+      "created_at": "2026-03-20T10:00:00.000Z"
+    },
+    {
+      "id": "abc123d5-...",
+      "document_id": "d1e2f3g4-...",
+      "chunk_index": 1,
+      "page_number": 2,
+      "original_text": "Continuing on the next page with overlapping context...",
+      "keywords": ["jurisdiction", "court"],
+      "created_at": "2026-03-20T10:00:00.000Z"
+    }
+  ]
+}
+```
+
+### Error Responses
+
+| Status | Error | Cause |
+| :--- | :--- | :--- |
+| `403` | `Access denied.` | No assignment on the document"s case |
+| `404` | `Document not found.` | No document with that ID |
+| `500` | `Internal server error.` | Unexpected failure |
+
+---
+
+## 5. `DELETE /:id`
 
 Permanently deletes the document, its physical file on disk, and all ingestion chunks from the database. **This operation is irreversible.**
 

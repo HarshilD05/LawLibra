@@ -74,7 +74,7 @@ export const uploadDocument = async (req, res) => {
         }
 
         if (!req.file) {
-            return res.status(400).json({ error: "No file provided. Use field name "document"." });
+            return res.status(400).json({ error: "No file provided. Use field name \"document\"." });
         }
 
         // ── Access check — EDIT or ADMIN required to upload ───────────────────
@@ -216,6 +216,31 @@ export const getDocumentById = async (req, res) => {
 
     } catch (err) {
         console.error("[Documents] getDocumentById error:", err.message);
+        return res.status(500).json({ error: "Internal server error." });
+    }
+};
+
+/**
+ * GET /api/documents/:id/chunks
+ * Returns all extracted chunks for a given document.
+ */
+export const getDocumentChunks = async (req, res) => {
+    try {
+        const doc = await Document.findById(req.params.id);
+        if (!doc) {
+            return res.status(404).json({ error: "Document not found." });
+        }
+
+        const access = await resolveCaseAccess(doc.caseId, req.user);
+        if (!access) {
+            return res.status(403).json({ error: "Access denied." });
+        }
+
+        const chunks = await Document.getChunksByDocumentId(doc.id);
+        return res.status(200).json({ chunks });
+
+    } catch (err) {
+        console.error("[Documents] getDocumentChunks error:", err.message);
         return res.status(500).json({ error: "Internal server error." });
     }
 };

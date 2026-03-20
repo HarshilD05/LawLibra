@@ -38,7 +38,7 @@ class EmbeddingService {
 
         // Initialize the new Google GenAI client
         this.ai = new GoogleGenAI({
-            apiKey: process.env.GOOGLE_EMBEDDER_API_KEY,
+            apiKey: process.env.GOOGLE_EMBEDDING_API_KEY,
         });
 
         console.log(

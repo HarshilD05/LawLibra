@@ -198,6 +198,24 @@ class Document {
         }
     }
 
+    /**
+     * Retrieve all chunks for a specific document without their dense embeddings.
+     * Orders chunks sequentially by their chunk_index.
+     *
+     * @param {string} documentId
+     * @returns {Promise<Array>} Array of chunk objects
+     */
+    static async getChunksByDocumentId(documentId) {
+        const { rows } = await db.query(
+            `SELECT id, document_id, chunk_index, page_number, original_text, keywords, created_at
+             FROM doc_chunks
+             WHERE document_id = $1
+             ORDER BY chunk_index ASC`,
+            [documentId]
+        );
+        return rows;
+    }
+
     // ─── Delete ──────────────────────────────────────────────────────────────────
 
     /**

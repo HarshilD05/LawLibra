@@ -58,14 +58,14 @@ The system converts raw text and query text into dense vector arrays. To maintai
 
 | Variable | Default | Description |
 | :--- | :--- | :--- |
-| `EMBEDDING_METHOD` | `google` | The embedding provider to use. Options: `google`, `local` (Ollama), `external`. |
+| `EMBEDDING_METHOD` | `google` | The embedding provider to use. Options: `google`, `ollama_local`, `external`. |
 | `EMBEDDING_DIMENSIONS` | `768` | Fixed constraint size for your pgvector queries. |
 | `EMBEDDING_BATCH_SIZE` | `100` | The chunked batch size for sending text snippets to embedding endpoint. |
 
 ### Method-Specific Requirements:
 - **Google** (`EMBEDDING_METHOD="google"`):
   - `GOOGLE_EMBEDDER_API_KEY`: Required. Generates embeddings via Google Gemini models.
-- **Local** (`EMBEDDING_METHOD="local"`):
+- **Ollama Local** (`EMBEDDING_METHOD="ollama_local"`):
   - `OLLAMA_BASE_URL` (Default `http://localhost:11434`): The URL for generating embeddings using local hardware.
   - `OLLAMA_EMBEDDING_MODEL` (Default `nomic-embed-text`): Has to be a 768-D model.
 - **External** (`EMBEDDING_METHOD="external"`):

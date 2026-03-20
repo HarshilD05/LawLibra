@@ -16,6 +16,7 @@ import {
     uploadDocument,
     getDocuments,
     getDocumentById,
+    getDocumentChunks,
     deleteDocument,
 } from "../controllers/document.controller.mjs";
 
@@ -33,6 +34,9 @@ router.get("/", getDocuments);
 
 // GET /api/documents/:id
 router.get("/:id", getDocumentById);
+
+// GET /api/documents/:id/chunks
+router.get("/:id/chunks", getDocumentChunks);
 
 // DELETE /api/documents/:id
 router.delete("/:id", deleteDocument);

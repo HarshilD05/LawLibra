@@ -143,7 +143,7 @@ export const deleteCase = async (req, res) => {
         }
 
         // Delete all case files from disk (non-fatal — DB is the source of truth)
-        await deleteDirRecursive(getCaseDirPath(deleted.id)).catch((e) => {
+        await deleteDirRecursive(getCaseDirPath(req.params.id)).catch((e) => {
             console.warn(`[Cases] Could not delete data directory for case ${deleted.id}: ${e.message}`);
         });
 
