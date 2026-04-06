@@ -34,13 +34,16 @@ Use a single PostgreSQL instance with the `pgvector` extension. All relational d
 ### Context
 OpenAI"s `text-embedding-3-small` uses 1536 dimensions. Local Ollama models (`nomic-embed-text`, `mxbai-embed-large`) use 768 dimensions. Changing vector dimensions after deployment requires dropping and recreating the HNSW index and re-embedding all documents.
 
-### Decision
-Standardise on **768 dimensions** now. An Embedding Factory allows configuring the embedding service (`google`, `ollama_local` for Ollama, or `external` API) freely via the `.env` without triggering a database schema rebuild.
+### Decisions
+Standardise on **768 dimensions** now. An Embedding Factory allows configuring the embedding service (`google`, `ollama_local` for Ollama, or `external` API) freely via the `.env` without triggering a database schema rebuild. 
+
+We additionally enforce an **Adaptive Rate Limit Strategy** via three `.env` variables (`EMBEDDING_BATCH_SIZE`, `EMBEDDING_DELAY_MS`, `EMBEDDING_RETRY_DELAY_MS`) to protect both cloud APIs (from HTTP 429 locks) and local GPUs (from Output Out-of-Memory crashes).
 
 ### Consequences
 - ✅ A unified `embed(texts, isQuery)` interface ensures that Google Gemini models gracefully switch between `RETRIEVAL_DOCUMENT` and `QUESTION_ANSWERING` task types.
 - ✅ Migrating to Ollama `nomic-embed-text` (local, zero API cost) requires changing only `.env` settings (`EMBEDDING_METHOD=ollama_local`) — **zero schema migration**
 - ✅ Google API provides high quality embeddings during development without requiring local GPU
+- ✅ Gracefully scales limits via adaptive batching without hard waits, vastly shrinking per-document processing time within legal quotas.
 - ⚠️ Google API key continues to incur costs per token when selected as the primary provider method
 
 ---

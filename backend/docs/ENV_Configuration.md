@@ -60,7 +60,9 @@ The system converts raw text and query text into dense vector arrays. To maintai
 | :--- | :--- | :--- |
 | `EMBEDDING_METHOD` | `google` | The embedding provider to use. Options: `google`, `ollama_local`, `external`. |
 | `EMBEDDING_DIMENSIONS` | `768` | Fixed constraint size for your pgvector queries. |
-| `EMBEDDING_BATCH_SIZE` | `100` | The chunked batch size for sending text snippets to embedding endpoint. |
+| `EMBEDDING_BATCH_SIZE` | `50` | Number of chunks per API request. Recommended: `50` for Google API, `10`-`20` for Local GPU limits. |
+| `EMBEDDING_DELAY_MS` | `1000` | Cooldown (milliseconds) between successful batches to prevent RPM limit spiking. |
+| `EMBEDDING_RETRY_DELAY_MS` | `65000` | Delay (milliseconds) if an API strictly enforces an HTTP `429 Too Many Requests` timeout. |
 
 ### Method-Specific Requirements:
 - **Google** (`EMBEDDING_METHOD="google"`):

@@ -65,12 +65,29 @@ class DocIngestionService {
                 throw new Error("Document produced no chunks after processing.");
             }
 
-            // ── Step 4: Generate embeddings ───────────────────────────────────────
+            // ── Step 4: Generate embeddings (Adaptive Batching) ───────────────────
             console.log(`[Ingestion] Embedding ${chunks.length} chunks`);
             const embeddingService = await createEmbeddingService();
             
+            const BATCH_SIZE = parseInt(process.env.EMBEDDING_BATCH_SIZE) || 50;
+            const DELAY_MS = parseInt(process.env.EMBEDDING_DELAY_MS) || 1000;
+            
             const chunkTexts = chunks.map(c => c.text);
-            const vectors = await embeddingService.embed(chunkTexts, false); // false for RETRIEVAL_DOCUMENT
+            const vectors = [];
+
+            for (let i = 0; i < chunkTexts.length; i += BATCH_SIZE) {
+                const batchTexts = chunkTexts.slice(i, i + BATCH_SIZE);
+                console.log(`[Ingestion] Processing batch ${i / BATCH_SIZE + 1} of ${Math.ceil(chunkTexts.length / BATCH_SIZE)}`);
+                
+                const batchVectors = await embeddingService.embed(batchTexts, false); // false for RETRIEVAL_DOCUMENT
+                vectors.push(...batchVectors);
+
+                // Add a cooldown delay between successful batches, but skip after the last batch
+                if (i + BATCH_SIZE < chunkTexts.length) {
+                    await new Promise(resolve => setTimeout(resolve, DELAY_MS));
+                }
+            }
+
             const embeddedChunks = chunks.map((chunk, i) => ({ ...chunk, embedding: vectors[i] }));
             
             await job.updateProgress(80);

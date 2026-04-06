@@ -32,8 +32,8 @@ const TASK_QUESTION_ANSWERING = "QUESTION_ANSWERING";
 
 class EmbeddingService {
     constructor() {
-        if (!process.env.GOOGLE_EMBEDDER_API_KEY) {
-            throw new Error("[EmbeddingService] GOOGLE_EMBEDDER_API_KEY is not set in .env");
+        if (!process.env.GOOGLE_EMBEDDING_API_KEY) {
+            throw new Error("[EmbeddingService] GOOGLE_EMBEDDING_API_KEY is not set in .env");
         }
 
         // Initialize the new Google GenAI client
@@ -75,14 +75,31 @@ class EmbeddingService {
                 const batch = valid.slice(i, i + EMBEDDING_BATCH_SIZE);
                 console.log(`[EmbeddingService] Processing sub-batch ${Math.floor(i / EMBEDDING_BATCH_SIZE) + 1} (${batch.length} chunks)...`);
                 
-                const response = await this.ai.models.embedContent({
-                    model: MODEL_NAME,
-                    contents: batch,
-                    config: {
-                        taskType: taskType,
-                        outputDimensionality: EXPECTED_DIMS
+                let attempt = 0;
+                let response = null;
+                while (attempt < 2) {
+                    try {
+                        response = await this.ai.models.embedContent({
+                            model: MODEL_NAME,
+                            contents: batch,
+                            config: {
+                                taskType: taskType,
+                                outputDimensionality: EXPECTED_DIMS
+                            }
+                        });
+                        break; // Success, exit retry loop
+                    } catch (err) {
+                        const isRateLimit = err.status === 429 || (err.message && err.message.includes('429'));
+                        if (isRateLimit && attempt === 0) {
+                            attempt++;
+                            const retryDelay = parseInt(process.env.EMBEDDING_RETRY_DELAY_MS || "65000", 10);
+                            console.warn(`[EmbeddingService] Rate limit hit (429). Waiting ${retryDelay}ms before retry...`);
+                            await new Promise(resolve => setTimeout(resolve, retryDelay));
+                        } else {
+                            throw err;
+                        }
                     }
-                });
+                }
                 
                 const batchVectors = response.embeddings?.map(e => e.values) || [];
                 
@@ -149,7 +166,7 @@ class EmbeddingService {
                 `[EmbeddingService] Embedding failed completely. ` +
                 `Batch error: ${batchError?.message || "none"}. ` +
                 `Fallback error: ${fallbackErr.message}. ` +
-                `Check GOOGLE_EMBEDDER_API_KEY, model availability, API restrictions, and quota in Google AI Studio.`,
+                `Check GOOGLE_EMBEDDING_API_KEY, model availability, API restrictions, and quota in Google AI Studio.`,
             );
         }
     }

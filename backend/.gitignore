@@ -6,10 +6,13 @@ package-lock.json
 .vscode/
 
 # Environment
-.env
+**.env
 
 # Generated secrets — never commit
 config/init/password.txt
+
+# DB Initialisation Values Dont Commit
+config/init/init_db.mjs
 
 # Uploaded files and processed data
 uploads/
