@@ -75,6 +75,14 @@ export const getCases = async (req, res) => {
             ({ cases, total } = await Case.getByLawyerId(req.user.id, { limit, offset, status }));
         }
 
+        // Hide the Global Case from the standard dashboard cases list
+        const GLOBAL_CASE_ID = "00000000-0000-0000-0000-000000000000";
+        const isGlobalIncluded = cases.some(c => c.id === GLOBAL_CASE_ID);
+        if (isGlobalIncluded) {
+            cases = cases.filter(c => c.id !== GLOBAL_CASE_ID);
+            total = total - 1;
+        }
+
         return res.status(200).json({
             data: cases.map((c) => c.toSafeObject()),
             total, limit, offset,
@@ -110,6 +118,11 @@ export const getCaseById = async (req, res) => {
  */
 export const updateCase = async (req, res) => {
     try {
+        const GLOBAL_CASE_ID = "00000000-0000-0000-0000-000000000000";
+        if (req.params.id === GLOBAL_CASE_ID) {
+            return res.status(403).json({ error: "The Global Legal Repository cannot be modified." });
+        }
+
         const access = await resolveAccess(req.params.id, req.user, ["EDIT", "ADMIN"]);
 
         if (!access) {
@@ -136,6 +149,11 @@ export const updateCase = async (req, res) => {
  */
 export const deleteCase = async (req, res) => {
     try {
+        const GLOBAL_CASE_ID = "00000000-0000-0000-0000-000000000000";
+        if (req.params.id === GLOBAL_CASE_ID) {
+            return res.status(403).json({ error: "The Global Legal Repository cannot be deleted." });
+        }
+
         const deleted = await Case.deleteById(req.params.id);
 
         if (!deleted) {

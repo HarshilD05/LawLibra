@@ -124,3 +124,51 @@ CREATE TABLE chat_messages (
 CREATE INDEX ON doc_chunks USING hnsw (embedding vector_cosine_ops);
 -- Create GIN index for JSONB metadata searching
 CREATE INDEX idx_cases_metadata ON cases USING gin (metadata);
+
+-- ==========================================
+-- GLOBAL KNOWLEDGE BASE (SYSTEM CASE)
+-- ==========================================
+
+-- Insert the Global Docs case with a Zero-UUID
+-- We use a zero-UUID since '0x0' is not a valid UUID format in PostgreSQL
+INSERT INTO cases (id, title, status, client_name, metadata)
+VALUES (
+    '00000000-0000-0000-0000-000000000000', 
+    'Global Legal Repository', 
+    'OPEN', 
+    'SYSTEM', 
+    '{"description": "Contains Constitution, IPC, BNS, and system-wide knowledge"}'::jsonb
+) ON CONFLICT (id) DO NOTHING;
+
+-- Create a View for easy querying of Global Documents
+CREATE VIEW global_documents AS
+SELECT * FROM documents 
+WHERE case_id = '00000000-0000-0000-0000-000000000000';
+
+-- Create a View for easy querying of Global Chunks (the actual data for RAG)
+CREATE VIEW global_doc_chunks AS
+SELECT dc.* FROM doc_chunks dc
+JOIN documents d ON dc.document_id = d.id
+WHERE d.case_id = '00000000-0000-0000-0000-000000000000';
+
+-- ==========================================
+-- AUTOMATION: GRANT ACCESS TO GLOBAL DOCS
+-- ==========================================
+
+-- Function to automatically assign new users to the Global Legal Repository
+CREATE OR REPLACE FUNCTION assign_global_case()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO case_assignments (lawyer_id, case_id, access_level)
+    VALUES (NEW.id, '00000000-0000-0000-0000-000000000000', 'VIEW')
+    ON CONFLICT (lawyer_id, case_id) DO NOTHING;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger to run the function after a new user is created
+DROP TRIGGER IF EXISTS trigger_assign_global_case ON users;
+CREATE TRIGGER trigger_assign_global_case
+AFTER INSERT ON users
+FOR EACH ROW
+EXECUTE FUNCTION assign_global_case();

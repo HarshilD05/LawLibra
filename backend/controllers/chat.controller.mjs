@@ -78,12 +78,13 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
     const [queryVector] = await _embeddingService.embed([userContent], true); // true for QUESTION_ANSWERING
     const pgVector    = `[${queryVector.join(",")}]`;
 
-    // ── 3. Similarity-thresholded vector search — case-scoped, max 10 ─────────
+    // ── 3. Similarity-thresholded vector search — case-scoped & global-scoped, max 10 ─────────
     // RAG_SIMILARITY_THRESHOLD: cosine similarity floor (0–1).
     // Only chunks with similarity >= threshold are returned, capped at 10.
     // Legal RAG benefits from broad, high-quality context — 10 sources at 0.65
     // strikes the right balance between precision and recall.
     const threshold = parseFloat(process.env.RAG_SIMILARITY_THRESHOLD ?? "0.65");
+    const GLOBAL_CASE_ID = '00000000-0000-0000-0000-000000000000';
 
     const { rows: chunks } = await db.query(
         `SELECT
@@ -95,12 +96,12 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
              1 - (dc.embedding <=> $1::vector)          AS similarity
          FROM doc_chunks dc
          JOIN documents  d ON d.id = dc.document_id
-         WHERE d.case_id           = $2
+         WHERE d.case_id           IN ($2, $3)
            AND d.processing_status = 'DONE'
-           AND 1 - (dc.embedding <=> $1::vector) >= $3
+           AND 1 - (dc.embedding <=> $1::vector) >= $4
          ORDER BY dc.embedding <=> $1::vector
          LIMIT 10`,
-        [pgVector, caseId, threshold],
+        [pgVector, caseId, GLOBAL_CASE_ID, threshold],
     );
 
     console.log(`[Chat RAG] Query matched ${chunks.length} chunks (threshold: ${threshold}, caseId: ${caseId})`);

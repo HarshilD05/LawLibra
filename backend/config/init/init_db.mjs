@@ -18,8 +18,8 @@
  */
 
 // ─── Edit these before running ───────────────────────────────────────────────
-const PGSQL_USER     = "your_postgre_db_username";
-const PGSQL_PASSWORD = "your_db_password";
+const PGSQL_USER     = "your_postgreSQL_username";
+const PGSQL_PASSWORD = "you_postgresSQL_password";
 const DB_NAME        = "lawlibra";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -59,7 +59,7 @@ async function createDatabaseIfNotExists() {
 
     if (check.rowCount === 0) {
         // Identifiers cannot be parameterised — DB_NAME is a trusted constant set above
-        await adminClient.query(`CREATE DATABASE '${DB_NAME}'`);
+        await adminClient.query(`CREATE DATABASE ${DB_NAME};`);
         console.log(`[Init] Database "${DB_NAME}" created.`);
     } else {
         console.log(`[Init] Database "${DB_NAME}" already exists. Skipping creation.`);
@@ -109,14 +109,25 @@ async function seedAdminUser() {
     await userClient.connect();
 
     // Upsert: create User0 on first run, or reset password on subsequent runs
-    await userClient.query(
+    const { rows } = await userClient.query(
         `INSERT INTO users (name, email, password_hash, salt, role)
          VALUES ($1, $2, $3, $4, 'ADMIN')
          ON CONFLICT (email) DO UPDATE
              SET password_hash = EXCLUDED.password_hash,
                  salt          = EXCLUDED.salt,
-                 updated_at    = CURRENT_TIMESTAMP`,
+                 updated_at    = CURRENT_TIMESTAMP
+         RETURNING id`,
         ["User0", "user0@lawlibra.local", passwordHash, salt],
+    );
+
+    const userId = rows[0].id;
+    
+    // Promote User0 to ADMIN for the Global Legal Repository case
+    await userClient.query(
+        `UPDATE case_assignments 
+         SET access_level = 'ADMIN'
+         WHERE lawyer_id = $1 AND case_id = '00000000-0000-0000-0000-000000000000'`,
+        [userId]
     );
 
     await userClient.end();
