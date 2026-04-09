@@ -3,64 +3,68 @@
 <html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>LawLibra - Dashboard</title>
+<title>LawLibra | The Sovereign Ledger</title>
+<!-- Fonts: Manrope (Headlines) & Inter (Body) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
         theme: {
           extend: {
             "colors": {
-                    "background": "#f8f9fa",
-                    "outline": "#74777f",
-                    "on-background": "#191c1d",
-                    "on-primary-fixed": "#001c3b",
-                    "surface-container-highest": "#e1e3e4",
-                    "on-primary-fixed-variant": "#2d486d",
-                    "on-tertiary-fixed-variant": "#5c4300",
-                    "on-error-container": "#93000a",
+                    "surface": "#f7f9fc",
+                    "surface-container-low": "#f2f4f7",
+                    "inverse-surface": "#2d3133",
                     "error": "#ba1a1a",
-                    "surface-container-high": "#e7e8e9",
-                    "primary-fixed": "#d5e3ff",
-                    "primary-fixed-dim": "#adc8f5",
-                    "on-primary": "#ffffff",
-                    "on-tertiary-fixed": "#261a00",
-                    "on-tertiary-container": "#ce9b0f",
-                    "secondary-container": "#d6e0f4",
-                    "on-surface": "#191c1d",
-                    "secondary-fixed-dim": "#bdc7da",
-                    "tertiary-fixed": "#ffdfa0",
-                    "secondary-fixed": "#d9e3f7",
-                    "surface": "#f8f9fa",
-                    "primary": "#022448",
-                    "surface-bright": "#f8f9fa",
-                    "surface-container": "#edeeef",
-                    "tertiary": "#302200",
-                    "on-surface-variant": "#43474e",
-                    "inverse-surface": "#2e3132",
-                    "outline-variant": "#c4c6cf",
-                    "surface-tint": "#455f87",
-                    "primary-container": "#1e3a5f",
-                    "surface-container-low": "#f3f4f5",
-                    "tertiary-fixed-dim": "#f6be39",
-                    "inverse-primary": "#adc8f5",
-                    "inverse-on-surface": "#f0f1f2",
-                    "on-primary-container": "#8aa4cf",
-                    "surface-container-lowest": "#ffffff",
-                    "on-tertiary": "#ffffff",
-                    "surface-variant": "#e1e3e4",
-                    "secondary": "#555f70",
-                    "tertiary-container": "#4b3600",
-                    "on-secondary": "#ffffff",
-                    "error-container": "#ffdad6",
+                    "secondary-container": "#fed977",
+                    "secondary-fixed-dim": "#e6c364",
+                    "primary-fixed": "#d7e3fc",
+                    "on-primary-container": "#79849b",
+                    "surface-variant": "#e0e3e6",
+                    "tertiary-fixed-dim": "#a7c8ff",
+                    "on-surface-variant": "#45474c",
+                    "background": "#f7f9fc",
+                    "on-error-container": "#93000a",
+                    "surface-tint": "#535f74",
+                    "on-secondary-container": "#785d00",
+                    "outline": "#75777d",
+                    "inverse-primary": "#bbc7df",
+                    "on-surface": "#191c1e",
+                    "surface-bright": "#f7f9fc",
+                    "surface-dim": "#d8dadd",
+                    "on-secondary-fixed": "#241a00",
                     "on-error": "#ffffff",
-                    "surface-dim": "#d9dadb",
-                    "on-secondary-container": "#5a6374",
-                    "on-secondary-fixed-variant": "#3e4757",
-                    "on-secondary-fixed": "#121c2a"
+                    "on-tertiary-fixed-variant": "#214779",
+                    "on-primary-fixed": "#101c2e",
+                    "error-container": "#ffdad6",
+                    "inverse-on-surface": "#eff1f4",
+                    "tertiary-fixed": "#d5e3ff",
+                    "secondary-fixed": "#ffe08f",
+                    "primary-fixed-dim": "#bbc7df",
+                    "secondary": "#755b00",
+                    "primary-container": "#101c2e",
+                    "on-background": "#191c1e",
+                    "tertiary-container": "#001c3b",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#eceef1",
+                    "on-primary": "#ffffff",
+                    "surface-container-high": "#e6e8eb",
+                    "on-tertiary-container": "#6285bb",
+                    "primary": "#000000",
+                    "tertiary": "#000000",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary-fixed": "#001c3b",
+                    "on-primary-fixed-variant": "#3c475b",
+                    "outline-variant": "#c5c6cd",
+                    "surface-container-highest": "#e0e3e6",
+                    "on-secondary-fixed-variant": "#584400"
             },
             "borderRadius": {
                     "DEFAULT": "0.125rem",
@@ -69,301 +73,292 @@
                     "full": "0.75rem"
             },
             "fontFamily": {
-                    "headline": ["Inter"],
-                    "body": ["Inter"],
-                    "label": ["Inter"]
+                    "headline": [ "Manrope" ],
+                    "body": [ "Inter" ],
+                    "label": [ "Inter" ]
             }
-          }
-        }
+          },
+        },
       }
     </script>
 <style>
         .material-symbols-outlined {
             font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .tonal-shift {
-            background-color: #f3f4f5;
         }
         body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, .font-manrope { font-family: 'Manrope', sans-serif; }
     </style>
 </head>
-<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
-<!-- SideNavBar -->
-<aside class="fixed left-0 top-0 h-full z-40 flex flex-col h-screen w-64 border-r border-transparent bg-slate-50 dark:bg-slate-900 font-['Inter'] font-medium tracking-tight">
-<div class="p-6 flex items-center gap-3">
-<div class="w-8 h-8 bg-gradient-to-br from-primary to-primary-container rounded flex items-center justify-center">
-<span class="material-symbols-outlined text-white text-lg">gavel</span>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar Integration -->
+<aside class="bg-slate-900 dark:bg-slate-950 h-screen w-64 fixed left-0 top-0 z-40 shadow-xl flex flex-col h-full py-6 px-4">
+<div class="mb-10 px-2">
+<h1 class="text-xl font-bold tracking-tighter text-white font-manrope">LawLibra</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-amber-400/60 font-semibold mt-1">The Sovereign Ledger</p>
 </div>
-<div>
-<h1 class="text-xl font-bold text-[#1E3A5F] dark:text-white leading-tight">LawLibra</h1>
-<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Legal Management</p>
-</div>
-</div>
-<nav class="flex-1 mt-4 px-3 space-y-1">
-<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out bg-white dark:bg-slate-800 text-[#1E3A5F] dark:text-white font-semibold border-r-4 border-[#1E3A5F] dark:border-[#f6be39]" href="#">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
-<span>Dashboard</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90" href="#">
-<span class="material-symbols-outlined">gavel</span>
-<span>Cases</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90" href="#">
-<span class="material-symbols-outlined">description</span>
-<span>Documents</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90" href="#">
-<span class="material-symbols-outlined">group</span>
-<span>Clients</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90" href="#">
-<span class="material-symbols-outlined">calendar_month</span>
-<span>Calendar</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90" href="#">
-<div class="relative">
-<span class="material-symbols-outlined">notifications</span>
-<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
-</div>
-<span>Notifications</span>
-</a>
+<nav class="flex-1 space-y-1">
+<!-- Active: Dashboard -->
+<a class="text-amber-400 bg-slate-800/50 border-r-2 border-amber-400 flex items-center px-3 py-2.5 rounded-sm font-manrope tracking-tight font-medium text-sm transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="text-slate-400 hover:text-slate-100 flex items-center px-3 py-2.5 rounded-sm font-manrope tracking-tight font-medium text-sm transition-all duration-200 hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]" data-icon="folder_open">folder_open</span>
+                Cases
+            </a>
+<a class="text-slate-400 hover:text-slate-100 flex items-center px-3 py-2.5 rounded-sm font-manrope tracking-tight font-medium text-sm transition-all duration-200 hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]" data-icon="groups">groups</span>
+                Clients
+            </a>
+<a class="text-slate-400 hover:text-slate-100 flex items-center px-3 py-2.5 rounded-sm font-manrope tracking-tight font-medium text-sm transition-all duration-200 hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]" data-icon="description">description</span>
+                Documents
+            </a>
+<a class="text-slate-400 hover:text-slate-100 flex items-center px-3 py-2.5 rounded-sm font-manrope tracking-tight font-medium text-sm transition-all duration-200 hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]" data-icon="calendar_month">calendar_month</span>
+                Calendar
+            </a>
+<a class="text-slate-400 hover:text-slate-100 flex items-center px-3 py-2.5 rounded-sm font-manrope tracking-tight font-medium text-sm transition-all duration-200 hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]" data-icon="payments">payments</span>
+                Billing
+            </a>
 </nav>
-<div class="p-4 mt-auto">
-<div class="p-4 bg-primary rounded-xl overflow-hidden relative group cursor-pointer">
-<img class="absolute inset-0 w-full h-full object-cover opacity-20 transition-opacity group-hover:opacity-30" data-alt="Close up of classic law books in a mahogany library with soft sunlight filtering through" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdqNkIUhsP-ttAI0QGJChyh7cfJeNMJaAMqAfPa0gdoyGz9CF4QNMwvsRNCGFrbqBrRgzeZjEC2pWZh1fSS3q95qgxc2ocYTnxNMJoW7RnjTDYKvr1tGLO3tNF9MhvdiFbmlVcee09LY-QxTrFsteiXKfrAjDzE8RPcJJ1bJZ3t2A2gDj7fBG1iIsPo5mYWbBQ9wxl_q5Z8S4VfNWQb4YbR6a078e7rtdGdLMVQnweHFxwYPOt1Fgw7fDCeQCkIiGlrmWSfYn0_dE"/>
-<div class="relative z-10">
-<p class="text-white text-xs font-bold mb-1">Upgrade to Pro</p>
-<p class="text-primary-fixed-dim text-[10px] leading-snug">Unlock AI-powered brief summarization.</p>
-</div>
+<div class="mt-auto space-y-1">
+<a class="text-slate-400 hover:text-slate-100 flex items-center px-3 py-2.5 rounded-sm font-manrope tracking-tight font-medium text-sm transition-all duration-200 hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]" data-icon="notifications">notifications</span>
+                Notifications
+            </a>
+<a class="text-slate-400 hover:text-slate-100 flex items-center px-3 py-2.5 rounded-sm font-manrope tracking-tight font-medium text-sm transition-all duration-200 hover:bg-slate-800" href="#">
+<span class="material-symbols-outlined mr-3 text-[20px]" data-icon="settings">settings</span>
+                Settings
+            </a>
+<div class="pt-4 px-2">
+<button class="w-full bg-gradient-to-b from-amber-400 to-amber-600 text-slate-950 font-bold py-3 rounded-xl text-xs uppercase tracking-widest shadow-lg active:scale-95 transition-transform">
+                    New Case
+                </button>
 </div>
 </div>
 </aside>
-<!-- TopNavBar -->
-<header class="flex items-center justify-between px-6 w-full z-50 ml-64 max-w-[calc(100%-16rem)] h-16 sticky top-0 bg-white/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 shadow-sm">
-<div class="flex items-center flex-1 max-w-xl">
-<div class="relative w-full group">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
-<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg pl-10 pr-4 py-2 text-sm" placeholder="Search cases, files, or clients..." type="text"/>
+<!-- TopNavBar Integration -->
+<header class="fixed top-0 right-0 left-64 h-16 z-30 bg-slate-50/85 dark:bg-slate-900/85 backdrop-blur-xl border-b border-slate-200/15 dark:border-slate-800/15 flex justify-between items-center px-8 w-full">
+<div class="flex items-center flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+<input class="w-full bg-surface-container-lowest border-none ring-1 ring-outline-variant/15 rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-secondary transition-all" placeholder="Search case files, clients, or records..." type="text"/>
 </div>
 </div>
-<div class="flex items-center gap-6">
-<div class="flex items-center gap-4 text-slate-600">
-<button class="material-symbols-outlined hover:text-[#1E3A5F] transition-colors">dark_mode</button>
-<button class="material-symbols-outlined hover:text-[#1E3A5F] transition-colors relative">
-                    notifications
-                    <span class="absolute top-0 right-0 w-1.5 h-1.5 bg-error rounded-full"></span>
+<div class="flex items-center gap-6 ml-4">
+<button class="relative text-slate-500 dark:text-slate-400 hover:text-amber-500 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
 </button>
+<div class="h-8 w-[1px] bg-outline-variant/20"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-xs font-bold text-slate-900 leading-none">Julian Thorne, Esq.</p>
+<p class="text-[10px] text-on-surface-variant leading-none mt-1">Senior Partner</p>
 </div>
-<div class="h-8 w-[1px] bg-outline-variant opacity-20"></div>
-<div class="flex items-center gap-3 cursor-pointer group">
-<div class="text-right hidden sm:block">
-<p class="text-xs font-bold text-primary">Julian Vance, Esq.</p>
-<p class="text-[10px] text-on-surface-variant">Senior Associate</p>
-</div>
-<img class="w-9 h-9 rounded-full object-cover ring-2 ring-offset-2 ring-transparent group-hover:ring-primary transition-all" data-alt="Professional portrait of a middle-aged male lawyer in a charcoal suit with a confident and approachable expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt_cPOYd-lQBMmthM_SZAk4vhKzCyWmJjp5kAQsOeIhxVuW2ADpPENxeNmw1NPfzbX0Xhql9VaK0JhvbhrBa7ceJbjNJuSJoiOzryTTEU7boAFHmQcQOeAAceUvEKBRzAKV1YtwPMBJnz_Pdq_RGOOSJiBnQeAjEFWUk6ojspG_uUgnQaiq4q263nokWiD9A0v-JqCa0UczaEGjX2iEUGrtoKyU-SfC6Sg_xT9DKhifQVwAeGWWrMeZ-VvJjXF15IPqtuxL5JABW4"/>
+<img alt="User Profile Avatar" class="w-9 h-9 rounded-full bg-slate-200 object-cover border border-outline-variant/20" data-alt="professional portrait of a middle-aged man in a sharp suit with short dark hair and a confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABAWEnKzeYfhBfnqBQ1NMRNplUl2wob54PpuJVH8xl0gyAbPY2RIcth1V0rWXO7uI4a-sIRUlvG_OPytgfijgQ0DRjDJO31zP5ZHXsNPjr7UJiHd-NkMdoUQXbLfFPhA3rW6ISdnoct4bZxU8v0a6gCEk5XqkbhEMGshvdrmuWAZRM8P2TzVvprQ9_yqd-VXuitIS_NiZht4YO9VtY9Kb61QfmgTKci_IR1iar0xCdZSJE73LWpnfrpJcV_jXApERlU2thciqyaofK"/>
 </div>
 </div>
 </header>
-<!-- Main Content Area -->
-<main class="ml-64 p-8 min-h-[calc(100vh-4rem)]">
-<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-<div>
-<h2 class="text-3xl font-extrabold tracking-tight text-primary">Case Overview</h2>
-<p class="text-on-surface-variant mt-1">Good morning, Julian. You have 3 hearings scheduled for today.</p>
+<!-- Main Content Canvas -->
+<main class="pl-64 pt-16 min-h-screen">
+<div class="p-8 max-w-[1600px] mx-auto">
+<!-- Welcome Header -->
+<div class="mb-10">
+<h2 class="text-3xl font-extrabold tracking-tight text-on-surface font-manrope">Chambers Overview</h2>
+<p class="text-on-surface-variant mt-2 max-w-2xl font-medium">Welcome back, Counselor. You have <span class="text-secondary font-bold">3 hearings</span> today and 12 documents awaiting your digital signature.</p>
 </div>
-<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-lg font-bold shadow-lg shadow-primary/10 flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all">
-<span class="material-symbols-outlined text-sm">add</span>
-                New Case File
-            </button>
-</div>
-<div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-<!-- Stats Column (3/4 Width) -->
-<div class="lg:col-span-3 space-y-8">
-<!-- Metric Cards Row -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: Stats & Recent Cases -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Stats Grid -->
 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-<div class="bg-surface-container-lowest p-5 rounded-xl border-b-2 border-primary shadow-sm group hover:bg-primary transition-colors duration-300">
-<div class="flex justify-between items-start mb-3">
-<span class="material-symbols-outlined text-primary group-hover:text-primary-fixed">balance</span>
-<span class="text-[10px] font-bold text-on-surface-variant group-hover:text-primary-fixed-dim uppercase tracking-tighter">+12% vs LY</span>
+<!-- Stat Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/5 group hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-blue-50 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="folder_managed">folder_managed</span>
 </div>
-<h4 class="text-2xl font-black text-primary group-hover:text-white">42</h4>
-<p class="text-xs font-semibold text-on-surface-variant group-hover:text-white/70">Active Cases</p>
+<span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">+4%</span>
 </div>
-<div class="bg-surface-container-lowest p-5 rounded-xl border-b-2 border-primary-container shadow-sm group hover:bg-primary-container transition-colors duration-300">
-<div class="flex justify-between items-start mb-3">
-<span class="material-symbols-outlined text-primary-container group-hover:text-primary-fixed">article</span>
-<span class="text-[10px] font-bold text-on-surface-variant group-hover:text-primary-fixed-dim uppercase tracking-tighter">8 Pending</span>
+<p class="text-2xl font-extrabold text-on-surface font-manrope">124</p>
+<p class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mt-1">Active Cases</p>
 </div>
-<h4 class="text-2xl font-black text-primary group-hover:text-white">128</h4>
-<p class="text-xs font-semibold text-on-surface-variant group-hover:text-white/70">Documents</p>
+<!-- Stat Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/5 group hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-amber-50 rounded-lg text-amber-600 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
 </div>
-<div class="bg-surface-container-lowest p-5 rounded-xl border-b-2 border-tertiary-fixed-dim shadow-sm group hover:bg-tertiary-fixed-dim transition-colors duration-300">
-<div class="flex justify-between items-start mb-3">
-<span class="material-symbols-outlined text-tertiary group-hover:text-on-tertiary-fixed">event_available</span>
-<span class="text-[10px] font-bold text-on-surface-variant group-hover:text-on-tertiary-fixed uppercase tracking-tighter">Next: 2PM</span>
+<span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Today</span>
 </div>
-<h4 class="text-2xl font-black text-primary group-hover:text-on-tertiary-fixed">15</h4>
-<p class="text-xs font-semibold text-on-surface-variant group-hover:text-on-tertiary-fixed/70">Hearings</p>
+<p class="text-2xl font-extrabold text-on-surface font-manrope">03</p>
+<p class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mt-1">Upcoming Hearings</p>
 </div>
-<div class="bg-surface-container-lowest p-5 rounded-xl border-b-2 border-error shadow-sm group hover:bg-error transition-colors duration-300">
-<div class="flex justify-between items-start mb-3">
-<span class="material-symbols-outlined text-error group-hover:text-white">notification_important</span>
-<span class="text-[10px] font-bold text-on-surface-variant group-hover:text-white/70 uppercase tracking-tighter">Action Required</span>
+<!-- Stat Card 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/5 group hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-emerald-50 rounded-lg text-emerald-600 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="pending_actions">pending_actions</span>
 </div>
-<h4 class="text-2xl font-black text-primary group-hover:text-white">09</h4>
-<p class="text-xs font-semibold text-on-surface-variant group-hover:text-white/70">Notifications</p>
+<span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">New</span>
+</div>
+<p class="text-2xl font-extrabold text-on-surface font-manrope">18</p>
+<p class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mt-1">Pending Docs</p>
+</div>
+<!-- Stat Card 4 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/5 group hover:shadow-md transition-shadow">
+<div class="flex justify-between items-start mb-4">
+<div class="p-2 bg-slate-100 rounded-lg text-slate-900 group-hover:bg-slate-900 group-hover:text-white transition-colors">
+<span class="material-symbols-outlined" data-icon="person_search">person_search</span>
+</div>
+<span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Total</span>
+</div>
+<p class="text-2xl font-extrabold text-on-surface font-manrope">412</p>
+<p class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mt-1">Total Clients</p>
 </div>
 </div>
-<!-- Recent Cases Table Section -->
-<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
-<div class="flex items-center justify-between mb-6">
-<h3 class="text-lg font-bold text-primary">Recent Case Files</h3>
-<button class="text-xs font-bold text-primary-container hover:underline">View All Registry</button>
+<!-- Recent Cases Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant/5">
+<div class="px-8 py-6 flex justify-between items-center border-b border-outline-variant/10">
+<h3 class="text-lg font-bold text-on-surface font-manrope">Recent Case Activity</h3>
+<button class="text-primary font-bold text-xs hover:underline decoration-2 underline-offset-4">View All Archive</button>
 </div>
 <div class="overflow-x-auto">
-<table class="w-full text-left border-collapse">
+<table class="w-full text-left">
 <thead>
-<tr class="text-[10px] uppercase tracking-widest text-on-surface-variant border-b border-surface-container-high">
-<th class="pb-3 font-bold">Case ID</th>
-<th class="pb-3 font-bold">Client Name</th>
-<th class="pb-3 font-bold">Matter Type</th>
-<th class="pb-3 font-bold">Status</th>
-<th class="pb-3 font-bold text-right">Last Action</th>
+<tr class="bg-surface-container-low/50">
+<th class="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Case ID</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Client</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Type</th>
+<th class="px-6 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Status</th>
+<th class="px-8 py-4 text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Next Hearing</th>
 </tr>
 </thead>
-<tbody class="divide-y divide-surface-container text-sm">
-<tr class="hover:bg-surface-container-low transition-colors group">
-<td class="py-4 font-bold text-primary">#LC-2024-001</td>
-<td class="py-4">
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-4 text-sm font-bold text-slate-900 font-manrope">#LL-2024-081</td>
+<td class="px-6 py-4">
 <div class="flex items-center gap-3">
-<div class="w-7 h-7 rounded bg-secondary-container flex items-center justify-center text-[10px] font-bold text-on-secondary-container">MW</div>
-<span>Marcus Wright</span>
+<div class="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center text-[10px] font-bold text-blue-700">EH</div>
+<span class="text-sm font-medium text-on-surface">Elena Hart</span>
 </div>
 </td>
-<td class="py-4">Corporate Litigation</td>
-<td class="py-4">
-<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-primary-fixed text-on-primary-fixed-variant">DISCOVERY</span>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Corporate Litigation</td>
+<td class="px-6 py-4">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Active</span>
 </td>
-<td class="py-4 text-right text-on-surface-variant">2 hours ago</td>
+<td class="px-8 py-4 text-sm font-medium text-on-surface">Oct 24, 2023</td>
 </tr>
-<tr class="hover:bg-surface-container-low transition-colors group">
-<td class="py-4 font-bold text-primary">#LC-2024-042</td>
-<td class="py-4">
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-4 text-sm font-bold text-slate-900 font-manrope">#LL-2024-092</td>
+<td class="px-6 py-4">
 <div class="flex items-center gap-3">
-<div class="w-7 h-7 rounded bg-tertiary-fixed flex items-center justify-center text-[10px] font-bold text-on-tertiary-fixed-variant">EP</div>
-<span>Elena Petrov</span>
+<div class="w-7 h-7 rounded-full bg-amber-100 flex items-center justify-center text-[10px] font-bold text-amber-700">MS</div>
+<span class="text-sm font-medium text-on-surface">Marcus Sterling</span>
 </div>
 </td>
-<td class="py-4">Intellectual Property</td>
-<td class="py-4">
-<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-tertiary-fixed-dim text-on-tertiary-fixed">FILING</span>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Intellectual Property</td>
+<td class="px-6 py-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Discovery</span>
 </td>
-<td class="py-4 text-right text-on-surface-variant">5 hours ago</td>
+<td class="px-8 py-4 text-sm font-medium text-on-surface">Nov 02, 2023</td>
 </tr>
-<tr class="hover:bg-surface-container-low transition-colors group">
-<td class="py-4 font-bold text-primary">#LC-2023-882</td>
-<td class="py-4">
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-4 text-sm font-bold text-slate-900 font-manrope">#LL-2024-045</td>
+<td class="px-6 py-4">
 <div class="flex items-center gap-3">
-<div class="w-7 h-7 rounded bg-secondary-fixed flex items-center justify-center text-[10px] font-bold text-on-secondary-fixed">JT</div>
-<span>Jonathan Thorne</span>
+<div class="w-7 h-7 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-700">DA</div>
+<span class="text-sm font-medium text-on-surface">Derrick Adams</span>
 </div>
 </td>
-<td class="py-4">Contract Dispute</td>
-<td class="py-4">
-<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-surface-container-highest text-on-surface-variant">INACTIVE</span>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Estate Law</td>
+<td class="px-6 py-4">
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Overdue</span>
 </td>
-<td class="py-4 text-right text-on-surface-variant">Yesterday</td>
+<td class="px-8 py-4 text-sm font-medium text-on-surface">Expired</td>
 </tr>
-<tr class="hover:bg-surface-container-low transition-colors group">
-<td class="py-4 font-bold text-primary">#LC-2024-115</td>
-<td class="py-4">
+<tr class="hover:bg-surface-container-low/30 transition-colors">
+<td class="px-8 py-4 text-sm font-bold text-slate-900 font-manrope">#LL-2024-104</td>
+<td class="px-6 py-4">
 <div class="flex items-center gap-3">
-<div class="w-7 h-7 rounded bg-primary-fixed-dim flex items-center justify-center text-[10px] font-bold text-on-primary-fixed">SC</div>
-<span>Sarah Chen</span>
+<div class="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center text-[10px] font-bold text-emerald-700">CP</div>
+<span class="text-sm font-medium text-on-surface">Clara Ponds</span>
 </div>
 </td>
-<td class="py-4">Labor Compliance</td>
-<td class="py-4">
-<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-error-container text-on-error-container">URGENT</span>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Family Dispute</td>
+<td class="px-6 py-4">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">Active</span>
 </td>
-<td class="py-4 text-right text-on-surface-variant">4 mins ago</td>
+<td class="px-8 py-4 text-sm font-medium text-on-surface">Oct 28, 2023</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 </div>
-<!-- Sidebar Info (1/4 Width) -->
-<div class="lg:col-span-1 space-y-6">
-<!-- Upcoming Hearings -->
-<section class="bg-surface-container-highest rounded-xl p-6 relative overflow-hidden">
-<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl"></div>
-<div class="relative z-10">
-<div class="flex items-center justify-between mb-6">
-<h3 class="text-sm font-black text-primary uppercase tracking-wider">Hearings This Week</h3>
-<span class="text-[10px] font-bold text-primary">3 NEW</span>
+<!-- Right Column: Upcoming Hearings & Insights -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<!-- Hearings Section -->
+<div class="bg-surface-container-low rounded-xl p-8 border border-outline-variant/10">
+<div class="flex items-center justify-between mb-8">
+<h3 class="text-lg font-bold text-on-surface font-manrope">Today's Docket</h3>
+<span class="text-[10px] font-black text-secondary tracking-widest uppercase">Oct 22, 2023</span>
 </div>
-<div class="space-y-4">
-<!-- Hearing Card 1 -->
-<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm border-l-4 border-primary group cursor-pointer hover:translate-x-1 transition-transform">
-<p class="text-[10px] font-bold text-on-surface-variant mb-1 uppercase">Today • 14:00 PM</p>
-<h4 class="text-sm font-bold text-primary mb-2">Wright vs. Sterling Corp</h4>
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-xs text-on-surface-variant">location_on</span>
-<span class="text-[10px] text-on-surface-variant">Superior Court - Room 4B</span>
-</div>
-</div>
-<!-- Hearing Card 2 -->
-<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm border-l-4 border-tertiary-fixed-dim group cursor-pointer hover:translate-x-1 transition-transform">
-<p class="text-[10px] font-bold text-on-surface-variant mb-1 uppercase">Oct 14 • 09:30 AM</p>
-<h4 class="text-sm font-bold text-primary mb-2">Petrov IP Deposition</h4>
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-xs text-on-surface-variant">videocam</span>
-<span class="text-[10px] text-on-surface-variant">Remote - Zoom Conference</span>
+<div class="space-y-6">
+<!-- Hearing 1 -->
+<div class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-1 before:bottom-1 before:w-1 before:bg-secondary before:rounded-full">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">09:00 AM — Courtroom 4B</p>
+<h4 class="text-sm font-extrabold text-on-surface mt-1">Hart vs. Global Dynamics</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Preliminary Injunction Hearing regarding corporate asset freeze.</p>
+<div class="mt-3 flex gap-2">
+<button class="bg-surface-container-lowest border border-outline-variant/20 text-[10px] font-bold px-3 py-1 rounded-lg hover:bg-white transition-colors">Briefing</button>
+<button class="bg-surface-container-lowest border border-outline-variant/20 text-[10px] font-bold px-3 py-1 rounded-lg hover:bg-white transition-colors">Contacts</button>
 </div>
 </div>
-<!-- Hearing Card 3 -->
-<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm border-l-4 border-primary group cursor-pointer hover:translate-x-1 transition-transform">
-<p class="text-[10px] font-bold text-on-surface-variant mb-1 uppercase">Oct 16 • 11:00 AM</p>
-<h4 class="text-sm font-bold text-primary mb-2">Chen Labor Review</h4>
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-xs text-on-surface-variant">location_on</span>
-<span class="text-[10px] text-on-surface-variant">District Court - Annex</span>
+<!-- Hearing 2 -->
+<div class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-1 before:bottom-1 before:w-1 before:bg-slate-300 before:rounded-full">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">01:30 PM — Virtual / Zoom</p>
+<h4 class="text-sm font-extrabold text-on-surface mt-1">Sterling IP Discovery</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Confidential meeting with opposing counsel on patent claims.</p>
+</div>
+<!-- Hearing 3 -->
+<div class="relative pl-6 before:content-[''] before:absolute before:left-0 before:top-1 before:bottom-1 before:w-1 before:bg-slate-300 before:rounded-full">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">04:00 PM — Chambers</p>
+<h4 class="text-sm font-extrabold text-on-surface mt-1">Clara Ponds Mediation</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Final settlement review before Friday's filing deadline.</p>
 </div>
 </div>
-</div>
-<button class="w-full mt-6 py-2 border border-outline-variant/30 rounded text-xs font-bold text-primary hover:bg-primary hover:text-white transition-all">
+<button class="w-full mt-8 py-4 bg-slate-900 text-white rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-black transition-colors">
                             Full Calendar View
                         </button>
 </div>
-</section>
-<!-- Document Checklist -->
-<section class="bg-primary text-white rounded-xl p-6 overflow-hidden relative">
-<img class="absolute inset-0 w-full h-full object-cover opacity-10" data-alt="Tidy legal workspace with fountain pen, leather notebook, and professional atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvsaFbCXaU5WUL1goxx_2iIF5nB4M3AoCepE-kI4OleBFSx76YMWhwxhrfj-fjAApNYgah9vrMpD2IKSd7wBenlBxRg79pMZUBYyMPJ4zNIFyba16rcX_2jtjE8BXga8nTMR9D6hnUQPEjXxxP6U7cp9ciDN8WSa_DqZeuBx6ZEBw--nz7fXrf7OfMTPmdiXYIvfhjJQHntcH5c9zJttFJBvau41I9kR8yjm5X7i9uUgrhWL8Q0qMvia7SNpvtvhn4kfzijOEJ0q8"/>
+<!-- Client Insights / Graphic -->
+<div class="bg-primary-container text-white rounded-xl p-8 relative overflow-hidden shadow-2xl">
 <div class="relative z-10">
-<h3 class="text-sm font-bold mb-4 flex items-center gap-2">
-<span class="material-symbols-outlined text-sm">checklist</span>
-                            Priority Tasks
-                        </h3>
-<ul class="space-y-3 text-[11px]">
-<li class="flex items-start gap-2">
-<input class="mt-0.5 rounded-sm bg-white/20 border-none text-tertiary-fixed-dim focus:ring-0" type="checkbox"/>
-<span>Sign witness affidavit for #LC-2024-001</span>
-</li>
-<li class="flex items-start gap-2">
-<input class="mt-0.5 rounded-sm bg-white/20 border-none text-tertiary-fixed-dim focus:ring-0" type="checkbox"/>
-<span>Submit brief for Petrov IP case</span>
-</li>
-<li class="flex items-start gap-2">
-<input class="mt-0.5 rounded-sm bg-white/20 border-none text-tertiary-fixed-dim focus:ring-0" type="checkbox"/>
-<span>Review billing for Q3 Corporate</span>
-</li>
-</ul>
+<h3 class="text-lg font-bold font-manrope">LawLibra Premium</h3>
+<p class="text-xs text-blue-100/60 mt-1 font-medium">Advanced Case Analytics Enabled</p>
+<div class="mt-8 flex items-end gap-2">
+<div class="w-4 h-12 bg-amber-400 rounded-t-sm"></div>
+<div class="w-4 h-20 bg-amber-400/80 rounded-t-sm"></div>
+<div class="w-4 h-16 bg-amber-400/60 rounded-t-sm"></div>
+<div class="w-4 h-24 bg-amber-400 rounded-t-sm"></div>
+<div class="w-4 h-14 bg-amber-400/40 rounded-t-sm"></div>
 </div>
-</section>
+<p class="text-[10px] text-blue-100/40 mt-4 leading-relaxed uppercase tracking-widest">Efficiency up <span class="text-amber-400 font-bold">22%</span> this quarter</p>
+</div>
+<!-- Abstract Background Decoration -->
+<div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full blur-3xl"></div>
+<div class="absolute -left-10 -top-10 w-40 h-40 bg-amber-400/10 rounded-full blur-3xl"></div>
+</div>
+</div>
 </div>
 </div>
 </main>
+<!-- FAB for New Case (Contextual Suppression Rule ignored for Dashboard as per User Prompt) -->
+<button class="fixed bottom-8 right-8 bg-primary text-white w-14 h-14 rounded-full shadow-[0_24px_48px_rgba(0,0,0,0.2)] flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-2xl" data-icon="add" style="font-variation-settings: 'wght' 600;">add</span>
+</button>
 </body></html>
