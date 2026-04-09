@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LawLibra Admin - User Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#191c1e",
+                    "on-surface-variant": "#45474c",
+                    "inverse-primary": "#bbc7df",
+                    "background": "#f7f9fc",
+                    "on-secondary-fixed": "#241a00",
+                    "primary-fixed": "#d7e3fc",
+                    "inverse-surface": "#2d3133",
+                    "primary-container": "#101c2e",
+                    "primary": "#000000",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#374766",
+                    "error-container": "#ffdad6",
+                    "surface": "#f7f9fc",
+                    "on-primary-fixed": "#101c2e",
+                    "on-error-container": "#93000a",
+                    "surface-variant": "#e0e3e6",
+                    "on-tertiary-container": "#7484a6",
+                    "outline": "#75777d",
+                    "secondary": "#755b00",
+                    "on-tertiary-fixed": "#081b38",
+                    "tertiary-fixed-dim": "#b6c7ec",
+                    "on-background": "#191c1e",
+                    "on-primary-fixed-variant": "#3c475b",
+                    "surface-bright": "#f7f9fc",
+                    "outline-variant": "#c5c6cd",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#bbc7df",
+                    "on-primary-container": "#79849b",
+                    "surface-dim": "#d8dadd",
+                    "surface-tint": "#535f74",
+                    "tertiary-fixed": "#d7e2ff",
+                    "on-secondary-fixed-variant": "#584400",
+                    "secondary-fixed": "#ffe08f",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#081b38",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#eff1f4",
+                    "secondary-container": "#fed977",
+                    "surface-container-highest": "#e0e3e6",
+                    "surface-container-low": "#f2f4f7",
+                    "surface-container": "#eceef1",
+                    "secondary-fixed-dim": "#e6c364",
+                    "on-secondary-container": "#785d00",
+                    "tertiary": "#000000",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-high": "#e6e8eb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fc; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#0D1F3C] dark:bg-[#06101F] shadow-2xl dark:shadow-none flex flex-col py-6 px-4 z-50">
+<div class="mb-10 px-2 flex items-center gap-3">
+<div class="w-10 h-10 bg-secondary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">gavel</span>
+</div>
+<div>
+<h1 class="text-2xl font-bold tracking-tight text-white leading-none">LawLibra</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-slate-400 mt-1">The Sovereign Counsel</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+<span class="font-label title-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-lg">folder_open</span>
+<span class="font-label title-lg">Cases</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-lg">description</span>
+<span class="font-label title-lg">Documents</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-lg">auto_awesome</span>
+<span class="font-label title-lg">AI Chat</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-lg">calendar_month</span>
+<span class="font-label title-lg">Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-lg">notifications</span>
+<span class="font-label title-lg">Notifications</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 bg-white/10 text-white font-semibold rounded-lg group scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<span class="font-label title-lg">Admin</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span class="font-label title-lg">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-white/5">
+<div class="flex items-center gap-3 px-2">
+<img alt="User Profile" class="w-9 h-9 rounded-full border border-white/10" data-alt="professional headshot of a senior legal partner in a tailored suit, soft library lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYjpmht6Dnd2ZR45l7LGHgWTwbmZNo62QzvYueTSe0r-brlWNE8hPFd4t5KpZ1_hPkiCefyAkuB2308fpYzmHdup-yWY7HslFSRi-zqjbmO5MDrCc-o_NZgoOB3NkR9tBgutwodI7UBPepHdeGkW4PSYqZqHMTfv-L1IsGpBNyGpB6BFOM54BJ6HTUJjBR60tLBMjgjRM56H3GCutFyJWFM62Zj9nbOiiMKfUNVz6E5ZfQ2Q-OdIoT71O_s64HfulR4SO1-lDjveOU"/>
+<div class="overflow-hidden">
+<p class="text-sm font-semibold text-white truncate">Marcus Sterling</p>
+<p class="text-xs text-slate-500 truncate">Senior Admin</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/80 backdrop-blur-xl flex items-center justify-between px-8 w-full shadow-sm">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-secondary/20 transition-all" placeholder="Search users, cases, or documents..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-100 rounded-lg transition-colors relative">
+<span class="material-symbols-outlined text-slate-600">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="h-8 w-px bg-slate-200 mx-2"></div>
+<button class="flex items-center gap-2 hover:bg-slate-100 p-1 pr-3 rounded-lg transition-colors">
+<img alt="Marcus Sterling" class="w-8 h-8 rounded-lg object-cover" data-alt="minimalist professional avatar for a law firm admin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASNI3rEa_ueMiINDVawJylm-HBGmpf73tVd8rUU4nq8xco1Xp1aE0A4B4eWObTXQMQOpNtBc4C7gseuK_k40VsJ_cQgq8xSYYBrS9O0kJe7oiF1inwqzhhtrwPkZgFhbQRieiOKtD2pIz50v32_U8hd1LGy05jQb_g8uwxNj1GqCAUC9HVdH4GVf-SqOKT0zvkSZbkDDNbepizU1WPOL0Df3i-5XpXEMsNiFjeVTTXI6A7TrCIXocZlT_mIJxiHtgJEE0yrzRFFgwl"/>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pl-64 pt-16 min-h-screen">
+<div class="p-8 max-w-7xl mx-auto">
+<!-- Page Header & Sub-nav -->
+<div class="mb-10 flex flex-col gap-6">
+<div class="flex items-center justify-between">
+<div>
+<h2 class="text-3xl font-extrabold text-on-surface tracking-tight font-headline">User Management</h2>
+<p class="text-on-surface-variant mt-1 font-body">Manage system access and roles for the legal team.</p>
+</div>
+<button class="flex items-center gap-2 bg-primary-container text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:opacity-90 transition-all active:scale-95 bg-gradient-to-br from-[#101c2e] to-[#3c475b]">
+<span class="material-symbols-outlined">add</span>
+<span>Add User</span>
+</button>
+</div>
+<!-- Sub-nav Tabs -->
+<div class="flex items-center gap-8 border-b-0">
+<a class="text-[#0D1F3C] font-bold border-b-2 border-secondary pb-2 px-1 text-sm tracking-wide transition-all" href="#">Users</a>
+<a class="text-slate-500 hover:text-on-surface pb-2 px-1 text-sm tracking-wide transition-all" href="#">All Cases</a>
+</div>
+</div>
+<!-- Bento-style Stats Grid (Optional but elevated) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Total Users</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-extrabold text-on-surface">124</span>
+<span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-0.5 rounded-full">+12%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Active Now</p>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-extrabold text-on-surface">42</span>
+<span class="text-xs font-medium text-slate-400">Steady</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm col-span-2">
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-2">Recent Security Events</p>
+<div class="flex items-center gap-4 mt-1">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center border-2 border-white"><span class="text-[10px] material-symbols-outlined">shield</span></div>
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed-dim flex items-center justify-center border-2 border-white"><span class="text-[10px] material-symbols-outlined">key</span></div>
+</div>
+<p class="text-sm text-on-surface-variant">2-factor authentication enabled for <span class="font-bold text-on-surface">14 new members</span> this week.</p>
+</div>
+</div>
+</div>
+<!-- Users Table Container -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden border border-outline-variant/10">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50">
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">Name</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">Email</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">Role</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest">Created Date</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-widest text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low">
+<!-- User Row 1 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary-container font-bold">JD</div>
+<div>
+<p class="font-bold text-on-surface">Julian Davenport</p>
+<p class="text-xs text-on-surface-variant">Last active 2m ago</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">j.davenport@lawlibra.com</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#101c2e10] text-[#101c2e]">Partner</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Oct 12, 2023</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-2 hover:bg-error-container hover:text-error rounded-lg text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- User Row 2 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed-dim flex items-center justify-center text-on-tertiary-fixed font-bold">EM</div>
+<div>
+<p class="font-bold text-on-surface">Elena Moretti</p>
+<p class="text-xs text-on-surface-variant">Last active 1h ago</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">e.moretti@lawlibra.com</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">Senior Associate</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Jan 05, 2024</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-2 hover:bg-error-container hover:text-error rounded-lg text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- User Row 3 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-fixed-dim flex items-center justify-center text-on-primary-fixed font-bold">TC</div>
+<div>
+<p class="font-bold text-on-surface">Thomas Chen</p>
+<p class="text-xs text-on-surface-variant">Last active yesterday</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">t.chen@lawlibra.com</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-surface-variant text-on-surface-variant">Paralegal</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Mar 22, 2024</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-2 hover:bg-error-container hover:text-error rounded-lg text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- User Row 4 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary-fixed-dim flex items-center justify-center text-on-secondary-fixed font-bold">SF</div>
+<div>
+<p class="font-bold text-on-surface">Sarah Fischer</p>
+<p class="text-xs text-on-surface-variant">Last active 4h ago</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">s.fischer@lawlibra.com</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-secondary-container text-on-secondary-container">Senior Associate</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant">Nov 30, 2023</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
+<button class="p-2 hover:bg-error-container hover:text-error rounded-lg text-on-surface-variant transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 flex items-center justify-between bg-surface-container-low/20">
+<p class="text-xs text-on-surface-variant font-medium tracking-wide">Showing <span class="text-on-surface">1-10</span> of <span class="text-on-surface">124</span> users</p>
+<div class="flex gap-2">
+<button class="px-4 py-2 text-xs font-bold text-on-surface-variant bg-surface-container-low rounded-lg hover:bg-surface-container-high transition-colors">Previous</button>
+<button class="px-4 py-2 text-xs font-bold text-on-primary bg-primary-container rounded-lg hover:opacity-90 transition-opacity">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- AI Helper Floating Button (The Libra Panel Trigger) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-secondary-container text-on-secondary-container rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-50 group">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="absolute right-full mr-4 bg-primary-container text-white px-4 py-2 rounded-xl text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Ask AI Assistant</span>
+</button>
+</body></html>

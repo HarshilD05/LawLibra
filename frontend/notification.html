@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notifications | LawLibra</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fc;
+        }
+        .font-headline {
+            font-family: 'Manrope', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface": "#191c1e",
+                      "on-surface-variant": "#45474c",
+                      "inverse-primary": "#bbc7df",
+                      "background": "#f7f9fc",
+                      "on-secondary-fixed": "#241a00",
+                      "primary-fixed": "#d7e3fc",
+                      "inverse-surface": "#2d3133",
+                      "primary-container": "#101c2e",
+                      "primary": "#000000",
+                      "error": "#ba1a1a",
+                      "on-tertiary-fixed-variant": "#374766",
+                      "error-container": "#ffdad6",
+                      "surface": "#f7f9fc",
+                      "on-primary-fixed": "#101c2e",
+                      "on-error-container": "#93000a",
+                      "surface-variant": "#e0e3e6",
+                      "on-tertiary-container": "#7484a6",
+                      "outline": "#75777d",
+                      "secondary": "#755b00",
+                      "on-tertiary-fixed": "#081b38",
+                      "tertiary-fixed-dim": "#b6c7ec",
+                      "on-background": "#191c1e",
+                      "on-primary-fixed-variant": "#3c475b",
+                      "surface-bright": "#f7f9fc",
+                      "outline-variant": "#c5c6cd",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#bbc7df",
+                      "on-primary-container": "#79849b",
+                      "surface-dim": "#d8dadd",
+                      "surface-tint": "#535f74",
+                      "tertiary-fixed": "#d7e2ff",
+                      "on-secondary-fixed-variant": "#584400",
+                      "secondary-fixed": "#ffe08f",
+                      "on-secondary": "#ffffff",
+                      "tertiary-container": "#081b38",
+                      "surface-container-lowest": "#ffffff",
+                      "inverse-on-surface": "#eff1f4",
+                      "secondary-container": "#fed977",
+                      "surface-container-highest": "#e0e3e6",
+                      "surface-container-low": "#f2f4f7",
+                      "surface-container": "#eceef1",
+                      "secondary-fixed-dim": "#e6c364",
+                      "on-secondary-container": "#785d00",
+                      "tertiary": "#000000",
+                      "on-tertiary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "surface-container-high": "#e6e8eb"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "fontFamily": {
+                      "headline": ["Manrope"],
+                      "body": ["Inter"],
+                      "label": ["Inter"]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar -->
+<aside class="bg-[#0D1F3C] dark:bg-[#06101F] h-screen w-64 fixed left-0 top-0 flex flex-col py-6 px-4 shadow-2xl z-50">
+<div class="mb-10 px-2 flex items-center gap-3">
+<div class="w-10 h-10 bg-secondary-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">gavel</span>
+</div>
+<div>
+<h1 class="text-2xl font-bold tracking-tight text-white font-headline">LawLibra</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">The Sovereign Counsel</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-3 py-3 text-slate-400 hover:text-white transition-all duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-400 hover:text-white transition-all duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">folder_open</span>
+<span class="font-medium text-sm">Cases</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-400 hover:text-white transition-all duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">description</span>
+<span class="font-medium text-sm">Documents</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-400 hover:text-white transition-all duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">auto_awesome</span>
+<span class="font-medium text-sm">AI Chat</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-400 hover:text-white transition-all duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">calendar_month</span>
+<span class="font-medium text-sm">Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 bg-white/10 text-white font-semibold rounded-lg scale-[0.98]" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<span class="font-medium text-sm">Notifications</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-400 hover:text-white transition-all duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">gavel</span>
+<span class="font-medium text-sm">Admin</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-3 text-slate-400 hover:text-white transition-all duration-200 group rounded-lg" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-white/5">
+<div class="flex items-center gap-3 px-2">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Portrait of a professional male lawyer in a dark suit with a focused expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACB9zsVq32vjbNZT1L8Jhe4dV0pkuE2eHqf3orlPrDnuiCG9NciaZltI1HCCmzty6-uSA4lkngqV1PIYQvgyDi2OLWRjqqqTvqxGcU4GNdCmVrxDfyxutQNxPNrqEBQ4EOVpEW2NdsI4RKxTG-PpgBgaHkWY2OZVHF541KWcgNijkPXPVO7t7iisjVTRB9SUUnf_BLb_4fHsTGKzjQm4-1VOL_f1V_Gfid4os6PrQPsXX0gpSlMXZSb0vI0K-CG92uol1MPOkUPFWm"/>
+<div class="overflow-hidden">
+<p class="text-white text-sm font-semibold truncate">Julian Sterling</p>
+<p class="text-slate-500 text-xs truncate">Senior Partner</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/80 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm">
+<div class="flex items-center bg-surface-container-low px-4 py-2 rounded-xl w-96 transition-all focus-within:bg-surface-container-lowest focus-within:ring-2 ring-secondary/20">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-on-surface-variant/50" placeholder="Search cases, documents, or legal precedents..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative p-2 rounded-lg hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined text-slate-600" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-error rounded-full border-2 border-white"></span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant/30"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-xs font-bold text-slate-900">Julian Sterling</p>
+<p class="text-[10px] text-slate-500 font-medium">L-9023412</p>
+</div>
+<img class="w-9 h-9 rounded-full object-cover border border-outline-variant/20" data-alt="Close up professional headshot of a male executive" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSBn1Fw6wp47YPhdaMY20BLXpANIGRwxweWIVwd6p3T6ij8JNqqS9Flc2sFUmM3_kdIFNZ8Wy91O-2lUBjiwejrSmnJA_MUGW7JT0WoTrq_SGTU_lFHjHr9BU4H6hssRjoToOKgQVwYFTwItSVQehTwtD_Vgi04wDDjs9UAzGCSpT8kfC_V_pivoiFBjQKsu4qp6O77LZCcN9WwHqV4VVg7xY5DVuKDchKkWc4EGKrjf2ntoX4IkcLdwV-xHxrHOQR0NhsZnyC3QTp"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="pl-64 pt-16 min-h-screen">
+<div class="max-w-6xl mx-auto p-10">
+<!-- Page Header -->
+<div class="flex items-end justify-between mb-10">
+<div>
+<h2 class="text-4xl font-extrabold tracking-tight text-on-surface font-headline mb-2">Notifications</h2>
+<p class="text-on-surface-variant font-medium">Keep track of your case updates and scheduled hearings.</p>
+</div>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-lowest text-on-surface text-sm font-semibold rounded-lg shadow-sm hover:shadow-md transition-all">
+<span class="material-symbols-outlined text-lg">done_all</span>
+                    Mark all read
+                </button>
+</div>
+<!-- Filters Section (No-Line Logic) -->
+<div class="flex items-center gap-2 mb-8 bg-surface-container-low p-1.5 rounded-xl self-start w-fit">
+<button class="px-6 py-2 rounded-lg bg-surface-container-lowest shadow-sm text-sm font-bold text-primary transition-all">All</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-surface-container-high transition-all">Unread</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-surface-container-high transition-all">Hearings</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-surface-container-high transition-all">Documents</button>
+<button class="px-6 py-2 rounded-lg text-sm font-medium text-on-surface-variant hover:bg-surface-container-high transition-all">Cases</button>
+</div>
+<!-- Notifications List -->
+<div class="space-y-6">
+<!-- Unread Notification -->
+<div class="group relative bg-surface-container-lowest p-6 rounded-xl border-l-4 border-blue-500 shadow-sm hover:shadow-lg transition-all flex items-start gap-6">
+<div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-blue-600" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-base font-bold text-on-surface">Upcoming Hearing: Commonwealth vs. Thorne</h3>
+<span class="text-xs font-semibold text-on-surface-variant bg-surface-container-low px-2 py-1 rounded">10 mins ago</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-4 max-w-2xl">The evidentiary hearing has been rescheduled for tomorrow at 09:00 AM in Courtroom 4B. Please review the updated brief before then.</p>
+<div class="flex items-center gap-4">
+<button class="text-xs font-bold text-secondary uppercase tracking-wider hover:underline">View Case Files</button>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<button class="text-xs font-bold text-on-surface-variant uppercase tracking-wider hover:text-on-surface">Mark as read</button>
+</div>
+</div>
+</div>
+<!-- Unread Notification -->
+<div class="group relative bg-surface-container-lowest p-6 rounded-xl border-l-4 border-blue-500 shadow-sm hover:shadow-lg transition-all flex items-start gap-6">
+<div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-amber-600" style="font-variation-settings: 'FILL' 1;">description</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-base font-bold text-on-surface">New Document Shared: Acquisition_Agreement_Final.pdf</h3>
+<span class="text-xs font-semibold text-on-surface-variant bg-surface-container-low px-2 py-1 rounded">2 hours ago</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-4 max-w-2xl">Marcus Vance has uploaded the final version of the agreement. Your digital signature is required to proceed with the filing.</p>
+<div class="flex items-center gap-4">
+<button class="text-xs font-bold text-secondary uppercase tracking-wider hover:underline">Review &amp; Sign</button>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<button class="text-xs font-bold text-on-surface-variant uppercase tracking-wider hover:text-on-surface">Mark as read</button>
+</div>
+</div>
+<div class="absolute top-6 right-6">
+<div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+</div>
+</div>
+<!-- Read Notification -->
+<div class="group relative bg-surface-container-low/50 p-6 rounded-xl border-l-4 border-transparent hover:bg-surface-container-low transition-all flex items-start gap-6">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center flex-shrink-0 opacity-70">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">folder_open</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-base font-semibold text-on-surface opacity-70">Case Status Updated: Zenith Corp Litigation</h3>
+<span class="text-xs font-medium text-on-surface-variant px-2 py-1">Yesterday</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed opacity-70 max-w-2xl">The motion to dismiss has been denied by Judge Alistair. The discovery phase is now officially open until November 15th.</p>
+</div>
+</div>
+<!-- Read Notification -->
+<div class="group relative bg-surface-container-low/50 p-6 rounded-xl border-l-4 border-transparent hover:bg-surface-container-low transition-all flex items-start gap-6">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high flex items-center justify-center flex-shrink-0 opacity-70">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">gavel</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-base font-semibold text-on-surface opacity-70">Trial Commencement: State vs. Miller</h3>
+<span class="text-xs font-medium text-on-surface-variant px-2 py-1">Oct 12, 2023</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed opacity-70 max-w-2xl">Jury selection is complete. Opening statements are scheduled for 10:00 AM. Ensure all primary exhibits are ready in the digital briefcase.</p>
+</div>
+</div>
+<!-- Unread Notification -->
+<div class="group relative bg-surface-container-lowest p-6 rounded-xl border-l-4 border-blue-500 shadow-sm hover:shadow-lg transition-all flex items-start gap-6">
+<div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-purple-600" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<h3 class="text-base font-bold text-on-surface">AI Analysis Ready: Compliance Report</h3>
+<span class="text-xs font-semibold text-on-surface-variant bg-surface-container-low px-2 py-1 rounded">2 days ago</span>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-4 max-w-2xl">Libra AI has completed scanning the 200+ pages of the new regulatory guidelines. 4 potential risk areas were identified for your attention.</p>
+<div class="flex items-center gap-4">
+<button class="text-xs font-bold text-secondary uppercase tracking-wider hover:underline">Read Summary</button>
+<span class="w-1 h-1 bg-outline-variant rounded-full"></span>
+<button class="text-xs font-bold text-on-surface-variant uppercase tracking-wider hover:text-on-surface">Mark as read</button>
+</div>
+</div>
+<div class="absolute top-6 right-6">
+<div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+</div>
+</div>
+</div>
+<!-- Empty State Concept (Footer) -->
+<div class="mt-16 flex items-center justify-center py-12 border-t border-outline-variant/10">
+<div class="text-center">
+<div class="w-16 h-16 bg-surface-container-low rounded-full flex items-center justify-center mx-auto mb-4">
+<span class="material-symbols-outlined text-on-surface-variant/30 text-3xl">notifications_off</span>
+</div>
+<p class="text-on-surface-variant text-sm font-medium">You've reached the end of your notifications.</p>
+<button class="mt-4 text-xs font-bold text-secondary uppercase tracking-widest hover:underline">View Archived</button>
+</div>
+</div>
+</div>
+</main>
+<!-- AI Libra Panel (Signature Component) -->
+<div class="fixed right-6 bottom-6 z-50">
+<button class="w-14 h-14 bg-secondary-container rounded-2xl flex items-center justify-center shadow-xl hover:scale-105 transition-transform group">
+<span class="material-symbols-outlined text-on-secondary-container text-2xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<div class="absolute right-full mr-4 px-4 py-2 bg-primary-container text-on-primary rounded-lg text-xs font-bold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                Ask Libra Assistant
+            </div>
+</button>
+</div>
+</body></html>

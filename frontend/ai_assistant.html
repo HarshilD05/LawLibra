@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LawLibra | AI Chat</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-surface": "#191c1e",
+                    "on-surface-variant": "#45474c",
+                    "inverse-primary": "#bbc7df",
+                    "background": "#f7f9fc",
+                    "on-secondary-fixed": "#241a00",
+                    "primary-fixed": "#d7e3fc",
+                    "inverse-surface": "#2d3133",
+                    "primary-container": "#101c2e",
+                    "primary": "#000000",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#374766",
+                    "error-container": "#ffdad6",
+                    "surface": "#f7f9fc",
+                    "on-primary-fixed": "#101c2e",
+                    "on-error-container": "#93000a",
+                    "surface-variant": "#e0e3e6",
+                    "on-tertiary-container": "#7484a6",
+                    "outline": "#75777d",
+                    "secondary": "#755b00",
+                    "on-tertiary-fixed": "#081b38",
+                    "tertiary-fixed-dim": "#b6c7ec",
+                    "on-background": "#191c1e",
+                    "on-primary-fixed-variant": "#3c475b",
+                    "surface-bright": "#f7f9fc",
+                    "outline-variant": "#c5c6cd",
+                    "on-primary": "#ffffff",
+                    "primary-fixed-dim": "#bbc7df",
+                    "on-primary-container": "#79849b",
+                    "surface-dim": "#d8dadd",
+                    "surface-tint": "#535f74",
+                    "tertiary-fixed": "#d7e2ff",
+                    "on-secondary-fixed-variant": "#584400",
+                    "secondary-fixed": "#ffe08f",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#081b38",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#eff1f4",
+                    "secondary-container": "#fed977",
+                    "surface-container-highest": "#e0e3e6",
+                    "surface-container-low": "#f2f4f7",
+                    "surface-container": "#eceef1",
+                    "secondary-fixed-dim": "#e6c364",
+                    "on-secondary-container": "#785d00",
+                    "tertiary": "#000000",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "surface-container-high": "#e6e8eb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body overflow-hidden">
+<!-- SideNavBar (Authority Source: JSON) -->
+<aside class="bg-[#0D1F3C] dark:bg-[#06101F] h-screen w-64 fixed left-0 top-0 flex flex-col py-6 px-4 z-50 shadow-2xl dark:shadow-none">
+<div class="mb-10 px-2">
+<h1 class="text-2xl font-bold tracking-tight text-white font-headline">LawLibra</h1>
+<p class="text-xs text-on-primary-container uppercase tracking-widest mt-1">The Sovereign Counsel</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white transition-colors hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span class="font-label text-sm">Dashboard</span>
+</a>
+<!-- Cases -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white transition-colors hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">folder_open</span>
+<span class="font-label text-sm">Cases</span>
+</a>
+<!-- Documents -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white transition-colors hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">description</span>
+<span class="font-label text-sm">Documents</span>
+</a>
+<!-- AI Chat (ACTIVE) -->
+<a class="flex items-center gap-3 px-3 py-2.5 bg-white/10 text-white font-semibold rounded-lg scale-98 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label text-sm">AI Chat</span>
+</a>
+<!-- Calendar -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white transition-colors hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">calendar_month</span>
+<span class="font-label text-sm">Calendar</span>
+</a>
+<!-- Notifications -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white transition-colors hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="font-label text-sm">Notifications</span>
+</a>
+<!-- Admin -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white transition-colors hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">gavel</span>
+<span class="font-label text-sm">Admin</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-white/5 pt-4">
+<a class="flex items-center gap-3 px-3 py-2.5 text-slate-400 hover:text-white transition-colors hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="font-label text-sm">Settings</span>
+</a>
+</div>
+</aside>
+<!-- TopNavBar (Authority Source: JSON) -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-8 w-full shadow-sm dark:shadow-none">
+<div class="flex items-center gap-4 w-1/3">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl py-2 pl-10 text-sm focus:ring-0 focus:bg-surface-container-lowest transition-all" placeholder="Search cases, documents, or insights..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-surface-variant">
+<div class="text-right">
+<p class="text-sm font-bold leading-none text-slate-900">Julian Thorne</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Senior Counsel</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="professional portrait of a senior lawyer with a serious but confident expression in a dark suit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp4eK4fy6bCP-UXri9_oTFYEP1xeJ77SdoAxtlGGvR2Dsa8Snw0v4iXPEWCQuSV45U1l93OrY4xvaRy__3pobAkm8F28YDFPrxbTJZRe7kBIcUOJ8Kaf9lRsNA8nosREgXPmf9u7w9C5eEJyHtHdanBwfFfDlCTWPsKQmpJ2pAJS76yj54DHgk13gCkdBp_7wnYXaP7NVLKAevt_bzfLN38OX1-vARBu1kVN8nrfUCy6JhpZ_gC70Y-FqwpUa3OWaJ8n6Gk-Qjxohu"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area: Split View AI Chat -->
+<main class="pt-16 pl-64 h-screen flex overflow-hidden">
+<!-- Left Sidebar: Chat Threads Grouped by Case -->
+<section class="w-[380px] bg-surface-container-low flex flex-col border-r-0">
+<div class="p-6">
+<h2 class="font-headline text-2xl font-bold tracking-tight mb-2">Consultations</h2>
+<p class="text-sm text-on-surface-variant">Intelligent legal synthesis &amp; case strategy.</p>
+</div>
+<div class="flex-1 overflow-y-auto px-4 pb-6 space-y-6">
+<!-- Case Group 1 -->
+<div>
+<div class="flex items-center gap-2 mb-3 px-2">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Case: Smith v. GlobalCorp</span>
+</div>
+<div class="space-y-2">
+<!-- Active Thread -->
+<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm border-l-4 border-secondary cursor-pointer transition-all">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-bold text-on-surface">Deposition Strategy</h3>
+<span class="text-[10px] text-on-surface-variant font-medium">10:24 AM</span>
+</div>
+<p class="text-xs text-on-surface-variant line-clamp-1">Analysis of witness inconsistencies in the Q3 report...</p>
+<div class="mt-3 flex gap-2">
+<span class="bg-primary-container/5 text-on-primary-container text-[10px] font-semibold px-2 py-0.5 rounded-full">AI Synthesis</span>
+</div>
+</div>
+<!-- Inactive Thread -->
+<div class="p-4 rounded-xl hover:bg-surface-container-high cursor-pointer transition-all group">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary">Liability Review</h3>
+<span class="text-[10px] text-on-surface-variant">Yesterday</span>
+</div>
+<p class="text-xs text-on-surface-variant line-clamp-1">Reviewing the tort law application for the cross-claim...</p>
+</div>
+</div>
+</div>
+<!-- Case Group 2 -->
+<div>
+<div class="flex items-center gap-2 mb-3 px-2">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Case: Estate of Harrison</span>
+</div>
+<div class="space-y-2">
+<div class="p-4 rounded-xl hover:bg-surface-container-high cursor-pointer transition-all group">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary">Trust Fund Clause</h3>
+<span class="text-[10px] text-on-surface-variant">Tue</span>
+</div>
+<p class="text-xs text-on-surface-variant line-clamp-1">Synthesizing the implications of the 1994 codicil...</p>
+</div>
+<div class="p-4 rounded-xl hover:bg-surface-container-high cursor-pointer transition-all group">
+<div class="flex justify-between items-start mb-1">
+<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary">Asset Distribution</h3>
+<span class="text-[10px] text-on-surface-variant">2d ago</span>
+</div>
+<p class="text-xs text-on-surface-variant line-clamp-1">Historical valuation of the real estate holdings...</p>
+</div>
+</div>
+</div>
+<!-- More Groups could follow -->
+</div>
+<div class="p-4 border-t-0 bg-surface-container-low">
+<button class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary-container text-on-primary font-bold text-sm bg-gradient-to-br from-[#101c2e] to-[#3c475b] shadow-md hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">add</span>
+                    New Consultation
+                </button>
+</div>
+</section>
+<!-- Right Side: Chat Interface -->
+<section class="flex-1 flex flex-col bg-surface relative">
+<!-- Chat Header -->
+<div class="h-16 flex items-center justify-between px-8 bg-surface-container-lowest/50 backdrop-blur-md">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<h2 class="font-headline text-lg font-bold">Deposition Strategy</h2>
+<p class="text-[10px] font-bold text-secondary uppercase tracking-widest">Model: Libra-X Sovereign</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-xl">share</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-xl">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Messages Area -->
+<div class="flex-1 overflow-y-auto p-12 space-y-10">
+<!-- User Message -->
+<div class="flex flex-col items-end gap-3 max-w-3xl ml-auto">
+<div class="bg-surface-container-high/40 p-5 rounded-2xl rounded-tr-none">
+<p class="text-sm leading-relaxed text-on-surface">
+                            Can you analyze the conflict between Sarah Miller's testimony in Exhibit B and the internal Q3 financial report? Focus specifically on the timing of her awareness of the shortfall.
+                        </p>
+</div>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">You • 10:24 AM</span>
+</div>
+<!-- AI Response -->
+<div class="flex gap-6 max-w-4xl">
+<div class="flex-shrink-0">
+<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<div class="bg-surface-container-lowest shadow-sm p-6 rounded-2xl rounded-tl-none border border-outline-variant/10">
+<p class="text-sm leading-relaxed text-on-surface mb-4">
+                                I have analyzed the relevant sections of **Exhibit B (Miller Testimony)** and the **Q3 Internal Report (Doc-42)**. There is a demonstrable discrepancy of 14 days in her narrative.
+                            </p>
+<div class="space-y-4">
+<div class="bg-surface-container-low p-4 rounded-xl border-l-4 border-secondary-container">
+<h4 class="text-[10px] font-black text-on-secondary-container uppercase mb-1">The Conflict</h4>
+<p class="text-xs text-on-surface-variant">In Exhibit B (pg. 42, line 12), Miller states she first learned of the shortfall on **October 15th**. However, metadata and carbon copies in the Q3 Report show she was CC'd on the "Critical Risk Assessment" email sent on **October 1st**.</p>
+</div>
+<h4 class="text-xs font-bold text-on-surface">Strategic Recommendation:</h4>
+<ul class="list-disc list-inside text-xs text-on-surface-variant space-y-2 ml-2">
+<li>Confront the witness with the October 1st email timestamp first.</li>
+<li>Ask her to identify her own signature on the receipt acknowledgment.</li>
+<li>This establishes a foundation for "prior knowledge" which complicates her subsequent denial of intent.</li>
+</ul>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="text-[10px] font-bold text-on-surface-variant uppercase">Libra AI • Just now</span>
+<div class="flex gap-2">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">thumb_up</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">content_copy</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">refresh</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Another User Message (Placeholder/Sketch) -->
+<div class="flex flex-col items-end gap-3 max-w-3xl ml-auto opacity-50">
+<div class="bg-surface-container-high/40 p-5 rounded-2xl rounded-tr-none">
+<p class="text-sm leading-relaxed text-on-surface italic">
+                            Typing...
+                        </p>
+</div>
+</div>
+</div>
+<!-- Input Area -->
+<div class="p-8 bg-surface">
+<div class="max-w-4xl mx-auto relative group">
+<!-- Textarea Container -->
+<div class="relative bg-surface-container-low rounded-2xl p-4 shadow-inner group-focus-within:bg-surface-container-lowest transition-all">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-sm resize-none placeholder-on-surface-variant/60 pb-12" placeholder="Ask Libra to draft a memo, synthesize evidence, or check precedents..." rows="2"></textarea>
+<div class="absolute bottom-4 left-4 flex gap-3">
+<button class="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">attach_file</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">image</span>
+</button>
+<button class="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">mic</span>
+</button>
+</div>
+<div class="absolute bottom-4 right-4">
+<button class="flex items-center gap-2 bg-primary-container text-on-primary px-6 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-br from-[#101c2e] to-[#3c475b] shadow-lg hover:scale-105 transition-transform">
+<span>Consult</span>
+<span class="material-symbols-outlined text-lg">north_east</span>
+</button>
+</div>
+</div>
+<!-- Context Indicator -->
+<div class="mt-4 flex items-center justify-center gap-6">
+<div class="flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-secondary"></div>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Case Files Connected</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Real-time Legal Database Active</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Empty State Overlay (Optional/Conditional) -->
+<!-- This would be shown if no thread is selected -->
+<div class="hidden fixed inset-0 z-10 bg-surface/90 backdrop-blur-md flex items-center justify-center ml-64 mt-16" id="empty-state">
+<div class="text-center max-w-sm px-12">
+<div class="w-20 h-20 bg-surface-container-low rounded-3xl flex items-center justify-center mx-auto mb-6 text-on-surface-variant/20">
+<span class="material-symbols-outlined text-5xl">forum</span>
+</div>
+<h3 class="font-headline text-xl font-bold mb-2">Select a thread</h3>
+<p class="text-sm text-on-surface-variant mb-8">Choose a consultation from the left to review AI insights or start a new strategy session.</p>
+<button class="px-6 py-3 bg-primary-container text-on-primary rounded-xl font-bold text-sm bg-gradient-to-br from-[#101c2e] to-[#3c475b]">Start New Chat</button>
+</div>
+</div>
+</body></html>
