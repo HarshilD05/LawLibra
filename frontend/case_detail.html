@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LawLibra | Case Detail</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f8f9fa",
+                        "outline": "#74777f",
+                        "on-background": "#191c1d",
+                        "on-primary-fixed": "#001c3b",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-primary-fixed-variant": "#2d486d",
+                        "on-tertiary-fixed-variant": "#5c4300",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e7e8e9",
+                        "primary-fixed": "#d5e3ff",
+                        "primary-fixed-dim": "#adc8f5",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#261a00",
+                        "on-tertiary-container": "#ce9b0f",
+                        "secondary-container": "#d6e0f4",
+                        "on-surface": "#191c1d",
+                        "secondary-fixed-dim": "#bdc7da",
+                        "tertiary-fixed": "#ffdfa0",
+                        "secondary-fixed": "#d9e3f7",
+                        "surface": "#f8f9fa",
+                        "primary": "#022448",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container": "#edeeef",
+                        "tertiary": "#302200",
+                        "on-surface-variant": "#43474e",
+                        "inverse-surface": "#2e3132",
+                        "outline-variant": "#c4c6cf",
+                        "surface-tint": "#455f87",
+                        "primary-container": "#1e3a5f",
+                        "surface-container-low": "#f3f4f5",
+                        "tertiary-fixed-dim": "#f6be39",
+                        "inverse-primary": "#adc8f5",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-primary-container": "#8aa4cf",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e1e3e4",
+                        "secondary": "#555f70",
+                        "tertiary-container": "#4b3600",
+                        "on-secondary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#d9dadb",
+                        "on-secondary-container": "#5a6374",
+                        "on-secondary-fixed-variant": "#3e4757",
+                        "on-secondary-fixed": "#121c2a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift {
+            background: linear-gradient(180deg, #f8f9fa 0%, #f3f4f5 100%);
+        }
+        .primary-gradient {
+            background: linear-gradient(135deg, #022448 0%, #1e3a5f 100%);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col h-screen w-64 bg-slate-50 dark:bg-slate-900 border-r border-transparent tonal-shift">
+<div class="p-6">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg primary-gradient flex items-center justify-center shadow-lg">
+<span class="material-symbols-outlined text-white" data-icon="gavel">gavel</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-[#1E3A5F] dark:text-white font-['Inter'] tracking-tight">LawLibra</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Legal Management</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 mt-4 px-3 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#1E3A5F] dark:text-white font-semibold border-r-4 border-[#1E3A5F] dark:border-[#f6be39] bg-white dark:bg-slate-800 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span>Cases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Documents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Clients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span>Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 font-medium" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span>Notifications</span>
+</a>
+</nav>
+<div class="p-6 border-t border-slate-200/50">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-lg object-cover" data-alt="professional male lawyer portrait with confident expression in a high-end corporate setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD25ofyPda5fzMipC643nAMhfA6-C70P1Og9XDB9HpZoLZCgZYC-nIQzufeCTEDibz8X9LLK-o-4MgJ8nALAVwdIpJ3nteWWqC5T59D64HZdQllmTbq5-UuU31S-WRg9zWwQULZw3uTwjz99AY4Q1FPJfU0tHICRrOL8TNwboNubC8cxhqxf6guZAoRpX-q7e3RQ-xHthNHXt6GJ9ZgBQ0xoTQC3bfWoba3k2_gC81VhX-j4hAV7iTz7I8UYaHpE1EdKu2owAq-ef8"/>
+<div class="overflow-hidden">
+<p class="text-sm font-bold text-primary truncate">Arthur Sterling</p>
+<p class="text-xs text-on-surface-variant">Senior Partner</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="w-full h-16 sticky top-0 flex items-center justify-between px-8 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-96 group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg pl-10 text-sm py-2 transition-all" placeholder="Search cases, documents, or clients..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-600 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<button class="text-slate-600 hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-slate-600 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Case Detail Header -->
+<section class="p-8 pb-0">
+<nav class="flex items-center gap-2 text-xs font-medium text-on-surface-variant mb-6">
+<a class="hover:text-primary" href="#">Cases</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary">Case #LL-2024-0892</span>
+</nav>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div class="space-y-2">
+<div class="flex items-center gap-3">
+<span class="px-3 py-1 bg-tertiary-fixed-dim text-on-tertiary-fixed text-[10px] font-bold uppercase tracking-widest rounded-md">Urgent Filing</span>
+<span class="text-sm font-medium text-on-surface-variant">ID: LL-2024-0892</span>
+</div>
+<h2 class="text-4xl font-black text-primary tracking-tight">Harrison vs. Apex Dynamics Corp.</h2>
+<p class="text-on-surface-variant max-w-2xl leading-relaxed">Intellectual property dispute regarding proprietary logistics algorithms and alleged breach of non-disclosure agreement in the Pacific Northwest region.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="px-5 py-2.5 rounded-lg font-bold text-primary border-outline-variant/30 border hover:bg-surface-container-low transition-colors text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">edit</span>
+                        Edit Case
+                    </button>
+<button class="px-6 py-2.5 rounded-lg font-bold text-white primary-gradient shadow-lg hover:shadow-primary/10 transition-all text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">share</span>
+                        Share Access
+                    </button>
+</div>
+</div>
+<!-- Tabs -->
+<div class="flex items-center gap-8 border-b border-outline-variant/20">
+<button class="pb-4 text-sm font-bold text-primary border-b-2 border-primary">Overview</button>
+<button class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">Documents <span class="ml-1 px-1.5 py-0.5 bg-surface-container rounded text-[10px]">14</span></button>
+<button class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">Events <span class="ml-1 px-1.5 py-0.5 bg-surface-container rounded text-[10px]">3</span></button>
+<button class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">Notes</button>
+<button class="pb-4 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">Financials</button>
+</div>
+</section>
+<!-- Case Content Canvas -->
+<div class="p-8 grid grid-cols-12 gap-8">
+<!-- Main Content Area -->
+<div class="col-span-12 lg:col-span-8 space-y-8">
+<!-- Client & Lawyer Info Bento -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-xl">person</span>
+                                Client Information
+                            </h3>
+<button class="text-primary text-xs font-bold hover:underline">View Profile</button>
+</div>
+<div class="flex items-center gap-4">
+<img class="w-14 h-14 rounded-lg object-cover" data-alt="professional woman executive portrait with neutral background and corporate attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABbmIhUDlcUmEn-dT98xLRKGnOmcv89WixPeivtQniFBPKD9r-_ezNBwtI-3iBI7Qfd1LogO6t_x-YqRyoHrw-3-dFDAtHQkQ67s1oO0K0GKFDwujGWIX0CCJPTiTXVvuSZXQLxtfAgeNWG5xP7kAqpO0xI1BcRjdlH6ZtFcZoZeBAIjveAjweLmOXLpos8jVJK0wocTyFLbXMgkgIFS7yllPGsMTqv6JSBoSEiOwTtIN0fAUiAA_r-sOJQdbbcMzbvgvAb37ATQU"/>
+<div>
+<p class="font-bold text-on-surface">Sarah Harrison</p>
+<p class="text-sm text-on-surface-variant">CEO, Harrison Logistics</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-xs text-on-surface-variant">mail</span>
+<span class="text-xs text-on-surface-variant">s.harrison@hl-global.com</span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-xl">gavel</span>
+                                Legal Lead
+                            </h3>
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container text-[10px] font-bold rounded">Senior Partner</span>
+</div>
+<div class="flex items-center gap-4">
+<img class="w-14 h-14 rounded-lg object-cover" data-alt="professional male lawyer portrait with confident expression in a high-end corporate setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpcqPRG6L6LMIUjiB1ThyvkBt0aslW0HZrA8gto9rWUEg5tLrs2qDmWjNZWL7YW4badw3_Merpu9f2Z4P1U5mCvta5YyD0BdVm7glEwBNlOox-fZZZByosEw-l-nEmtXJAwZBFRPKLBYfEyPlcCkHEqcnAcarcG6TFfNhbaak3Q3FCbDrCizMOGn5dCKprkpk5h8eKb_VyTj7eiNT4HiqRpuFzkaqA6Kxgy-H_vvq_TpZbEFgqr2-BWRPcKS9cksJl6pGh-9UUsm0"/>
+<div>
+<p class="font-bold text-on-surface">Arthur Sterling</p>
+<p class="text-sm text-on-surface-variant">Intellectual Property Expert</p>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-symbols-outlined text-xs text-on-surface-variant">call</span>
+<span class="text-xs text-on-surface-variant">+1 (555) 902-1244</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Case Details Card -->
+<div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-outline-variant/10">
+<h3 class="font-bold text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined text-xl">info</span>
+                        Case Brief &amp; Overview
+                    </h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Practice Area</p>
+<p class="font-semibold text-on-surface">Intellectual Property</p>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Filing Date</p>
+<p class="font-semibold text-on-surface">January 14, 2024</p>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1">Jurisdiction</p>
+<p class="font-semibold text-on-surface">WA State Superior Court</p>
+</div>
+</div>
+<div class="prose prose-slate max-w-none">
+<p class="text-on-surface-variant leading-relaxed">The plaintiff, Sarah Harrison, alleges that Apex Dynamics Corp. illegally obtained and utilized proprietary data-modeling algorithms developed by Harrison Logistics. The core of the case rests on a series of non-disclosure agreements signed during a failed acquisition attempt in late 2023. Our strategy focuses on establishing the unique nature of the algorithms as trade secrets and demonstrating clear evidence of unauthorized access via forensic server logs.</p>
+</div>
+</div>
+<!-- Recent Documents Section -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-xl">folder_open</span>
+                            Critical Documents
+                        </h3>
+<button class="text-xs font-bold text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">upload</span>
+                            Upload New
+                        </button>
+</div>
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
+<div class="p-4 hover:bg-surface-container-low transition-colors flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-error/5 text-error rounded flex items-center justify-center">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Signed_NDA_Apex_Dynamics.pdf</p>
+<p class="text-[10px] text-on-surface-variant">Added 2 days ago • 4.2 MB • Sarah Harrison</p>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-xl">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-xl">download</span></button>
+</div>
+</div>
+<div class="p-4 hover:bg-surface-container-low transition-colors flex items-center justify-between border-t border-outline-variant/10 group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary/5 text-primary rounded flex items-center justify-center">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Deposition_Transcript_Witness_A.docx</p>
+<p class="text-[10px] text-on-surface-variant">Added Yesterday • 1.1 MB • Arthur Sterling</p>
+</div>
+</div>
+<div class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-xl">visibility</span></button>
+<button class="p-2 text-on-surface-variant hover:text-primary"><span class="material-symbols-outlined text-xl">download</span></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar Info Area -->
+<div class="col-span-12 lg:col-span-4 space-y-8">
+<!-- Timeline/Upcoming Events -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<h3 class="font-bold text-primary mb-6 flex items-center justify-between">
+                        Upcoming Deadlines
+                        <span class="px-2 py-0.5 bg-error-container text-on-error-container text-[10px] font-bold rounded">Action Required</span>
+</h3>
+<div class="space-y-6 relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-px before:bg-outline-variant/30">
+<div class="relative pl-8">
+<div class="absolute left-1.5 top-1.5 w-3 h-3 rounded-full bg-error ring-4 ring-error/10"></div>
+<p class="text-xs font-bold text-error uppercase tracking-tighter">Due in 2 Days</p>
+<p class="text-sm font-bold text-on-surface">Response to Motion to Dismiss</p>
+<p class="text-xs text-on-surface-variant mt-1">Washington State Superior Court</p>
+</div>
+<div class="relative pl-8">
+<div class="absolute left-1.5 top-1.5 w-3 h-3 rounded-full bg-tertiary-fixed-dim ring-4 ring-tertiary-fixed-dim/10"></div>
+<p class="text-xs font-bold text-on-tertiary-fixed-variant uppercase tracking-tighter">March 24, 2024</p>
+<p class="text-sm font-bold text-on-surface">Settlement Conference</p>
+<p class="text-xs text-on-surface-variant mt-1">Virtual Meeting Room B</p>
+</div>
+<div class="relative pl-8">
+<div class="absolute left-1.5 top-1.5 w-3 h-3 rounded-full bg-outline-variant ring-4 ring-outline-variant/10"></div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-tighter">April 12, 2024</p>
+<p class="text-sm font-bold text-on-surface">Discovery Deadline</p>
+<p class="text-xs text-on-surface-variant mt-1">Exchange of Forensic Logs</p>
+</div>
+</div>
+<button class="w-full mt-8 py-3 text-xs font-bold text-primary border border-primary/20 rounded-lg hover:bg-primary hover:text-white transition-all">
+                        View Full Calendar
+                    </button>
+</div>
+<!-- Case Stats/Financials Bento -->
+<div class="bg-primary-container text-white p-6 rounded-xl shadow-lg shadow-primary/20">
+<h3 class="text-on-primary-container font-bold mb-6 text-sm uppercase tracking-widest">Case Financials</h3>
+<div class="space-y-6">
+<div>
+<p class="text-xs text-on-primary-container font-medium">Total Billable Hours</p>
+<div class="flex items-end gap-2">
+<span class="text-3xl font-black">142.5</span>
+<span class="text-xs mb-1 text-on-primary-container">HRS</span>
+</div>
+</div>
+<div class="h-px bg-white/10"></div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<p class="text-xs text-on-primary-container font-medium">Expenses</p>
+<p class="text-lg font-bold">$12,450</p>
+</div>
+<div>
+<p class="text-xs text-on-primary-container font-medium">Retainer</p>
+<p class="text-lg font-bold">$40,000</p>
+</div>
+</div>
+<button class="w-full bg-white text-primary py-3 rounded-lg text-sm font-bold hover:bg-surface transition-colors">
+                            Generate Invoice
+                        </button>
+</div>
+</div>
+<!-- Quick Notes -->
+<div class="bg-tertiary-fixed p-6 rounded-xl border border-tertiary-container/10">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-tertiary text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">sticky_note_2</span>
+                            Confidential Note
+                        </h3>
+<span class="text-[10px] text-on-tertiary-fixed-variant font-medium">Private</span>
+</div>
+<p class="text-sm text-tertiary leading-relaxed italic">"Client mentioned potential witness at Apex who may be willing to speak off-record. Need to investigate David L. in engineering."</p>
+<div class="mt-4 flex items-center gap-2">
+<img class="w-6 h-6 rounded-full" data-alt="professional male lawyer portrait with confident expression in a high-end corporate setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuASscA3lf9dCvmAIc1dio-Ve--Kwg3de0ogsN8C6X-jgiUtJezSGXzJcbBoQGqsvwTfimB-1i9D5TRJFHceM5rlMTxaLWiWh2wNJ6-NTrIYKhTN9hmGaG3gnLn5sGlpQJP1dZ7jodZnX-mjX02CVJpTxErqXv1idIlYIYQisu8evcoA74yQ50O8CYSDx-1Qw6SA_iaB-OKff5oxb1OUXH5ub1sCXMFvXvbVt8kn8B0Spxab_Hcldy0CvnbQ3xSQUZb-_h_huQTc6G8"/>
+<span class="text-[10px] text-tertiary-container font-bold">Arthur S. • Jan 20</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB (Suppressed on details page per instructions, but available for Dashboard/Home) -->
+<!-- <button class="fixed bottom-8 right-8 w-14 h-14 primary-gradient text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50">
+        <span class="material-symbols-outlined">add</span>
+    </button> -->
+</body></html>

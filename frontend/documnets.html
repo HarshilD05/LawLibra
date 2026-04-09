@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LawLibra | Documents</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#f8f9fa",
+                    "outline": "#74777f",
+                    "on-background": "#191c1d",
+                    "on-primary-fixed": "#001c3b",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-primary-fixed-variant": "#2d486d",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-fixed": "#d5e3ff",
+                    "primary-fixed-dim": "#adc8f5",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#261a00",
+                    "on-tertiary-container": "#ce9b0f",
+                    "secondary-container": "#d6e0f4",
+                    "on-surface": "#191c1d",
+                    "secondary-fixed-dim": "#bdc7da",
+                    "tertiary-fixed": "#ffdfa0",
+                    "secondary-fixed": "#d9e3f7",
+                    "surface": "#f8f9fa",
+                    "primary": "#022448",
+                    "surface-bright": "#f8f9fa",
+                    "surface-container": "#edeeef",
+                    "tertiary": "#302200",
+                    "on-surface-variant": "#43474e",
+                    "inverse-surface": "#2e3132",
+                    "outline-variant": "#c4c6cf",
+                    "surface-tint": "#455f87",
+                    "primary-container": "#1e3a5f",
+                    "surface-container-low": "#f3f4f5",
+                    "tertiary-fixed-dim": "#f6be39",
+                    "inverse-primary": "#adc8f5",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-primary-container": "#8aa4cf",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "surface-variant": "#e1e3e4",
+                    "secondary": "#555f70",
+                    "tertiary-container": "#4b3600",
+                    "on-secondary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#d9dadb",
+                    "on-secondary-container": "#5a6374",
+                    "on-secondary-fixed-variant": "#3e4757",
+                    "on-secondary-fixed": "#121c2a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift { background-color: #f3f4f5; }
+        .no-line-card { border: none; }
+        .editorial-shadow { box-shadow: 0 32px 64px -12px rgba(2, 36, 72, 0.06); }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col h-screen w-64 border-r border-transparent bg-slate-50 dark:bg-slate-900 font-['Inter'] font-medium tracking-tight">
+<div class="p-6">
+<div class="text-xl font-bold text-[#1E3A5F] dark:text-white flex items-center gap-2 mb-8">
+<span class="material-symbols-outlined text-primary" data-icon="gavel">gavel</span>
+<span>LawLibra</span>
+</div>
+<nav class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span>Cases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out text-[#1E3A5F] dark:text-white font-semibold border-r-4 border-[#1E3A5F] dark:border-[#f6be39] bg-white dark:bg-slate-800" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Documents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Clients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span>Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span>Notifications</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-6">
+<div class="bg-primary/5 rounded-xl p-4 flex items-center gap-3">
+<img alt="User profile" class="w-10 h-10 rounded-lg object-cover" data-alt="professional legal partner portrait in high-end office setting with warm editorial lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA81ziurtnUq1KiK7sxxm7_ZjzZm-f6ChEzS8o4nUG5J9g6UuJNQPI9nHpBk5fvjYjk1XVrZVArn6_58hez2UU5LuVt6xH6AvrJ2VmavrIjjnXhURlmWujPhfmZG-dQpBqtF_f5z44FPRYbZxD2BcNxAHyjsnV2nl5_B1cjxLJ2wUAlDurIio4mw07zeyL72ioe42CVEZs3CyamiMzvCouPmTb_2npmZRBMwV62gdijrf1-ikzhjNySVmY22wCnrxBKldxXPjf_NQY"/>
+<div>
+<p class="text-sm font-bold text-primary">Julian Thorne</p>
+<p class="text-xs text-on-surface-variant">Senior Partner</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar -->
+<header class="flex items-center justify-between px-8 w-full z-50 sticky top-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl h-16 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-8 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/60 text-sm" data-icon="search">search</span>
+<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary/20 rounded-lg pl-10 pr-4 py-2 text-sm placeholder:text-on-surface-variant/50" placeholder="Search documents, cases, or files..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors text-on-surface-variant relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-lg transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Document Canvas -->
+<div class="p-8">
+<!-- Editorial Header -->
+<div class="flex items-end justify-between mb-12">
+<div>
+<h1 class="text-4xl font-extrabold tracking-tight text-primary mb-2">Documents</h1>
+<p class="text-on-surface-variant max-w-md font-medium">Centralized legal repository. Manage high-stakes filings and sensitive evidence with surgical precision.</p>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-3 rounded-lg font-bold flex items-center gap-2 shadow-lg shadow-primary/10 transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="upload">upload</span>
+<span>Upload Document</span>
+</button>
+</div>
+<!-- Dashboard Stats Tonal Shift Layer -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+<div class="bg-surface-container-low p-6 rounded-xl">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-widest font-bold mb-4">Total Files</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black text-primary">1,284</span>
+<span class="text-tertiary-fixed-dim font-bold text-sm">+12 today</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-widest font-bold mb-4">Storage Used</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black text-primary">42.8<span class="text-xl">GB</span></span>
+<span class="text-on-surface-variant/40 font-medium text-sm">of 100GB</span>
+</div>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl">
+<p class="text-label-sm text-on-surface-variant uppercase tracking-widest font-bold mb-4">Recent Filings</p>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-black text-primary">18</span>
+<span class="text-on-surface-variant/60 font-medium text-sm">last 48h</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl border-b-2 border-tertiary-fixed-dim editorial-shadow">
+<p class="text-label-sm text-tertiary uppercase tracking-widest font-bold mb-4">Urgent Review</p>
+<div class="flex items-center justify-between">
+<span class="text-4xl font-black text-primary">03</span>
+<span class="material-symbols-outlined text-tertiary-fixed-dim" data-icon="priority_high" style="font-variation-settings: 'FILL' 1;">priority_high</span>
+</div>
+</div>
+</div>
+<!-- File Explorer Shell -->
+<div class="bg-surface-container-lowest rounded-xl editorial-shadow overflow-hidden">
+<div class="px-6 py-4 bg-surface-container-low/50 flex items-center justify-between">
+<div class="flex gap-4">
+<button class="text-sm font-bold text-primary border-b-2 border-primary pb-1">All Documents</button>
+<button class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors pb-1">Recent</button>
+<button class="text-sm font-medium text-on-surface-variant hover:text-primary transition-colors pb-1">Starred</button>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-on-surface-variant/40 uppercase">Filter by Case:</span>
+<select class="bg-transparent border-none text-xs font-bold text-primary focus:ring-0 cursor-pointer">
+<option>All Active Cases</option>
+<option>Thorne vs. Sterling</option>
+<option>Oakwood Acquisition</option>
+</select>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest">
+<th class="px-6 py-5 text-xs font-black text-on-surface-variant/60 uppercase tracking-widest">Document Name</th>
+<th class="px-6 py-5 text-xs font-black text-on-surface-variant/60 uppercase tracking-widest">Associated Case</th>
+<th class="px-6 py-5 text-xs font-black text-on-surface-variant/60 uppercase tracking-widest">Uploaded By</th>
+<th class="px-6 py-5 text-xs font-black text-on-surface-variant/60 uppercase tracking-widest">Date</th>
+<th class="px-6 py-5 text-right"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+<span class="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
+</div>
+<div>
+<p class="text-sm font-bold text-primary leading-tight">Motion_to_Dismiss_v2.pdf</p>
+<p class="text-xs text-on-surface-variant font-medium">2.4 MB • PDF</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium text-primary bg-primary/5 px-3 py-1 rounded-full">Thorne vs. Sterling</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<img alt="User" class="w-6 h-6 rounded-full object-cover" data-alt="professional male legal associate avatar headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqKSdjg41QCFUzTV416E2xA5-m-4QaYvs-VODUUrGc2v44tCf7lP0Uvw5dhScqqsV2X0TWZwG3Ule1keR_NFSueu2-XDGct2u3rp9yxb3blxLtK57z6EsaLXQPfkbd3CtEYkD89Wed0jWQbah7K71GbSzVKsgS1x1o_SCaj-E6VZqMjrIN7POcbUiv_95sOxchp7errEULuZO9hY5xHHBAP3m1ga8jr0dzCv3L338HhBD-mmY-_povDFsKWiZVAeV62T17XltUchw"/>
+<span class="text-sm font-medium text-on-surface">Mark Vance</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium text-on-surface-variant">Oct 24, 2023</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-fixed rounded-lg text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+</div>
+<div>
+<p class="text-sm font-bold text-primary leading-tight">Acquisition_Agreement_Final.docx</p>
+<p class="text-xs text-on-surface-variant font-medium">840 KB • DOCX</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium text-primary bg-primary/5 px-3 py-1 rounded-full">Oakwood Acquisition</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<img alt="User" class="w-6 h-6 rounded-full object-cover" data-alt="professional female senior lawyer avatar headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6CzReyk6Aj7x1s94FZR4_XJ-9Iwae3xd-0aOf8d0f8qQUy1dNKKizK8PD_-NYd25GlB_1k_A_cyBGU6Kv6XJIJwAJKiQKdNkRFFlKbDcwd6EsCUlf3qrKqLPzTxdHUU9ST7LFDLeEvyuyFC2UGUyL9H5n2etgVxl_6dxWvanqnzNPSP7WruLVUiJ9tcFI4iwjZSDukWJ02SH9meAV69tvkWDBbpQfOAGjCAsPmt9g79u0cYt4XcWDoQuIOn7akhlmryyxXSEINic"/>
+<span class="text-sm font-medium text-on-surface">Elena Rodriguez</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium text-on-surface-variant">Oct 23, 2023</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-fixed rounded-lg text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600">
+<span class="material-symbols-outlined" data-icon="image">image</span>
+</div>
+<div>
+<p class="text-sm font-bold text-primary leading-tight">Evidence_Scan_042.jpg</p>
+<p class="text-xs text-on-surface-variant font-medium">12.5 MB • JPEG</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium text-primary bg-primary/5 px-3 py-1 rounded-full">State vs. Miller</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<img alt="User" class="w-6 h-6 rounded-full object-cover" data-alt="professional legal partner portrait headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsd3n-CZS4wDt2eX-9EDsCN8UP4il0wkSjTPBB_OqTGfWQtCDujWIC7Q6MOt9Pz6upylWBv-QIOVzuEOgU1Od-EyRF7Z08Na26bnrB6c8XGJwNfo44lS2penJvw0BUI67PjJYKve73mpJjmR4i0aZd8gmw_wM65x9xNaCwDXWgYoCkB0Bh3YudQrPYv4qgfoLPnieOUYLh8vwlRKfL2iQc0QBwDA5f4aSHkKYbkowT2Q4Fv6fRJJQER9utO8XVdClnzceefopt1Cg"/>
+<span class="text-sm font-medium text-on-surface">Julian Thorne</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium text-on-surface-variant">Oct 22, 2023</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-fixed rounded-lg text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
+<span class="material-symbols-outlined" data-icon="table_chart">table_chart</span>
+</div>
+<div>
+<p class="text-sm font-bold text-primary leading-tight">Settlement_Calculator_Q4.xlsx</p>
+<p class="text-xs text-on-surface-variant font-medium">154 KB • XLSX</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium text-primary bg-primary/5 px-3 py-1 rounded-full">Corporate General</span>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<img alt="User" class="w-6 h-6 rounded-full object-cover" data-alt="professional male legal associate avatar headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvLakLFK0tShenIyMrGTUmwEvOFeQY4fDeYjbFK1DYwd7IORPpHGUey3QaEnJ1oqp594nFlg578QB4icKr0AtQD0y1Lyh0pCzIilBnXqTaHLJ1RLTA1ZM_Ga1s1CWxWpQ3Qw9lXz6Nwxgjb4x1uLdPqnz-hdxxNwbM8CQQmCpwqxeQbfaQXh8GGc5gYkw9hRqUTIrc88xuFPF-NoeDNcLielKLxO_5QSAwT4duu7lGacFqpc6tx9Rsoz3ESvKdVJeW2UxPK4GmpfA"/>
+<span class="text-sm font-medium text-on-surface">Mark Vance</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="text-sm font-medium text-on-surface-variant">Oct 20, 2023</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-primary-fixed rounded-lg text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 bg-surface-container-low/50 flex items-center justify-between border-t border-surface-container">
+<p class="text-xs font-medium text-on-surface-variant">Showing 1-10 of 1,284 documents</p>
+<div class="flex gap-2">
+<button class="px-4 py-2 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">Previous</button>
+<button class="px-4 py-2 text-xs font-bold text-primary bg-white rounded shadow-sm">1</button>
+<button class="px-4 py-2 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">2</button>
+<button class="px-4 py-2 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">3</button>
+<button class="px-4 py-2 text-xs font-bold text-on-surface-variant hover:text-primary transition-colors">Next</button>
+</div>
+</div>
+</div>
+<!-- Bento Grid - Bottom Section -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+<!-- Signature Block - Storage Breakdown -->
+<div class="md:col-span-2 bg-primary rounded-xl p-8 relative overflow-hidden text-white shadow-2xl">
+<div class="relative z-10">
+<h3 class="text-2xl font-bold mb-2">Secure Cloud Infrastructure</h3>
+<p class="text-primary-fixed/80 max-w-sm mb-8">All documents are encrypted with AES-256 standard and backed up across three geographic regions.</p>
+<div class="grid grid-cols-2 gap-8">
+<div>
+<p class="text-xs font-bold uppercase tracking-widest text-on-primary-container mb-2">Compliance Status</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-fixed-dim" data-icon="verified">verified</span>
+<span class="font-bold">SOC2 Certified</span>
+</div>
+</div>
+<div>
+<p class="text-xs font-bold uppercase tracking-widest text-on-primary-container mb-2">Access Logs</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-green-400" data-icon="checklist">checklist</span>
+<span class="font-bold">Full Audit Enabled</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Decorative Element -->
+<div class="absolute -right-12 -bottom-12 opacity-10">
+<span class="material-symbols-outlined text-[200px]" data-icon="security">security</span>
+</div>
+</div>
+<!-- Status Chip Block -->
+<div class="bg-tertiary-fixed p-8 rounded-xl flex flex-col justify-between">
+<div>
+<h3 class="text-xl font-black text-on-tertiary-fixed mb-2">Quick Access</h3>
+<p class="text-on-tertiary-fixed/60 text-sm font-medium">Frequently accessed folders and templates.</p>
+</div>
+<div class="space-y-3 mt-6">
+<button class="w-full flex items-center justify-between p-3 bg-white/40 hover:bg-white/60 transition-colors rounded-lg group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="folder_special">folder_special</span>
+<span class="text-sm font-bold text-on-tertiary-fixed">Court Templates</span>
+</div>
+<span class="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="w-full flex items-center justify-between p-3 bg-white/40 hover:bg-white/60 transition-colors rounded-lg group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="history">history</span>
+<span class="text-sm font-bold text-on-tertiary-fixed">Recent Scans</span>
+</div>
+<span class="material-symbols-outlined text-xs group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

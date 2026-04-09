@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#f8f9fa",
+                    "outline": "#74777f",
+                    "on-background": "#191c1d",
+                    "on-primary-fixed": "#001c3b",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-primary-fixed-variant": "#2d486d",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-fixed": "#d5e3ff",
+                    "primary-fixed-dim": "#adc8f5",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#261a00",
+                    "on-tertiary-container": "#ce9b0f",
+                    "secondary-container": "#d6e0f4",
+                    "on-surface": "#191c1d",
+                    "secondary-fixed-dim": "#bdc7da",
+                    "tertiary-fixed": "#ffdfa0",
+                    "secondary-fixed": "#d9e3f7",
+                    "surface": "#f8f9fa",
+                    "primary": "#022448",
+                    "surface-bright": "#f8f9fa",
+                    "surface-container": "#edeeef",
+                    "tertiary": "#302200",
+                    "on-surface-variant": "#43474e",
+                    "inverse-surface": "#2e3132",
+                    "outline-variant": "#c4c6cf",
+                    "surface-tint": "#455f87",
+                    "primary-container": "#1e3a5f",
+                    "surface-container-low": "#f3f4f5",
+                    "tertiary-fixed-dim": "#f6be39",
+                    "inverse-primary": "#adc8f5",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-primary-container": "#8aa4cf",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "surface-variant": "#e1e3e4",
+                    "secondary": "#555f70",
+                    "tertiary-container": "#4b3600",
+                    "on-secondary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#d9dadb",
+                    "on-secondary-container": "#5a6374",
+                    "on-secondary-fixed-variant": "#3e4757",
+                    "on-secondary-fixed": "#121c2a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+        .tonal-shift { background: linear-gradient(to right, #f8f9fa, #f3f4f5); }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col h-screen w-64 border-r border-transparent bg-slate-50 dark:bg-slate-900 transition-all duration-200 ease-in-out">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm" data-icon="gavel">gavel</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-[#1E3A5F] dark:text-white">LawLibra</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Legal Management</p>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1 mt-4">
+<!-- Active State determined: Calendar page -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90 font-['Inter'] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90 font-['Inter'] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
+<span>Cases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90 font-['Inter'] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Documents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90 font-['Inter'] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Clients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-[#1E3A5F] dark:text-white font-semibold border-r-4 border-[#1E3A5F] dark:border-[#f6be39] bg-white dark:bg-slate-800 scale-95 active:scale-90 font-['Inter'] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span>Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90 font-['Inter'] font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span>Notifications</span>
+</a>
+</nav>
+<div class="p-4 mt-auto">
+<div class="bg-primary-container rounded-xl p-4 text-on-primary-container">
+<p class="text-xs font-bold mb-2">Storage Limit</p>
+<div class="w-full bg-primary/20 h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary-fixed-dim h-full w-[85%]"></div>
+</div>
+<p class="text-[10px] mt-2 opacity-80">8.5GB of 10GB used</p>
+</div>
+</div>
+</aside>
+<!-- TopNavBar (Shared Component) -->
+<header class="flex items-center justify-between px-6 w-full z-50 ml-64 max-w-[calc(100%-16rem)] w-full h-16 sticky top-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none font-['Inter'] text-sm">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full focus-within:ring-2 focus-within:ring-[#1E3A5F] rounded-lg">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-lg py-2 pl-10 pr-4 focus:ring-0 text-on-surface" placeholder="Search cases, events, or files..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-6">
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:text-[#1E3A5F] transition-colors">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:text-[#1E3A5F] transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200 dark:border-slate-800">
+<div class="text-right hidden sm:block">
+<p class="font-bold text-[#1E3A5F] leading-none">Julian Thorne</p>
+<p class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Senior Partner</p>
+</div>
+<img alt="User profile" class="w-8 h-8 rounded-full border border-slate-200" data-alt="Professional headshot of a mature lawyer in a tailored suit with a clean office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDp87ogEwa13tpqtUK-1JvfLFw9OHwc_OfyLNIVze91B_pp76wc7KVMl62qa7UYa6r9nkJUrY9yLxPSaE6vWVTIPsZlO5zFz1GtrHiTudoObVkSbqreAAtqXlNFUj0_4LlAJ-w2xfKAzx2OT0WmcobL3EDQIH9PnrmxrRsrbzGOrqXILpkdoe8ULZ1Qs070HtLLiRApUD0mVBzkqE2U66apQrYc8WuTh-LsPV9v23oKA4IubQxiUigpV1jNRihLXA8_QhkUhU46IY"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 p-8 min-h-screen bg-background">
+<!-- Dashboard Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-4xl font-black text-primary -tracking-[0.03em]">October 2024</h2>
+<p class="text-on-surface-variant font-medium mt-1">LawLibra Court Calendar &amp; Filings</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="flex bg-surface-container-low rounded-lg p-1">
+<button class="px-4 py-2 text-xs font-bold bg-white text-primary rounded shadow-sm">Month</button>
+<button class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-primary transition-colors">Week</button>
+<button class="px-4 py-2 text-xs font-bold text-slate-500 hover:text-primary transition-colors">Day</button>
+</div>
+<button class="flex items-center gap-2 bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-lg font-bold shadow-lg shadow-primary/10 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm">add</span>
+<span>Add Event</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-8">
+<!-- Calendar Section -->
+<div class="col-span-9">
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<!-- Day Labels -->
+<div class="calendar-grid border-b border-surface-container-high bg-surface-container-low/50">
+<div class="py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Sun</div>
+<div class="py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Mon</div>
+<div class="py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Tue</div>
+<div class="py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Wed</div>
+<div class="py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Thu</div>
+<div class="py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Fri</div>
+<div class="py-4 text-center text-[10px] font-black uppercase tracking-widest text-slate-400">Sat</div>
+</div>
+<!-- Grid Cells -->
+<div class="calendar-grid auto-rows-[minmax(140px,auto)]">
+<!-- Empty cells for start of month -->
+<div class="p-2 border-r border-b border-surface-container-high bg-slate-50/50"></div>
+<div class="p-2 border-r border-b border-surface-container-high bg-slate-50/50"></div>
+<!-- Calendar Days -->
+<!-- Day 1 -->
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">01</span>
+<div class="mt-2 space-y-1">
+<div class="px-2 py-1 bg-primary/10 border-l-2 border-primary rounded text-[10px] font-bold text-primary">Hearing: Case #224-A</div>
+</div>
+</div>
+<!-- Day 2 -->
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">02</span>
+</div>
+<!-- Day 3 -->
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">03</span>
+<div class="mt-2 space-y-1">
+<div class="px-2 py-1 bg-error-container border-l-2 border-error rounded text-[10px] font-bold text-on-error-container">Deadline: Filing #09</div>
+</div>
+</div>
+<!-- Day 4 -->
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors bg-secondary-container/10">
+<span class="text-xs font-black text-primary">04</span>
+<div class="mt-2 space-y-1">
+<div class="px-2 py-1 bg-on-tertiary-fixed border-l-2 border-tertiary-fixed-dim rounded text-[10px] font-bold text-tertiary-fixed-dim">Client Meeting: Smith</div>
+</div>
+</div>
+<!-- Day 5 -->
+<div class="p-3 border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">05</span>
+</div>
+<!-- Row 2 -->
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">06</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">07</span>
+<div class="mt-2 space-y-1">
+<div class="px-2 py-1 bg-primary/10 border-l-2 border-primary rounded text-[10px] font-bold text-primary">Mediation: Rivera v. Apex</div>
+</div>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">08</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">09</span>
+<div class="mt-2 space-y-1">
+<div class="px-2 py-1 bg-error-container border-l-2 border-error rounded text-[10px] font-bold text-on-error-container">Discovery Cutoff</div>
+<div class="px-2 py-1 bg-on-tertiary-fixed border-l-2 border-tertiary-fixed-dim rounded text-[10px] font-bold text-tertiary-fixed-dim">Internal Review</div>
+</div>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">10</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">11</span>
+</div>
+<div class="p-3 border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">12</span>
+</div>
+<!-- Row 3 -->
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">13</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">14</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">15</span>
+<div class="mt-2 space-y-1">
+<div class="px-2 py-1 bg-primary/10 border-l-2 border-primary rounded text-[10px] font-bold text-primary">Trial: Johnson Case</div>
+</div>
+</div>
+<!-- Current Day Indicator Example -->
+<div class="p-3 border-r border-b border-surface-container-high bg-primary-container/5 relative">
+<span class="text-xs font-black text-primary">16</span>
+<div class="absolute top-3 right-3 w-2 h-2 bg-primary rounded-full"></div>
+<div class="mt-2 space-y-1">
+<div class="px-2 py-1 bg-primary border-l-2 border-tertiary-fixed-dim rounded text-[10px] font-bold text-white shadow-md">Today: Board Meeting</div>
+</div>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">17</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">18</span>
+</div>
+<div class="p-3 border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">19</span>
+</div>
+<!-- Row 4 -->
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">20</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">21</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">22</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">23</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">24</span>
+</div>
+<div class="p-3 border-r border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">25</span>
+</div>
+<div class="p-3 border-b border-surface-container-high hover:bg-surface transition-colors">
+<span class="text-xs font-bold text-slate-400">26</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Sidebar -->
+<div class="col-span-3 space-y-6">
+<!-- Mini Stats / Summary -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Focus Metrics</h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-on-surface-variant">Active Cases</span>
+<span class="text-sm font-bold text-primary">24</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-on-surface-variant">Hearings This Week</span>
+<span class="text-sm font-bold text-primary">06</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-on-surface-variant">Hours Logged</span>
+<span class="text-sm font-bold text-primary">142.5</span>
+</div>
+</div>
+</div>
+<!-- Upcoming Events -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Upcoming</h3>
+<span class="text-[10px] font-bold text-primary underline cursor-pointer">View All</span>
+</div>
+<div class="space-y-6">
+<!-- Event 1 -->
+<div class="relative pl-6 border-l-2 border-primary">
+<p class="text-[10px] font-black text-primary uppercase">Oct 17 • 09:00 AM</p>
+<h4 class="text-sm font-bold text-on-surface mt-1">Pre-Trial Motion</h4>
+<p class="text-xs text-on-surface-variant mt-1">State vs. Davidson • Courtroom 4B</p>
+</div>
+<!-- Event 2 -->
+<div class="relative pl-6 border-l-2 border-error">
+<p class="text-[10px] font-black text-error uppercase">Oct 18 • 05:00 PM</p>
+<h4 class="text-sm font-bold text-on-surface mt-1">Filing Deadline</h4>
+<p class="text-xs text-on-surface-variant mt-1">Supreme Court Writ #88-21</p>
+</div>
+<!-- Event 3 -->
+<div class="relative pl-6 border-l-2 border-tertiary-fixed-dim">
+<p class="text-[10px] font-black text-on-tertiary-container uppercase">Oct 20 • 02:30 PM</p>
+<h4 class="text-sm font-bold text-on-surface mt-1">Deposition: Sarah Lane</h4>
+<p class="text-xs text-on-surface-variant mt-1">Corporate Office Suite 200</p>
+</div>
+<!-- Event 4 -->
+<div class="relative pl-6 border-l-2 border-primary">
+<p class="text-[10px] font-black text-primary uppercase">Oct 22 • 11:15 AM</p>
+<h4 class="text-sm font-bold text-on-surface mt-1">Sentencing Hearing</h4>
+<p class="text-xs text-on-surface-variant mt-1">Municipal Court Annex</p>
+</div>
+</div>
+</div>
+<!-- Ad/Promotion Bento Card -->
+<div class="bg-gradient-to-br from-primary to-primary-container rounded-xl p-6 text-white overflow-hidden relative group">
+<div class="relative z-10">
+<h4 class="font-black text-lg leading-tight mb-2 italic">Upgrade to AI Discovery</h4>
+<p class="text-xs opacity-70 mb-4">Process thousands of legal documents in seconds with our new Jurist AI engine.</p>
+<button class="bg-tertiary-fixed-dim text-on-tertiary-fixed text-[10px] font-black uppercase px-4 py-2 rounded-lg hover:bg-white transition-colors">Learn More</button>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-white/10 text-8xl rotate-12 group-hover:rotate-0 transition-transform">auto_awesome</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Suppressed on details, but keeping for main dashboard calendar context as requested) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-tertiary-fixed-dim text-on-tertiary-fixed rounded-xl flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>

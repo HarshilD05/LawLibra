@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#f8f9fa",
+                    "outline": "#74777f",
+                    "on-background": "#191c1d",
+                    "on-primary-fixed": "#001c3b",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-primary-fixed-variant": "#2d486d",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-fixed": "#d5e3ff",
+                    "primary-fixed-dim": "#adc8f5",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#261a00",
+                    "on-tertiary-container": "#ce9b0f",
+                    "secondary-container": "#d6e0f4",
+                    "on-surface": "#191c1d",
+                    "secondary-fixed-dim": "#bdc7da",
+                    "tertiary-fixed": "#ffdfa0",
+                    "secondary-fixed": "#d9e3f7",
+                    "surface": "#f8f9fa",
+                    "primary": "#022448",
+                    "surface-bright": "#f8f9fa",
+                    "surface-container": "#edeeef",
+                    "tertiary": "#302200",
+                    "on-surface-variant": "#43474e",
+                    "inverse-surface": "#2e3132",
+                    "outline-variant": "#c4c6cf",
+                    "surface-tint": "#455f87",
+                    "primary-container": "#1e3a5f",
+                    "surface-container-low": "#f3f4f5",
+                    "tertiary-fixed-dim": "#f6be39",
+                    "inverse-primary": "#adc8f5",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-primary-container": "#8aa4cf",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "surface-variant": "#e1e3e4",
+                    "secondary": "#555f70",
+                    "tertiary-container": "#4b3600",
+                    "on-secondary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#d9dadb",
+                    "on-secondary-container": "#5a6374",
+                    "on-secondary-fixed-variant": "#3e4757",
+                    "on-secondary-fixed": "#121c2a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .tonal-shift {
+            background-image: linear-gradient(to right, var(--tw-gradient-stops));
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(24px);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-surface antialiased">
+<!-- SideNavBar (Execution from JSON) -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col h-screen w-64 border-r border-transparent bg-slate-50 dark:bg-slate-900 font-['Inter'] font-medium tracking-tight">
+<div class="p-6">
+<div class="text-xl font-bold text-[#1E3A5F] dark:text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-[#1E3A5F]" style="font-variation-settings: 'FILL' 1;">balance</span>
+<span>LawLibra</span>
+</div>
+<p class="text-[10px] uppercase tracking-[0.2em] text-slate-500 mt-1">Legal Management</p>
+</div>
+<nav class="flex-1 px-4 space-y-2 mt-4">
+<a class="flex items-center gap-3 px-4 py-3 transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Active State: Cases -->
+<a class="flex items-center gap-3 px-4 py-3 transition-all duration-200 ease-in-out text-[#1E3A5F] dark:text-white font-semibold border-r-4 border-[#1E3A5F] dark:border-[#f6be39] bg-white dark:bg-slate-800 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="gavel" style="font-variation-settings: 'FILL' 1;">gavel</span>
+<span>Cases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span>Documents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Clients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span>Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 transition-all duration-200 ease-in-out hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white group" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span>Notifications</span>
+</a>
+</nav>
+<div class="p-4 mt-auto">
+<div class="bg-primary-container p-4 rounded-xl text-white">
+<p class="text-xs font-semibold opacity-70">PRO PLAN</p>
+<p class="text-sm mt-1 font-bold">24/50 Cases Used</p>
+<div class="w-full bg-white/20 h-1.5 rounded-full mt-2 overflow-hidden">
+<div class="bg-tertiary-fixed-dim h-full w-[48%]"></div>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar (Execution from JSON) -->
+<header class="flex items-center justify-between px-6 w-full z-50 ml-64 max-w-[calc(100%-16rem)] w-full h-16 sticky top-0 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none font-['Inter'] text-sm">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg" data-icon="search">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none focus:ring-2 focus:ring-[#1E3A5F] rounded-lg text-sm" placeholder="Search case files, clients, or motions..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-slate-600 dark:text-slate-400 hover:text-[#1E3A5F] transition-colors">
+<span class="material-symbols-outlined" data-icon="dark_mode">dark_mode</span>
+</button>
+<button class="text-slate-600 dark:text-slate-400 hover:text-[#1E3A5F] transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute -top-1 -right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<div class="flex items-center gap-3 pl-6 border-l border-slate-200">
+<div class="text-right">
+<p class="text-xs font-bold text-primary">Julian Thorne, Esq.</p>
+<p class="text-[10px] text-on-surface-variant">Senior Partner</p>
+</div>
+<img class="w-9 h-9 rounded-lg object-cover border border-slate-200" data-alt="professional portrait of a middle-aged male lawyer in a sharp navy suit with subtle studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjKkvYUPRl-Cx7Ai3M8WTUlGkYku7QQBcNUqvlDQCuN1XbXoY3EiBP1DDG7Q1mB0SpK6kBaQ7u4Z8EqrT2-cc7vS5KkC8Lk0ynpdx_AXN1trZ8CmxMH5zMnysrsDSg2-IwdeCg18SBe5wPHbEe1pdVPBalaqlIoTYYtSe5IBF5VVSo-Fs6AwsSdpYmVjCp6i9HnQNw439vlgcO7Pw48xPJcy9XgTR__N2DnNT22u8cb1o-7FDbabQtMwYwMopXmyzc6gaWvQbykdI"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8 min-h-screen">
+<div class="max-w-6xl mx-auto">
+<!-- Page Header Area -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<nav class="flex items-center gap-2 text-xs font-medium text-on-surface-variant mb-4">
+<span>Dashboard</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-primary">My Cases</span>
+</nav>
+<h1 class="text-4xl font-extrabold tracking-tight text-primary">My Cases</h1>
+<p class="text-on-surface-variant mt-2 max-w-md">Manage your ongoing litigation, client filings, and upcoming court dates with precision.</p>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-3 rounded-lg font-bold flex items-center gap-2 shadow-lg shadow-primary/10 transition-transform active:scale-95">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+<span>New Case</span>
+</button>
+</div>
+<!-- Filter Bar & Search -->
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-wrap items-center gap-4 mb-8">
+<div class="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-lg border-b-2 border-primary">
+<span class="material-symbols-outlined text-sm text-on-surface-variant" data-icon="filter_list">filter_list</span>
+<select class="bg-transparent border-none focus:ring-0 text-sm font-semibold text-primary py-0">
+<option>All Statuses</option>
+<option>Active</option>
+<option>Pending</option>
+<option>Closed</option>
+</select>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-lg flex-1">
+<span class="material-symbols-outlined text-sm text-on-surface-variant" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-full" placeholder="Search by case number or client name..." type="text"/>
+</div>
+<div class="flex items-center gap-2 text-xs font-bold text-on-surface-variant uppercase tracking-widest px-4">
+<span>Sort By:</span>
+<button class="text-primary flex items-center gap-1 hover:underline">
+                        Recent
+                        <span class="material-symbols-outlined text-xs" data-icon="expand_more">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Case List Table/Grid -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low">
+<th class="px-6 py-4 text-[11px] font-black uppercase tracking-[0.1em] text-on-surface-variant border-none">Case Number</th>
+<th class="px-6 py-4 text-[11px] font-black uppercase tracking-[0.1em] text-on-surface-variant border-none">Client Name</th>
+<th class="px-6 py-4 text-[11px] font-black uppercase tracking-[0.1em] text-on-surface-variant border-none">Case Type</th>
+<th class="px-6 py-4 text-[11px] font-black uppercase tracking-[0.1em] text-on-surface-variant border-none text-center">Status</th>
+<th class="px-6 py-4 text-[11px] font-black uppercase tracking-[0.1em] text-on-surface-variant border-none">Next Hearing</th>
+<th class="px-6 py-4 text-[11px] font-black uppercase tracking-[0.1em] text-on-surface-variant border-none text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container">
+<!-- Row 1: Active -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-6 text-sm font-bold text-primary">#LC-2024-0892</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary-container flex items-center justify-center text-primary font-bold text-xs">SM</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Sarah Montgomery</p>
+<p class="text-[11px] text-on-surface-variant">Corp. Counsel</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 text-sm text-on-surface-variant">Intellectual Property</td>
+<td class="px-6 py-6 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase bg-emerald-100 text-emerald-800">Active</span>
+</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-sm text-on-surface-variant" data-icon="event">event</span>
+                                        Oct 12, 2024
+                                    </div>
+</td>
+<td class="px-6 py-6 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Pending (Amber) -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-6 text-sm font-bold text-primary">#LC-2024-1104</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-tertiary-fixed flex items-center justify-center text-tertiary font-bold text-xs">AK</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Arthur Kensington</p>
+<p class="text-[11px] text-on-surface-variant">Private Estate</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 text-sm text-on-surface-variant">Estate Litigation</td>
+<td class="px-6 py-6 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase bg-amber-100 text-amber-800">Pending</span>
+</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-2 text-sm text-error font-semibold">
+<span class="material-symbols-outlined text-sm" data-icon="warning">warning</span>
+                                        Unscheduled
+                                    </div>
+</td>
+<td class="px-6 py-6 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: Closed (Gray) -->
+<tr class="hover:bg-surface-container-low transition-colors group opacity-75">
+<td class="px-6 py-6 text-sm font-bold text-primary">#LC-2023-0421</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-highest flex items-center justify-center text-on-surface-variant font-bold text-xs">BC</div>
+<div>
+<p class="text-sm font-bold text-on-surface">BlueChip Tech</p>
+<p class="text-[11px] text-on-surface-variant">Acquisition</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 text-sm text-on-surface-variant">Mergers &amp; Acquisitions</td>
+<td class="px-6 py-6 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase bg-slate-200 text-slate-600">Closed</span>
+</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="history">history</span>
+                                        Finalized Aug '23
+                                    </div>
+</td>
+<td class="px-6 py-6 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Active -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="px-6 py-6 text-sm font-bold text-primary">#LC-2024-1288</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary-container flex items-center justify-center text-primary font-bold text-xs">JR</div>
+<div>
+<p class="text-sm font-bold text-on-surface">James Rivera</p>
+<p class="text-[11px] text-on-surface-variant">Civil Defense</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-6 text-sm text-on-surface-variant">Class Action</td>
+<td class="px-6 py-6 text-center">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-[10px] font-black uppercase bg-emerald-100 text-emerald-800">Active</span>
+</td>
+<td class="px-6 py-6">
+<div class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-sm text-on-surface-variant" data-icon="event">event</span>
+                                        Nov 05, 2024
+                                    </div>
+</td>
+<td class="px-6 py-6 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_horiz">more_horiz</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 border-t border-surface-container-high flex items-center justify-between">
+<p class="text-xs text-on-surface-variant font-medium">Showing <span class="text-primary font-bold">1 - 4</span> of 24 cases</p>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg hover:bg-surface-container-low text-on-surface-variant disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-primary text-white text-xs font-bold">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-low text-on-surface-variant text-xs font-bold">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-surface-container-low text-on-surface-variant text-xs font-bold">3</button>
+<button class="p-2 rounded-lg hover:bg-surface-container-low text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Editorial Summary -->
+<div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-primary p-6 rounded-xl text-white relative overflow-hidden group">
+<div class="relative z-10">
+<h3 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Success Rate</h3>
+<p class="text-4xl font-black mt-2">94.2%</p>
+<p class="text-xs mt-1 opacity-70">Across all settled cases this year</p>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-9xl opacity-5 group-hover:scale-110 transition-transform" data-icon="trending_up">trending_up</span>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl relative overflow-hidden group border border-outline-variant/10">
+<div class="relative z-10">
+<h3 class="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant">Billable Hours</h3>
+<p class="text-4xl font-black mt-2 text-primary">128.5</p>
+<p class="text-xs mt-1 text-on-surface-variant">Accumulated this month</p>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-9xl text-primary/5 group-hover:scale-110 transition-transform" data-icon="timer">timer</span>
+</div>
+<div class="bg-tertiary-fixed-dim p-6 rounded-xl relative overflow-hidden group">
+<div class="relative z-10 text-on-tertiary-fixed">
+<h3 class="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Action Required</h3>
+<p class="text-4xl font-black mt-2">3</p>
+<p class="text-xs mt-1 opacity-70">Pending filings due in 24h</p>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-9xl text-on-tertiary-fixed/10 group-hover:scale-110 transition-transform" data-icon="gavel">gavel</span>
+</div>
+</div>
+</div>
+</main>
+</body></html>

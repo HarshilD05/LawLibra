@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LawLibra - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "background": "#f8f9fa",
+                    "outline": "#74777f",
+                    "on-background": "#191c1d",
+                    "on-primary-fixed": "#001c3b",
+                    "surface-container-highest": "#e1e3e4",
+                    "on-primary-fixed-variant": "#2d486d",
+                    "on-tertiary-fixed-variant": "#5c4300",
+                    "on-error-container": "#93000a",
+                    "error": "#ba1a1a",
+                    "surface-container-high": "#e7e8e9",
+                    "primary-fixed": "#d5e3ff",
+                    "primary-fixed-dim": "#adc8f5",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#261a00",
+                    "on-tertiary-container": "#ce9b0f",
+                    "secondary-container": "#d6e0f4",
+                    "on-surface": "#191c1d",
+                    "secondary-fixed-dim": "#bdc7da",
+                    "tertiary-fixed": "#ffdfa0",
+                    "secondary-fixed": "#d9e3f7",
+                    "surface": "#f8f9fa",
+                    "primary": "#022448",
+                    "surface-bright": "#f8f9fa",
+                    "surface-container": "#edeeef",
+                    "tertiary": "#302200",
+                    "on-surface-variant": "#43474e",
+                    "inverse-surface": "#2e3132",
+                    "outline-variant": "#c4c6cf",
+                    "surface-tint": "#455f87",
+                    "primary-container": "#1e3a5f",
+                    "surface-container-low": "#f3f4f5",
+                    "tertiary-fixed-dim": "#f6be39",
+                    "inverse-primary": "#adc8f5",
+                    "inverse-on-surface": "#f0f1f2",
+                    "on-primary-container": "#8aa4cf",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "surface-variant": "#e1e3e4",
+                    "secondary": "#555f70",
+                    "tertiary-container": "#4b3600",
+                    "on-secondary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#d9dadb",
+                    "on-secondary-container": "#5a6374",
+                    "on-secondary-fixed-variant": "#3e4757",
+                    "on-secondary-fixed": "#121c2a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "fontFamily": {
+                    "headline": ["Inter"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .tonal-shift {
+            background-color: #f3f4f5;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col h-screen w-64 border-r border-transparent bg-slate-50 dark:bg-slate-900 font-['Inter'] font-medium tracking-tight">
+<div class="p-6 flex items-center gap-3">
+<div class="w-8 h-8 bg-gradient-to-br from-primary to-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg">gavel</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-[#1E3A5F] dark:text-white leading-tight">LawLibra</h1>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Legal Management</p>
+</div>
+</div>
+<nav class="flex-1 mt-4 px-3 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out bg-white dark:bg-slate-800 text-[#1E3A5F] dark:text-white font-semibold border-r-4 border-[#1E3A5F] dark:border-[#f6be39]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">gavel</span>
+<span>Cases</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">description</span>
+<span>Documents</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">group</span>
+<span>Clients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span>Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded transition-all duration-200 ease-in-out text-slate-500 dark:text-slate-400 hover:text-[#1E3A5F] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:scale-90" href="#">
+<div class="relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</div>
+<span>Notifications</span>
+</a>
+</nav>
+<div class="p-4 mt-auto">
+<div class="p-4 bg-primary rounded-xl overflow-hidden relative group cursor-pointer">
+<img class="absolute inset-0 w-full h-full object-cover opacity-20 transition-opacity group-hover:opacity-30" data-alt="Close up of classic law books in a mahogany library with soft sunlight filtering through" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDdqNkIUhsP-ttAI0QGJChyh7cfJeNMJaAMqAfPa0gdoyGz9CF4QNMwvsRNCGFrbqBrRgzeZjEC2pWZh1fSS3q95qgxc2ocYTnxNMJoW7RnjTDYKvr1tGLO3tNF9MhvdiFbmlVcee09LY-QxTrFsteiXKfrAjDzE8RPcJJ1bJZ3t2A2gDj7fBG1iIsPo5mYWbBQ9wxl_q5Z8S4VfNWQb4YbR6a078e7rtdGdLMVQnweHFxwYPOt1Fgw7fDCeQCkIiGlrmWSfYn0_dE"/>
+<div class="relative z-10">
+<p class="text-white text-xs font-bold mb-1">Upgrade to Pro</p>
+<p class="text-primary-fixed-dim text-[10px] leading-snug">Unlock AI-powered brief summarization.</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar -->
+<header class="flex items-center justify-between px-6 w-full z-50 ml-64 max-w-[calc(100%-16rem)] h-16 sticky top-0 bg-white/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 shadow-sm">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none focus:ring-2 focus:ring-primary rounded-lg pl-10 pr-4 py-2 text-sm" placeholder="Search cases, files, or clients..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-slate-600">
+<button class="material-symbols-outlined hover:text-[#1E3A5F] transition-colors">dark_mode</button>
+<button class="material-symbols-outlined hover:text-[#1E3A5F] transition-colors relative">
+                    notifications
+                    <span class="absolute top-0 right-0 w-1.5 h-1.5 bg-error rounded-full"></span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-outline-variant opacity-20"></div>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-primary">Julian Vance, Esq.</p>
+<p class="text-[10px] text-on-surface-variant">Senior Associate</p>
+</div>
+<img class="w-9 h-9 rounded-full object-cover ring-2 ring-offset-2 ring-transparent group-hover:ring-primary transition-all" data-alt="Professional portrait of a middle-aged male lawyer in a charcoal suit with a confident and approachable expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt_cPOYd-lQBMmthM_SZAk4vhKzCyWmJjp5kAQsOeIhxVuW2ADpPENxeNmw1NPfzbX0Xhql9VaK0JhvbhrBa7ceJbjNJuSJoiOzryTTEU7boAFHmQcQOeAAceUvEKBRzAKV1YtwPMBJnz_Pdq_RGOOSJiBnQeAjEFWUk6ojspG_uUgnQaiq4q263nokWiD9A0v-JqCa0UczaEGjX2iEUGrtoKyU-SfC6Sg_xT9DKhifQVwAeGWWrMeZ-VvJjXF15IPqtuxL5JABW4"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 p-8 min-h-[calc(100vh-4rem)]">
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<div>
+<h2 class="text-3xl font-extrabold tracking-tight text-primary">Case Overview</h2>
+<p class="text-on-surface-variant mt-1">Good morning, Julian. You have 3 hearings scheduled for today.</p>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-white px-6 py-2.5 rounded-lg font-bold shadow-lg shadow-primary/10 flex items-center gap-2 hover:scale-[1.02] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm">add</span>
+                New Case File
+            </button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+<!-- Stats Column (3/4 Width) -->
+<div class="lg:col-span-3 space-y-8">
+<!-- Metric Cards Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest p-5 rounded-xl border-b-2 border-primary shadow-sm group hover:bg-primary transition-colors duration-300">
+<div class="flex justify-between items-start mb-3">
+<span class="material-symbols-outlined text-primary group-hover:text-primary-fixed">balance</span>
+<span class="text-[10px] font-bold text-on-surface-variant group-hover:text-primary-fixed-dim uppercase tracking-tighter">+12% vs LY</span>
+</div>
+<h4 class="text-2xl font-black text-primary group-hover:text-white">42</h4>
+<p class="text-xs font-semibold text-on-surface-variant group-hover:text-white/70">Active Cases</p>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-b-2 border-primary-container shadow-sm group hover:bg-primary-container transition-colors duration-300">
+<div class="flex justify-between items-start mb-3">
+<span class="material-symbols-outlined text-primary-container group-hover:text-primary-fixed">article</span>
+<span class="text-[10px] font-bold text-on-surface-variant group-hover:text-primary-fixed-dim uppercase tracking-tighter">8 Pending</span>
+</div>
+<h4 class="text-2xl font-black text-primary group-hover:text-white">128</h4>
+<p class="text-xs font-semibold text-on-surface-variant group-hover:text-white/70">Documents</p>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-b-2 border-tertiary-fixed-dim shadow-sm group hover:bg-tertiary-fixed-dim transition-colors duration-300">
+<div class="flex justify-between items-start mb-3">
+<span class="material-symbols-outlined text-tertiary group-hover:text-on-tertiary-fixed">event_available</span>
+<span class="text-[10px] font-bold text-on-surface-variant group-hover:text-on-tertiary-fixed uppercase tracking-tighter">Next: 2PM</span>
+</div>
+<h4 class="text-2xl font-black text-primary group-hover:text-on-tertiary-fixed">15</h4>
+<p class="text-xs font-semibold text-on-surface-variant group-hover:text-on-tertiary-fixed/70">Hearings</p>
+</div>
+<div class="bg-surface-container-lowest p-5 rounded-xl border-b-2 border-error shadow-sm group hover:bg-error transition-colors duration-300">
+<div class="flex justify-between items-start mb-3">
+<span class="material-symbols-outlined text-error group-hover:text-white">notification_important</span>
+<span class="text-[10px] font-bold text-on-surface-variant group-hover:text-white/70 uppercase tracking-tighter">Action Required</span>
+</div>
+<h4 class="text-2xl font-black text-primary group-hover:text-white">09</h4>
+<p class="text-xs font-semibold text-on-surface-variant group-hover:text-white/70">Notifications</p>
+</div>
+</div>
+<!-- Recent Cases Table Section -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-lg font-bold text-primary">Recent Case Files</h3>
+<button class="text-xs font-bold text-primary-container hover:underline">View All Registry</button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-[10px] uppercase tracking-widest text-on-surface-variant border-b border-surface-container-high">
+<th class="pb-3 font-bold">Case ID</th>
+<th class="pb-3 font-bold">Client Name</th>
+<th class="pb-3 font-bold">Matter Type</th>
+<th class="pb-3 font-bold">Status</th>
+<th class="pb-3 font-bold text-right">Last Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container text-sm">
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 font-bold text-primary">#LC-2024-001</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded bg-secondary-container flex items-center justify-center text-[10px] font-bold text-on-secondary-container">MW</div>
+<span>Marcus Wright</span>
+</div>
+</td>
+<td class="py-4">Corporate Litigation</td>
+<td class="py-4">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-primary-fixed text-on-primary-fixed-variant">DISCOVERY</span>
+</td>
+<td class="py-4 text-right text-on-surface-variant">2 hours ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 font-bold text-primary">#LC-2024-042</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded bg-tertiary-fixed flex items-center justify-center text-[10px] font-bold text-on-tertiary-fixed-variant">EP</div>
+<span>Elena Petrov</span>
+</div>
+</td>
+<td class="py-4">Intellectual Property</td>
+<td class="py-4">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-tertiary-fixed-dim text-on-tertiary-fixed">FILING</span>
+</td>
+<td class="py-4 text-right text-on-surface-variant">5 hours ago</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 font-bold text-primary">#LC-2023-882</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded bg-secondary-fixed flex items-center justify-center text-[10px] font-bold text-on-secondary-fixed">JT</div>
+<span>Jonathan Thorne</span>
+</div>
+</td>
+<td class="py-4">Contract Dispute</td>
+<td class="py-4">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-surface-container-highest text-on-surface-variant">INACTIVE</span>
+</td>
+<td class="py-4 text-right text-on-surface-variant">Yesterday</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 font-bold text-primary">#LC-2024-115</td>
+<td class="py-4">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded bg-primary-fixed-dim flex items-center justify-center text-[10px] font-bold text-on-primary-fixed">SC</div>
+<span>Sarah Chen</span>
+</div>
+</td>
+<td class="py-4">Labor Compliance</td>
+<td class="py-4">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-error-container text-on-error-container">URGENT</span>
+</td>
+<td class="py-4 text-right text-on-surface-variant">4 mins ago</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Sidebar Info (1/4 Width) -->
+<div class="lg:col-span-1 space-y-6">
+<!-- Upcoming Hearings -->
+<section class="bg-surface-container-highest rounded-xl p-6 relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-primary/5 rounded-full blur-2xl"></div>
+<div class="relative z-10">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-sm font-black text-primary uppercase tracking-wider">Hearings This Week</h3>
+<span class="text-[10px] font-bold text-primary">3 NEW</span>
+</div>
+<div class="space-y-4">
+<!-- Hearing Card 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm border-l-4 border-primary group cursor-pointer hover:translate-x-1 transition-transform">
+<p class="text-[10px] font-bold text-on-surface-variant mb-1 uppercase">Today • 14:00 PM</p>
+<h4 class="text-sm font-bold text-primary mb-2">Wright vs. Sterling Corp</h4>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-xs text-on-surface-variant">location_on</span>
+<span class="text-[10px] text-on-surface-variant">Superior Court - Room 4B</span>
+</div>
+</div>
+<!-- Hearing Card 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm border-l-4 border-tertiary-fixed-dim group cursor-pointer hover:translate-x-1 transition-transform">
+<p class="text-[10px] font-bold text-on-surface-variant mb-1 uppercase">Oct 14 • 09:30 AM</p>
+<h4 class="text-sm font-bold text-primary mb-2">Petrov IP Deposition</h4>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-xs text-on-surface-variant">videocam</span>
+<span class="text-[10px] text-on-surface-variant">Remote - Zoom Conference</span>
+</div>
+</div>
+<!-- Hearing Card 3 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg shadow-sm border-l-4 border-primary group cursor-pointer hover:translate-x-1 transition-transform">
+<p class="text-[10px] font-bold text-on-surface-variant mb-1 uppercase">Oct 16 • 11:00 AM</p>
+<h4 class="text-sm font-bold text-primary mb-2">Chen Labor Review</h4>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-xs text-on-surface-variant">location_on</span>
+<span class="text-[10px] text-on-surface-variant">District Court - Annex</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 border border-outline-variant/30 rounded text-xs font-bold text-primary hover:bg-primary hover:text-white transition-all">
+                            Full Calendar View
+                        </button>
+</div>
+</section>
+<!-- Document Checklist -->
+<section class="bg-primary text-white rounded-xl p-6 overflow-hidden relative">
+<img class="absolute inset-0 w-full h-full object-cover opacity-10" data-alt="Tidy legal workspace with fountain pen, leather notebook, and professional atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBvsaFbCXaU5WUL1goxx_2iIF5nB4M3AoCepE-kI4OleBFSx76YMWhwxhrfj-fjAApNYgah9vrMpD2IKSd7wBenlBxRg79pMZUBYyMPJ4zNIFyba16rcX_2jtjE8BXga8nTMR9D6hnUQPEjXxxP6U7cp9ciDN8WSa_DqZeuBx6ZEBw--nz7fXrf7OfMTPmdiXYIvfhjJQHntcH5c9zJttFJBvau41I9kR8yjm5X7i9uUgrhWL8Q0qMvia7SNpvtvhn4kfzijOEJ0q8"/>
+<div class="relative z-10">
+<h3 class="text-sm font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">checklist</span>
+                            Priority Tasks
+                        </h3>
+<ul class="space-y-3 text-[11px]">
+<li class="flex items-start gap-2">
+<input class="mt-0.5 rounded-sm bg-white/20 border-none text-tertiary-fixed-dim focus:ring-0" type="checkbox"/>
+<span>Sign witness affidavit for #LC-2024-001</span>
+</li>
+<li class="flex items-start gap-2">
+<input class="mt-0.5 rounded-sm bg-white/20 border-none text-tertiary-fixed-dim focus:ring-0" type="checkbox"/>
+<span>Submit brief for Petrov IP case</span>
+</li>
+<li class="flex items-start gap-2">
+<input class="mt-0.5 rounded-sm bg-white/20 border-none text-tertiary-fixed-dim focus:ring-0" type="checkbox"/>
+<span>Review billing for Q3 Corporate</span>
+</li>
+</ul>
+</div>
+</section>
+</div>
+</div>
+</main>
+</body></html>
