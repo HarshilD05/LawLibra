@@ -93,60 +93,73 @@
             box-shadow: 0 12px 32px 0 rgba(25, 28, 30, 0.06);
         }
     </style>
+
+<style id="ll-global-fixes">
+  /* Layout: prevent horizontal scroll */
+  html, body { overflow-x: hidden; max-width: 100vw; }
+  /* Sidebar width token */
+  :root { --sidebar-w: 224px; }
+  aside { width: var(--sidebar-w) !important; }
+  /* Main content area */
+  .ll-main { margin-left: var(--sidebar-w); overflow-x: hidden; }
+  /* TopNav: must not exceed viewport */
+  header.ll-topnav { left: var(--sidebar-w) !important; right: 0 !important; width: auto !important; }
+  /* Font size reductions */
+  .font-headline.text-4xl, h2.text-4xl { font-size: 1.5rem !important; line-height: 2rem !important; }
+  .font-headline.text-3xl, h2.text-3xl { font-size: 1.25rem !important; }
+  .text-3xl.font-black { font-size: 1.6rem !important; }
+  /* Table horizontal scroll only when needed */
+  .overflow-x-auto { overflow-x: auto; max-width: 100%; }
+  /* Sidebar: narrow and clean */
+  aside nav a, aside .space-y-0\.5 a, aside button { font-size: 0.8125rem !important; }
+  /* Dropdown panels */
+  #ll-notif-panel, #ll-profile-panel { position: absolute; }
+</style>
+
 </head>
 <body class="bg-surface font-body text-on-surface">
 <!-- SideNavBar -->
-<aside class="bg-[#0D1F3C] dark:bg-[#06101F] h-screen w-64 fixed left-0 top-0 flex flex-col py-6 px-4 z-50">
+<aside id="ll-sidebar" class="bg-[#0D1F3C] dark:bg-[#06101F] h-screen w-56 fixed left-0 top-0 flex flex-col py-6 px-4 z-50">
 <div class="mb-10 px-2">
 <h1 class="text-2xl font-bold tracking-tight text-white font-headline">LawLibra</h1>
 <p class="text-[10px] uppercase tracking-widest text-on-primary-container font-semibold opacity-70">The Sovereign Counsel</p>
 </div>
 <nav class="flex-1 space-y-1">
-<!-- Dashboard -->
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 hover:bg-white/5 rounded-lg group" href="#">
-<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
-<span class="font-label text-md">Dashboard</span>
+<a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">dashboard</span>
+<span class="font-label">Dashboard</span>
 </a>
-<!-- Cases -->
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 hover:bg-white/5 rounded-lg group" href="#">
-<span class="material-symbols-outlined" data-icon="folder_open">folder_open</span>
-<span class="font-label text-md">Cases</span>
+<a href="case_list.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">folder_open</span>
+<span class="font-label">Cases</span>
 </a>
-<!-- Documents -->
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 hover:bg-white/5 rounded-lg group" href="#">
-<span class="material-symbols-outlined" data-icon="description">description</span>
-<span class="font-label text-md">Documents</span>
+<a href="documents.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">description</span>
+<span class="font-label">Documents</span>
 </a>
-<!-- AI Chat -->
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 hover:bg-white/5 rounded-lg group" href="#">
-<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
-<span class="font-label text-md">AI Chat</span>
+<a href="ai_assistant.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">auto_awesome</span>
+<span class="font-label">AI Chat</span>
 </a>
-<!-- Calendar (ACTIVE) -->
-<a class="bg-white/10 text-white font-semibold rounded-lg flex items-center gap-3 px-4 py-3 transition-all duration-200 scale-98" href="#">
-<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
-<span class="font-label text-md">Calendar</span>
+<a href="calendar.html" class="flex items-center gap-3 px-4 py-3 bg-white/10 text-white font-semibold rounded-lg scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+<span class="font-label">Calendar</span>
 </a>
-<!-- Notifications -->
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 hover:bg-white/5 rounded-lg group" href="#">
-<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-<span class="font-label text-md">Notifications</span>
-</a>
-<!-- Admin -->
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 hover:bg-white/5 rounded-lg group" href="#">
-<span class="material-symbols-outlined" data-icon="gavel">gavel</span>
-<span class="font-label text-md">Admin</span>
-</a>
+
 </nav>
-<div class="mt-auto pt-6 px-2">
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 hover:bg-white/5 rounded-lg group" href="#">
-<span class="material-symbols-outlined" data-icon="settings">settings</span>
-<span class="font-label text-md">Settings</span>
+<div class="mt-auto pt-4 border-t border-white/10 space-y-1">
+<a href="user_management.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">gavel</span>
+<span class="font-label">Admin</span>
+</a>
+<a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">settings</span>
+<span class="font-label">Settings</span>
 </a>
 </div>
 </aside>
 <!-- TopNavBar -->
-<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/80 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm">
+<header class="ll-topnav fixed top-0 right-0 left-56 h-16 z-40 bg-white/80 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm">
 <div class="flex items-center gap-4 flex-1">
 <div class="relative w-full max-w-md">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-primary-container text-sm">search</span>
@@ -169,8 +182,8 @@
 </div>
 </header>
 <!-- Main Content Area -->
-<main class="pl-64 pt-16 min-h-screen">
-<div class="p-8 flex gap-8">
+<main class="ml-56 pt-16 min-h-screen overflow-x-hidden">
+<div class="p-8 flex gap-8 min-w-0">
 <!-- Left Mini-Column -->
 <div class="w-72 flex-shrink-0 space-y-8">
 <!-- Mini Calendar Card -->
@@ -238,7 +251,7 @@
 </div>
 </div>
 <!-- Central Calendar Grid -->
-<div class="flex-1">
+<div class="flex-1 min-w-0">
 <div class="bg-surface-container-lowest rounded-xl lawyer-shadow overflow-hidden">
 <!-- Calendar Header -->
 <div class="p-6 flex items-center justify-between">
@@ -417,4 +430,15 @@
 </span>
 </button>
 </div>
+
+<script src="api.js"></script>
+<script>
+  // Inline auth guard — runs before nav.js to prevent login bypass
+  (function() {
+    var token = localStorage.getItem("ll_token");
+    if (!token) { window.location.replace("login_page.html"); }
+  })();
+</script>
+<script src="nav.js"></script>
+
 </body></html>

@@ -85,6 +85,29 @@
         background: linear-gradient(135deg, #101c2e 0%, #3c475b 100%);
       }
     </style>
+
+<style id="ll-global-fixes">
+  /* Layout: prevent horizontal scroll */
+  html, body { overflow-x: hidden; max-width: 100vw; }
+  /* Sidebar width token */
+  :root { --sidebar-w: 224px; }
+  aside { width: var(--sidebar-w) !important; }
+  /* Main content area */
+  .ll-main { margin-left: var(--sidebar-w); overflow-x: hidden; }
+  /* TopNav: must not exceed viewport */
+  header.ll-topnav { left: var(--sidebar-w) !important; right: 0 !important; width: auto !important; }
+  /* Font size reductions */
+  .font-headline.text-4xl, h2.text-4xl { font-size: 1.5rem !important; line-height: 2rem !important; }
+  .font-headline.text-3xl, h2.text-3xl { font-size: 1.25rem !important; }
+  .text-3xl.font-black { font-size: 1.6rem !important; }
+  /* Table horizontal scroll only when needed */
+  .overflow-x-auto { overflow-x: auto; max-width: 100%; }
+  /* Sidebar: narrow and clean */
+  aside nav a, aside .space-y-0\.5 a, aside button { font-size: 0.8125rem !important; }
+  /* Dropdown panels */
+  #ll-notif-panel, #ll-profile-panel { position: absolute; }
+</style>
+
 </head>
 <body class="bg-surface font-body text-on-surface antialiased">
 <!-- Main Container -->
@@ -196,4 +219,74 @@
 </div>
 </div>
 </div>
+
+<script src="api.js"></script>
+<script src="nav.js"></script>
+
+
+
+
+<script>
+// LawLibra Login Handler
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.querySelector("form");
+  if (!form) return;
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+    const email    = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const btn      = form.querySelector('button[type="submit"]');
+    const origHTML = btn.innerHTML;
+
+    if (!email || !password) { showError("Please enter your email and password."); return; }
+
+    btn.disabled  = true;
+    btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg> Signing in...';
+
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+        signal: AbortSignal.timeout(4000)
+      }).then(r => r.json());
+
+      if (res.token) {
+        localStorage.setItem("ll_token", res.token);
+        localStorage.setItem("ll_user", JSON.stringify(res.user));
+        window.location.href = "dashboard.html";
+        return;
+      } else {
+        showError(res.error || "Invalid email or password.");
+      }
+    } catch (err) {
+      // Backend not running — enter demo mode
+      console.warn("Backend offline — Demo mode active");
+      const role = email.toLowerCase().includes("admin") ? "ADMIN" : "LAWYER";
+      const demoUser = { id:"demo-001", name: email.split("@")[0].replace(/[._]/g," ").replace(/\w/g,c=>c.toUpperCase()), email, role };
+      localStorage.setItem("ll_token", "demo-token-" + Date.now());
+      localStorage.setItem("ll_user", JSON.stringify(demoUser));
+      window.location.href = "dashboard.html";
+      return;
+    }
+
+    btn.disabled  = false;
+    btn.innerHTML = origHTML;
+  });
+
+  function showError(msg) {
+    let err = document.getElementById("ll-error");
+    if (!err) {
+      err = document.createElement("p");
+      err.id = "ll-error";
+      err.className = "text-red-600 text-sm text-center bg-red-50 border border-red-100 rounded-lg px-4 py-2";
+      document.querySelector("form").prepend(err);
+    }
+    err.textContent = msg;
+  }
+
+  // If already logged in, redirect
+  if (localStorage.getItem("ll_token")) window.location.href = "dashboard.html";
+});
+</script>
 </body></html>

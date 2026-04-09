@@ -97,10 +97,33 @@
             background: linear-gradient(135deg, #101c2e 0%, #3c475b 100%);
         }
     </style>
+
+<style id="ll-global-fixes">
+  /* Layout: prevent horizontal scroll */
+  html, body { overflow-x: hidden; max-width: 100vw; }
+  /* Sidebar width token */
+  :root { --sidebar-w: 224px; }
+  aside { width: var(--sidebar-w) !important; }
+  /* Main content area */
+  .ll-main { margin-left: var(--sidebar-w); overflow-x: hidden; }
+  /* TopNav: must not exceed viewport */
+  header.ll-topnav { left: var(--sidebar-w) !important; right: 0 !important; width: auto !important; }
+  /* Font size reductions */
+  .font-headline.text-4xl, h2.text-4xl { font-size: 1.5rem !important; line-height: 2rem !important; }
+  .font-headline.text-3xl, h2.text-3xl { font-size: 1.25rem !important; }
+  .text-3xl.font-black { font-size: 1.6rem !important; }
+  /* Table horizontal scroll only when needed */
+  .overflow-x-auto { overflow-x: auto; max-width: 100%; }
+  /* Sidebar: narrow and clean */
+  aside nav a, aside .space-y-0\.5 a, aside button { font-size: 0.8125rem !important; }
+  /* Dropdown panels */
+  #ll-notif-panel, #ll-profile-panel { position: absolute; }
+</style>
+
 </head>
 <body class="bg-surface font-body text-on-surface">
 <!-- SideNavBar -->
-<aside class="h-screen w-64 fixed left-0 top-0 bg-[#0D1F3C] dark:bg-[#06101F] flex flex-col py-6 px-4 z-50 shadow-2xl dark:shadow-none">
+<aside id="ll-sidebar" class="h-screen w-56 fixed left-0 top-0 bg-[#0D1F3C] dark:bg-[#06101F] flex flex-col py-6 px-4 z-50 shadow-2xl dark:shadow-none">
 <div class="mb-10 px-2 flex items-center gap-3">
 <div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center">
 <span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">gavel</span>
@@ -111,51 +134,41 @@
 </div>
 </div>
 <nav class="flex-1 space-y-1">
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">dashboard</span>
-<span class="font-label text-md">Dashboard</span>
+<a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">dashboard</span>
+<span class="font-label">Dashboard</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">folder_open</span>
-<span class="font-label text-md">Cases</span>
+<a href="case_list.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">folder_open</span>
+<span class="font-label">Cases</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">description</span>
-<span class="font-label text-md">Documents</span>
+<a href="documents.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">description</span>
+<span class="font-label">Documents</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">auto_awesome</span>
-<span class="font-label text-md">AI Chat</span>
+<a href="ai_assistant.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">auto_awesome</span>
+<span class="font-label">AI Chat</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">calendar_month</span>
-<span class="font-label text-md">Calendar</span>
+<a href="calendar.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">calendar_month</span>
+<span class="font-label">Calendar</span>
 </a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">notifications</span>
-<span class="font-label text-md">Notifications</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-all duration-200 group" href="#">
-<span class="material-symbols-outlined text-xl group-hover:scale-110 transition-transform">gavel</span>
-<span class="font-label text-md">Admin</span>
-</a>
-<a class="flex items-center gap-3 px-4 py-3 bg-white/10 text-white font-semibold rounded-lg scale-[0.98] transition-all duration-200" href="#">
-<span class="material-symbols-outlined text-xl">settings</span>
-<span class="font-label text-md">Settings</span>
-</a>
+
 </nav>
-<div class="mt-auto px-4 py-4 bg-white/5 rounded-xl border border-white/5">
-<div class="flex items-center gap-3">
-<img class="w-10 h-10 rounded-full border border-white/10 object-cover" data-alt="professional portrait of a senior lawyer in a dark suit with a neutral confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD43ltsotEVmJZqZumMX-ZwkHQ6Z6a9ld6QDxYLyXDhfVERiFm1S5QwC6IFlWRBOPL3vZy_NGFN-c6ZzY8C-9DbNta_CVjwlQ4aQWHgkLDqYuUUO7sXpvutgxIvkASJhr2rE3uxSD0fzonNFcCF1yWkebq9nsYsH2PzrN7jyT5Q5WeqQHdnz2q2MnGdqTcmv7ZTWJm97Fb8hv3hy4YxozQhIYIebkcvpTAaNEA1QFfSASrEdcdDOg-EkO_HTwsiLHqB5mj_cbfTeIFy"/>
-<div class="overflow-hidden">
-<p class="text-white text-sm font-semibold truncate">Julian Sterling</p>
-<p class="text-slate-500 text-xs truncate">Senior Partner</p>
-</div>
-</div>
+<div class="mt-auto pt-4 border-t border-white/10 space-y-1">
+<a href="user_management.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
+<span class="material-symbols-outlined" style="">gavel</span>
+<span class="font-label">Admin</span>
+</a>
+<a href="settings.html" class="flex items-center gap-3 px-4 py-3 bg-white/10 text-white font-semibold rounded-lg scale-[0.98] transition-all duration-200">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label">Settings</span>
+</a>
 </div>
 </aside>
 <!-- TopNavBar -->
-<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-8 w-full shadow-sm dark:shadow-none">
+<header class="ll-topnav fixed top-0 right-0 left-56 h-16 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm dark:shadow-none">
 <div class="flex items-center flex-1">
 <div class="relative w-full max-w-md group">
 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
@@ -175,7 +188,7 @@
 </div>
 </header>
 <!-- Main Content Canvas -->
-<main class="ml-64 pt-24 pb-12 px-12 min-h-screen">
+<main class="ml-[224px] pt-24 pb-12 px-12 min-h-screen">
 <div class="max-w-5xl mx-auto">
 <!-- Header Section -->
 <div class="mb-12">
@@ -336,4 +349,15 @@
 <span class="material-symbols-outlined text-2xl group-hover:rotate-12 transition-transform" style="font-variation-settings: 'FILL' 1;">question_answer</span>
 </button>
 </div>
+
+<script src="api.js"></script>
+<script>
+  // Inline auth guard — runs before nav.js to prevent login bypass
+  (function() {
+    var token = localStorage.getItem("ll_token");
+    if (!token) { window.location.replace("login_page.html"); }
+  })();
+</script>
+<script src="nav.js"></script>
+
 </body></html>
