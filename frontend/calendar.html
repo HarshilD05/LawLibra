@@ -1,444 +1,301 @@
 <!DOCTYPE html>
-
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>LawLibra | Calendar</title>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>LawLibra - Calendar</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                "on-surface": "#191c1e",
-                "on-surface-variant": "#45474c",
-                "inverse-primary": "#bbc7df",
-                "background": "#f7f9fc",
-                "on-secondary-fixed": "#241a00",
-                "primary-fixed": "#d7e3fc",
-                "inverse-surface": "#2d3133",
-                "primary-container": "#101c2e",
-                "primary": "#000000",
-                "error": "#ba1a1a",
-                "on-tertiary-fixed-variant": "#374766",
-                "error-container": "#ffdad6",
-                "surface": "#f7f9fc",
-                "on-primary-fixed": "#101c2e",
-                "on-error-container": "#93000a",
-                "surface-variant": "#e0e3e6",
-                "on-tertiary-container": "#7484a6",
-                "outline": "#75777d",
-                "secondary": "#755b00",
-                "on-tertiary-fixed": "#081b38",
-                "tertiary-fixed-dim": "#b6c7ec",
-                "on-background": "#191c1e",
-                "on-primary-fixed-variant": "#3c475b",
-                "surface-bright": "#f7f9fc",
-                "outline-variant": "#c5c6cd",
-                "on-primary": "#ffffff",
-                "primary-fixed-dim": "#bbc7df",
-                "on-primary-container": "#79849b",
-                "surface-dim": "#d8dadd",
-                "surface-tint": "#535f74",
-                "tertiary-fixed": "#d7e2ff",
-                "on-secondary-fixed-variant": "#584400",
-                "secondary-fixed": "#ffe08f",
-                "on-secondary": "#ffffff",
-                "tertiary-container": "#081b38",
-                "surface-container-lowest": "#ffffff",
-                "inverse-on-surface": "#eff1f4",
-                "secondary-container": "#fed977",
-                "surface-container-highest": "#e0e3e6",
-                "surface-container-low": "#f2f4f7",
-                "surface-container": "#eceef1",
-                "secondary-fixed-dim": "#e6c364",
-                "on-secondary-container": "#785d00",
-                "tertiary": "#000000",
-                "on-tertiary": "#ffffff",
-                "on-error": "#ffffff",
-                "surface-container-high": "#e6e8eb"
-            },
-            "borderRadius": {
-                "DEFAULT": "0.125rem",
-                "lg": "0.25rem",
-                "xl": "0.5rem",
-                "full": "0.75rem"
-            },
-            "fontFamily": {
-                "headline": ["Manrope"],
-                "body": ["Inter"],
-                "label": ["Inter"]
-            }
-          },
-        },
-      }
-    </script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-surface":"#191c1e","on-surface-variant":"#45474c","background":"#f7f9fc","primary-container":"#101c2e","secondary":"#755b00","outline":"#75777d","outline-variant":"#c5c6cd","surface":"#f7f9fc","surface-container-lowest":"#ffffff","secondary-container":"#fed977","surface-container-low":"#f2f4f7","surface-container":"#eceef1","on-secondary-container":"#785d00","on-primary-container":"#79849b","error":"#ba1a1a"},fontFamily:{headline:["Manrope"],body:["Inter"]}}}}</script>
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-        }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(24px);
-        }
-        .lawyer-shadow {
-            box-shadow: 0 12px 32px 0 rgba(25, 28, 30, 0.06);
-        }
-    </style>
-
-<style id="ll-global-fixes">
-  /* Layout: prevent horizontal scroll */
-  html, body { overflow-x: hidden; max-width: 100vw; }
-  /* Sidebar width token */
-  :root { --sidebar-w: 224px; }
-  aside { width: var(--sidebar-w) !important; }
-  /* Main content area */
-  .ll-main { margin-left: var(--sidebar-w); overflow-x: hidden; }
-  /* TopNav: must not exceed viewport */
-  header.ll-topnav { left: var(--sidebar-w) !important; right: 0 !important; width: auto !important; }
-  /* Font size reductions */
-  .font-headline.text-4xl, h2.text-4xl { font-size: 1.5rem !important; line-height: 2rem !important; }
-  .font-headline.text-3xl, h2.text-3xl { font-size: 1.25rem !important; }
-  .text-3xl.font-black { font-size: 1.6rem !important; }
-  /* Table horizontal scroll only when needed */
-  .overflow-x-auto { overflow-x: auto; max-width: 100%; }
-  /* Sidebar: narrow and clean */
-  aside nav a, aside .space-y-0\.5 a, aside button { font-size: 0.8125rem !important; }
-  /* Dropdown panels */
-  #ll-notif-panel, #ll-profile-panel { position: absolute; }
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}
+:root{--sidebar-w:224px;}
+html,body{overflow-x:hidden;}
+aside{width:var(--sidebar-w)!important;}
+.ll-main{margin-left:var(--sidebar-w);}
+header.ll-topnav{left:var(--sidebar-w)!important;right:0!important;width:auto!important;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
+.day-cell{min-height:110px;}
 </style>
-
 </head>
-<body class="bg-surface font-body text-on-surface">
-<!-- SideNavBar -->
-<aside id="ll-sidebar" class="bg-[#0D1F3C] dark:bg-[#06101F] h-screen w-56 fixed left-0 top-0 flex flex-col py-6 px-4 z-50">
-<div class="mb-10 px-2">
-<h1 class="text-2xl font-bold tracking-tight text-white font-headline">LawLibra</h1>
-<p class="text-[10px] uppercase tracking-widest text-on-primary-container font-semibold opacity-70">The Sovereign Counsel</p>
-</div>
-<nav class="flex-1 space-y-1">
-<a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">dashboard</span>
-<span class="font-label">Dashboard</span>
-</a>
-<a href="case_list.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">folder_open</span>
-<span class="font-label">Cases</span>
-</a>
-<a href="documents.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">description</span>
-<span class="font-label">Documents</span>
-</a>
-<a href="ai_assistant.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">auto_awesome</span>
-<span class="font-label">AI Chat</span>
-</a>
-<a href="calendar.html" class="flex items-center gap-3 px-4 py-3 bg-white/10 text-white font-semibold rounded-lg scale-[0.98] transition-all duration-200">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
-<span class="font-label">Calendar</span>
-</a>
-
-</nav>
-<div class="mt-auto pt-4 border-t border-white/10 space-y-1">
-<a href="user_management.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">gavel</span>
-<span class="font-label">Admin</span>
-</a>
-<a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">settings</span>
-<span class="font-label">Settings</span>
-</a>
-</div>
-</aside>
-<!-- TopNavBar -->
-<header class="ll-topnav fixed top-0 right-0 left-56 h-16 z-40 bg-white/80 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm">
-<div class="flex items-center gap-4 flex-1">
-<div class="relative w-full max-w-md">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-primary-container text-sm">search</span>
-<input class="w-full bg-surface-container-low border-none rounded-xl py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-secondary/20 placeholder:text-on-primary-container/50" placeholder="Search case files, hearings, or clients..." type="text"/>
-</div>
-</div>
-<div class="flex items-center gap-6">
-<button class="relative text-slate-500 hover:text-slate-900 transition-colors p-2 rounded-lg hover:bg-slate-100">
-<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
-</button>
-<div class="h-8 w-[1px] bg-outline-variant/30"></div>
-<div class="flex items-center gap-3">
-<div class="text-right hidden sm:block">
-<p class="text-xs font-bold text-slate-900 leading-none">Marcus Thorne, Esq.</p>
-<p class="text-[10px] text-slate-500 font-medium mt-1">Senior Partner</p>
-</div>
-<img class="h-10 w-10 rounded-full object-cover border-2 border-surface-container-high" data-alt="professional headshot of a mature lawyer in a suit with a confident expression in a high-end office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmWsomaCYboKHIV_7j9-5xQo1L7TnnCRqJ33YpXpx0DTOquGAeP6wEzs1dWHsRa7zus3VURUbyogTYJBykRdH73mS0s7I3Y6cGkl5nMsSm-YayPG1LoQuoH5uFGAdtuTefWc0zXJRqRlsm6yK8k2DhmuFFmlnjouCl8w7BM1Lr3qPULD_dfv-QlsOOPz5IzBrPpih79zK_qy45V3PumLsqHM95Ej8Z_XyLzaw16qrUPZt8Cliuu_QE_YwNRfOFpUTn2tQxJF1SM6Vi"/>
-</div>
-</div>
+<body class="bg-background text-on-surface font-body">
+<aside id="ll-sidebar" class="bg-[#0D1F3C] h-screen fixed left-0 top-0 flex flex-col py-6 px-4 z-50 shadow-2xl"></aside>
+<header class="ll-topnav fixed top-0 right-0 h-16 z-40 bg-white/90 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm">
+  <div class="flex items-center gap-4 flex-1 max-w-md"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span><input class="w-full bg-surface-container-low border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-secondary-container transition-all" placeholder="Search events..." type="text"/></div></div>
+  <div class="flex items-center gap-3">
+    <button id="dark-toggle" class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg"><span class="material-symbols-outlined">dark_mode</span></button>
+    <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg relative"><span class="material-symbols-outlined">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full hidden" id="notif-badge"></span></button>
+    <div class="h-8 w-px bg-outline-variant/30"></div>
+    <div id="hdr-avatar" class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-amber-400 font-bold text-sm cursor-pointer">?</div>
+  </div>
 </header>
-<!-- Main Content Area -->
-<main class="ml-56 pt-16 min-h-screen overflow-x-hidden">
-<div class="p-8 flex gap-8 min-w-0">
-<!-- Left Mini-Column -->
-<div class="w-72 flex-shrink-0 space-y-8">
-<!-- Mini Calendar Card -->
-<div class="bg-surface-container-lowest p-6 rounded-xl lawyer-shadow">
-<div class="flex items-center justify-between mb-6">
-<h3 class="font-headline font-bold text-on-surface">October 2024</h3>
-<div class="flex gap-1">
-<button class="p-1 hover:bg-surface-container-low rounded"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
-<button class="p-1 hover:bg-surface-container-low rounded"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
-</div>
-</div>
-<div class="grid grid-cols-7 gap-y-3 text-center">
-<span class="text-[10px] font-bold text-on-primary-container">M</span>
-<span class="text-[10px] font-bold text-on-primary-container">T</span>
-<span class="text-[10px] font-bold text-on-primary-container">W</span>
-<span class="text-[10px] font-bold text-on-primary-container">T</span>
-<span class="text-[10px] font-bold text-on-primary-container">F</span>
-<span class="text-[10px] font-bold text-on-primary-container text-error/60">S</span>
-<span class="text-[10px] font-bold text-on-primary-container text-error/60">S</span>
-<span class="text-xs text-on-primary-container/30">27</span>
-<span class="text-xs text-on-primary-container/30">28</span>
-<span class="text-xs text-on-primary-container/30">29</span>
-<span class="text-xs text-on-primary-container/30">30</span>
-<span class="text-xs text-on-surface">1</span>
-<span class="text-xs text-on-surface">2</span>
-<span class="text-xs text-on-surface">3</span>
-<span class="text-xs text-on-surface">4</span>
-<span class="text-xs text-on-surface">5</span>
-<span class="text-xs text-on-surface">6</span>
-<span class="text-xs text-on-surface">7</span>
-<span class="text-xs bg-primary-container text-white rounded-full h-6 w-6 flex items-center justify-center mx-auto">8</span>
-<span class="text-xs text-on-surface">9</span>
-<span class="text-xs text-on-surface">10</span>
-</div>
-</div>
-<!-- Case Filter -->
-<div class="space-y-4">
-<h4 class="text-xs font-bold uppercase tracking-widest text-on-primary-container/60 px-2">Calendars</h4>
-<div class="space-y-2">
-<label class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors group">
-<input checked="" class="rounded border-secondary text-secondary focus:ring-secondary/20" type="checkbox"/>
-<span class="text-sm font-medium text-on-surface">Hearings &amp; Court</span>
-<span class="ml-auto w-2 h-2 rounded-full bg-secondary"></span>
-</label>
-<label class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors group">
-<input checked="" class="rounded border-blue-500 text-blue-500 focus:ring-blue-500/20" type="checkbox"/>
-<span class="text-sm font-medium text-on-surface">Deadlines</span>
-<span class="ml-auto w-2 h-2 rounded-full bg-blue-500"></span>
-</label>
-<label class="flex items-center gap-3 p-2 hover:bg-surface-container-low rounded-lg cursor-pointer transition-colors group">
-<input checked="" class="rounded border-error text-error focus:ring-error/20" type="checkbox"/>
-<span class="text-sm font-medium text-on-surface">Reminders</span>
-<span class="ml-auto w-2 h-2 rounded-full bg-error"></span>
-</label>
-</div>
-</div>
-<!-- AI Insight Card -->
-<div class="bg-primary-container text-white p-6 rounded-xl relative overflow-hidden">
-<span class="material-symbols-outlined text-secondary absolute -right-2 -bottom-2 text-6xl opacity-20" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-<p class="text-xs font-bold text-secondary-container mb-2 flex items-center gap-2">
-<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-                        LIBRA AI INSIGHT
-                    </p>
-<p class="text-xs leading-relaxed opacity-90">You have 3 conflicting court dates next Tuesday. I recommend requesting a continuance for the Peterson Case by Friday.</p>
-</div>
-</div>
-<!-- Central Calendar Grid -->
-<div class="flex-1 min-w-0">
-<div class="bg-surface-container-lowest rounded-xl lawyer-shadow overflow-hidden">
-<!-- Calendar Header -->
-<div class="p-6 flex items-center justify-between">
-<div class="flex items-center gap-4">
-<h2 class="font-headline font-extrabold text-2xl text-on-surface">October 2024</h2>
-<div class="flex bg-surface-container-low rounded-lg p-1">
-<button class="px-4 py-1.5 text-xs font-bold bg-white rounded-md shadow-sm">Month</button>
-<button class="px-4 py-1.5 text-xs font-medium text-on-primary-container">Week</button>
-<button class="px-4 py-1.5 text-xs font-medium text-on-primary-container">Day</button>
-</div>
-</div>
-<button class="bg-primary-container text-white px-6 py-2.5 rounded-lg font-bold text-sm flex items-center gap-2 hover:opacity-90 transition-opacity" style="background: linear-gradient(135deg, #101c2e 0%, #3c475b 100%);">
-<span class="material-symbols-outlined text-sm">add</span>
-                            Schedule Event
-                        </button>
-</div>
-<!-- Days of Week -->
-<div class="calendar-grid border-b border-surface-container-low">
-<div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase tracking-tighter">Mon</div>
-<div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase tracking-tighter">Tue</div>
-<div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase tracking-tighter">Wed</div>
-<div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase tracking-tighter">Thu</div>
-<div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase tracking-tighter">Fri</div>
-<div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase tracking-tighter">Sat</div>
-<div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase tracking-tighter">Sun</div>
-</div>
-<!-- Calendar Body -->
-<div class="calendar-grid">
-<!-- Empty cells for padding -->
-<div class="h-32 p-2 border-r border-b border-surface-container-low bg-surface-container-low/20"></div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low bg-surface-container-low/20"></div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low bg-surface-container-low/20"></div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low bg-surface-container-low/20"></div>
-<!-- Oct 1 -->
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
-<span class="text-xs font-bold text-on-primary-container/40">1</span>
-</div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
-<span class="text-xs font-bold text-on-primary-container/40">2</span>
-<div class="mt-1 space-y-1">
-<div class="bg-blue-50 text-blue-700 text-[10px] font-bold p-1 rounded-md border-l-2 border-blue-500 truncate">Brief Submission</div>
-</div>
-</div>
-<div class="h-32 p-2 border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
-<span class="text-xs font-bold text-on-primary-container/40">3</span>
-</div>
-<!-- Row 2 -->
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
-<span class="text-xs font-bold text-on-primary-container/40">4</span>
-</div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
-<span class="text-xs font-bold text-on-primary-container/40">5</span>
-</div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
-<span class="text-xs font-bold text-on-primary-container/40">6</span>
-<div class="mt-1 space-y-1">
-<div class="bg-secondary-container text-on-secondary-container text-[10px] font-bold p-1 rounded-md border-l-2 border-secondary truncate">Peterson Hearing</div>
-</div>
-</div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
-<span class="text-xs font-bold text-on-primary-container/40">7</span>
-</div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low bg-surface-container-low/40">
-<span class="text-xs font-extrabold text-primary-container">8</span>
-<div class="mt-1 space-y-1">
-<div class="bg-error-container text-on-error-container text-[10px] font-bold p-1 rounded-md border-l-2 border-error truncate">Critical: Tax Audit</div>
-<div class="bg-secondary-container text-on-secondary-container text-[10px] font-bold p-1 rounded-md border-l-2 border-secondary truncate">Deposition</div>
-</div>
-</div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
-<span class="text-xs font-bold text-on-primary-container/40">9</span>
-</div>
-<div class="h-32 p-2 border-b border-surface-container-low hover:bg-surface-container-low transition-colors">
-<span class="text-xs font-bold text-on-primary-container/40">10</span>
-</div>
-<!-- ... rest of month grid ... -->
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors"><span class="text-xs font-bold text-on-primary-container/40">11</span></div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors"><span class="text-xs font-bold text-on-primary-container/40">12</span></div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors"><span class="text-xs font-bold text-on-primary-container/40">13</span></div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors"><span class="text-xs font-bold text-on-primary-container/40">14</span></div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors"><span class="text-xs font-bold text-on-primary-container/40">15</span></div>
-<div class="h-32 p-2 border-r border-b border-surface-container-low hover:bg-surface-container-low transition-colors"><span class="text-xs font-bold text-on-primary-container/40">16</span></div>
-<div class="h-32 p-2 border-b border-surface-container-low hover:bg-surface-container-low transition-colors"><span class="text-xs font-bold text-on-primary-container/40">17</span></div>
-</div>
-</div>
-</div>
-<!-- Right Schedule Column -->
-<div class="w-80 flex-shrink-0">
-<div class="bg-surface-container-lowest h-full rounded-xl lawyer-shadow flex flex-col">
-<div class="p-6 border-b border-surface-container-low">
-<p class="text-xs font-bold text-on-primary-container/60 mb-1 uppercase tracking-widest">Today</p>
-<h3 class="font-headline font-extrabold text-lg">Tuesday, Oct 8</h3>
-</div>
-<div class="flex-1 overflow-y-auto p-6 space-y-6">
-<!-- Event 1 -->
-<div class="relative pl-6 border-l-2 border-error">
-<span class="absolute -left-1 top-0 w-2 h-2 rounded-full bg-error"></span>
-<p class="text-[10px] font-bold text-error uppercase mb-1">09:00 AM — Critical</p>
-<h4 class="font-bold text-on-surface text-sm">IRS Tax Audit: Miller Corp</h4>
-<p class="text-xs text-on-primary-container mt-1">Conference Room B • 2h</p>
-<div class="mt-2 flex -space-x-2">
-<img class="h-6 w-6 rounded-full border-2 border-white object-cover" data-alt="professional portrait of a male legal associate with glasses" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHBE1jWm3tswF57LlIia12h6gxeKacBBPwwSCECm6w0t7P4Qz2T4oPeoS5iHTYYxL-qe9WynaszWOsQZFtiBg1ibmF9az_PGkB7QuwcKm89LbCJlcLDXfWXFWw0FR0h0N99wnPifMZkf4xy7v6mXsbU6VaAmEIJXKVasBHy4T8jXU6OV1LvxU7aEMJ5lyEaJ_VIAV3rD9WLWl_ND9h2NIhTO9OP8CEABbMRHY17Uzu1qdzmOkMtwmQYRtJTeenH1C6vqKs0FHnb7_T"/>
-<img class="h-6 w-6 rounded-full border-2 border-white object-cover" data-alt="professional portrait of a female attorney in business attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7Xmsa5yoaQpJkhHC2pImQFDnwBouLMVE0e3beTSC3ajWu8Gs8MjfzuaIQSLrkB-XF6whQBtWjKDDPAqqmwoVO8ukqu9kbWd4B1AeUqWv83gPHneL-ORJPnA38dhJmVhY4D0TEa-5BdVwDMKU_4nnnQz12GXHkscJIfFxWpELqe9VDGyD_KFiVdhVLPuuTqyKRAL_oMqIdkWc1QkcNEmhIiiECmxrm_Ay42wtUNt_CL3on11APOcBxc07eoLPtGtqcn0T2AeT7Plyt"/>
-</div>
-</div>
-<!-- Event 2 -->
-<div class="relative pl-6 border-l-2 border-secondary">
-<span class="absolute -left-1 top-0 w-2 h-2 rounded-full bg-secondary"></span>
-<p class="text-[10px] font-bold text-secondary uppercase mb-1">11:30 AM — Hearing</p>
-<h4 class="font-bold text-on-surface text-sm">Preliminary Deposition</h4>
-<p class="text-xs text-on-primary-container mt-1">State Court, Div 4 • 1.5h</p>
-</div>
-<!-- Event 3 -->
-<div class="relative pl-6 border-l-2 border-blue-500">
-<span class="absolute -left-1 top-0 w-2 h-2 rounded-full bg-blue-500"></span>
-<p class="text-[10px] font-bold text-blue-500 uppercase mb-1">02:00 PM — Reminder</p>
-<h4 class="font-bold text-on-surface text-sm">Review Peterson Evidence</h4>
-<p class="text-xs text-on-primary-container mt-1">Office Desk • 45m</p>
-</div>
-<!-- Empty state/spacer -->
-<div class="py-4 text-center">
-<button class="text-xs font-bold text-on-primary-container/40 hover:text-on-surface transition-colors flex items-center gap-1 mx-auto">
-<span class="material-symbols-outlined text-sm">expand_more</span>
-                                Load tomorrow
-                            </button>
-</div>
-</div>
-</div>
-</div>
-</div>
+<main class="ll-main mt-16 p-6 min-h-screen bg-background">
+  <div class="flex gap-6">
+    <!-- Left panel -->
+    <div class="w-72 flex-shrink-0 space-y-5">
+      <!-- Mini calendar -->
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm p-5">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="font-headline font-bold text-on-surface" id="mini-cal-title">—</h3>
+          <div class="flex gap-1">
+            <button id="prev-month" class="p-1.5 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined text-lg">chevron_left</span></button>
+            <button id="next-month" class="p-1.5 hover:bg-surface-container rounded-lg transition-colors"><span class="material-symbols-outlined text-lg">chevron_right</span></button>
+          </div>
+        </div>
+        <div class="grid grid-cols-7 gap-y-2 text-center mb-2">
+          <span class="text-[10px] font-bold text-on-primary-container">M</span><span class="text-[10px] font-bold text-on-primary-container">T</span><span class="text-[10px] font-bold text-on-primary-container">W</span><span class="text-[10px] font-bold text-on-primary-container">T</span><span class="text-[10px] font-bold text-on-primary-container">F</span><span class="text-[10px] font-bold text-error/60">S</span><span class="text-[10px] font-bold text-error/60">S</span>
+        </div>
+        <div class="grid grid-cols-7 gap-y-1 text-center" id="mini-cal-grid"></div>
+      </div>
+      <!-- Calendars filter -->
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm p-5">
+        <h4 class="text-xs font-bold uppercase tracking-widest text-on-primary-container/60 mb-3">Event Types</h4>
+        <div class="space-y-2">
+          <label class="flex items-center gap-3 p-2 hover:bg-surface-container rounded-lg cursor-pointer"><input type="checkbox" checked data-type="HEARING" class="type-filter rounded"/><span class="text-sm font-medium">Hearings</span><span class="ml-auto w-2 h-2 rounded-full bg-red-500"></span></label>
+          <label class="flex items-center gap-3 p-2 hover:bg-surface-container rounded-lg cursor-pointer"><input type="checkbox" checked data-type="MEETING" class="type-filter rounded"/><span class="text-sm font-medium">Meetings</span><span class="ml-auto w-2 h-2 rounded-full bg-blue-500"></span></label>
+          <label class="flex items-center gap-3 p-2 hover:bg-surface-container rounded-lg cursor-pointer"><input type="checkbox" checked data-type="REMINDER" class="type-filter rounded"/><span class="text-sm font-medium">Reminders</span><span class="ml-auto w-2 h-2 rounded-full bg-amber-500"></span></label>
+        </div>
+      </div>
+      <!-- AI insight -->
+      <div class="bg-primary-container text-white p-5 rounded-xl relative overflow-hidden">
+        <span class="material-symbols-outlined text-secondary-container absolute -right-2 -bottom-2 text-6xl opacity-20" style="font-variation-settings:'FILL' 1">auto_awesome</span>
+        <p class="text-xs font-bold text-secondary-container mb-2 flex items-center gap-1"><span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1">auto_awesome</span>LIBRA AI INSIGHT</p>
+        <p class="text-xs leading-relaxed opacity-90" id="ai-insight">Analyzing your calendar for conflicts...</p>
+      </div>
+    </div>
+    <!-- Main calendar -->
+    <div class="flex-1 min-w-0">
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+        <!-- Header -->
+        <div class="p-5 flex items-center justify-between border-b border-surface-container-low">
+          <div class="flex items-center gap-4">
+            <h2 class="font-headline font-extrabold text-xl text-on-surface" id="cal-title">—</h2>
+          </div>
+          <button onclick="openEventModal()" class="flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-white shadow-md hover:scale-[1.02] transition-all text-sm" style="background:linear-gradient(135deg,#101c2e,#3c475b)"><span class="material-symbols-outlined text-lg">add</span>Schedule Event</button>
+        </div>
+        <!-- Days header -->
+        <div class="cal-grid border-b border-surface-container-low">
+          <div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase">Mon</div>
+          <div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase">Tue</div>
+          <div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase">Wed</div>
+          <div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase">Thu</div>
+          <div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase">Fri</div>
+          <div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase">Sat</div>
+          <div class="py-3 text-center text-[11px] font-extrabold text-on-primary-container/40 uppercase">Sun</div>
+        </div>
+        <!-- Calendar grid -->
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+    </div>
+    <!-- Right: Today's schedule -->
+    <div class="w-64 flex-shrink-0">
+      <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+        <div class="p-4 border-b border-surface-container-low">
+          <p class="text-xs font-bold text-on-primary-container/60 uppercase tracking-widest mb-0.5">Selected Day</p>
+          <h3 class="font-headline font-bold text-base" id="selected-day-title">—</h3>
+        </div>
+        <div class="p-3 space-y-3 max-h-[calc(100vh-200px)] overflow-y-auto" id="day-events"></div>
+      </div>
+    </div>
+  </div>
 </main>
-<!-- Popup Modal (Add Event) - Semi-visible overlay state -->
-<div class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-primary-container/20 backdrop-blur-sm pointer-events-none opacity-0 group-[.show-modal]:opacity-100 group-[.show-modal]:pointer-events-auto">
-<div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl lawyer-shadow overflow-hidden translate-y-4 group-[.show-modal]:translate-y-0 transition-transform">
-<div class="p-6 flex items-center justify-between border-b border-surface-container-low">
-<h3 class="font-headline font-bold text-lg">New Custom Event</h3>
-<button class="text-on-primary-container hover:text-on-surface"><span class="material-symbols-outlined">close</span></button>
-</div>
-<div class="p-8 space-y-6">
-<div>
-<label class="block text-[11px] font-extrabold text-on-primary-container/60 uppercase mb-2">Event Title</label>
-<input class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-secondary/20" placeholder="e.g. Client Settlement Call" type="text"/>
-</div>
-<div class="grid grid-cols-2 gap-4">
-<div>
-<label class="block text-[11px] font-extrabold text-on-primary-container/60 uppercase mb-2">Date</label>
-<input class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-secondary/20" type="date" value="2024-10-08"/>
-</div>
-<div>
-<label class="block text-[11px] font-extrabold text-on-primary-container/60 uppercase mb-2">Time</label>
-<input class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-secondary/20" type="time"/>
-</div>
-</div>
-<div>
-<label class="block text-[11px] font-extrabold text-on-primary-container/60 uppercase mb-2">Linked Case</label>
-<select class="w-full bg-surface-container-low border-none rounded-xl py-3 px-4 focus:ring-2 focus:ring-secondary/20 appearance-none">
-<option>Peterson vs. Global Logistics</option>
-<option>State of NY vs. Jameson</option>
-<option>Miller Corp Tax Audit</option>
-</select>
-</div>
-<div class="flex gap-4 pt-4">
-<button class="flex-1 py-3 font-bold text-on-surface border border-outline-variant/30 rounded-xl hover:bg-surface-container-low transition-colors">Cancel</button>
-<button class="flex-1 py-3 font-bold text-white bg-primary-container rounded-xl shadow-lg" style="background: linear-gradient(135deg, #101c2e 0%, #3c475b 100%);">Create Event</button>
-</div>
-</div>
-</div>
-</div>
-<!-- Floating AI Drawer (Minimised) -->
-<div class="fixed right-6 bottom-6 z-50">
-<button class="glass-panel h-16 w-16 rounded-full flex items-center justify-center lawyer-shadow border border-white/40 group hover:scale-110 transition-transform">
-<span class="material-symbols-outlined text-secondary text-3xl" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-<span class="absolute -top-1 -right-1 flex h-4 w-4">
-<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-<span class="relative inline-flex rounded-full h-4 w-4 bg-secondary"></span>
-</span>
-</button>
-</div>
-
-<script src="api.js"></script>
-<script>
-  // Inline auth guard — runs before nav.js to prevent login bypass
-  (function() {
-    var token = localStorage.getItem("ll_token");
-    if (!token) { window.location.replace("login_page.html"); }
-  })();
-</script>
+<script src="app.js"></script>
 <script src="nav.js"></script>
+<script>
+const TYPE_COLORS = {
+  HEARING:  { bg:"bg-red-50", text:"text-red-700", border:"border-red-400", dot:"bg-red-500" },
+  MEETING:  { bg:"bg-blue-50", text:"text-blue-700", border:"border-blue-400", dot:"bg-blue-500" },
+  REMINDER: { bg:"bg-amber-50", text:"text-amber-700", border:"border-amber-400", dot:"bg-amber-500" },
+};
+const DEFAULT_COLOR = { bg:"bg-slate-50", text:"text-slate-700", border:"border-slate-300", dot:"bg-slate-400" };
 
+let viewYear, viewMonth, selectedDate;
+
+function getColor(type) { return TYPE_COLORS[type] || DEFAULT_COLOR; }
+
+function getActiveTypes() {
+  return [...document.querySelectorAll(".type-filter:checked")].map(cb => cb.dataset.type);
+}
+
+function renderMiniCal(year, month) {
+  const names = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  document.getElementById("mini-cal-title").textContent = names[month] + " " + year;
+  const firstDay = new Date(year, month, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const startOffset = (firstDay === 0 ? 6 : firstDay - 1); // Mon-based
+  const today = new Date().toISOString().split("T")[0];
+  const todayYear = new Date().getFullYear();
+  const todayMonth = new Date().getMonth();
+  const todayDay = new Date().getDate();
+  const events = LawLibra.DB.events.forMonth(year, month);
+  let html = "";
+  for (let i = 0; i < startOffset; i++) html += `<span></span>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const isToday = year===todayYear && month===todayMonth && d===todayDay;
+    const isSelected = dateStr === selectedDate;
+    const hasEvent = events.some(e => e.date === dateStr);
+    html += `<button onclick="selectDay('${dateStr}')" class="w-7 h-7 mx-auto text-xs flex flex-col items-center justify-center rounded-full transition-colors relative ${isSelected?"bg-primary-container text-white font-bold":isToday?"border-2 border-primary-container text-primary-container font-bold":"hover:bg-surface-container text-on-surface"}">${d}${hasEvent&&!isSelected?`<span class="absolute bottom-0.5 w-1 h-1 rounded-full bg-secondary"></span>`:""}</button>`;
+  }
+  document.getElementById("mini-cal-grid").innerHTML = html;
+}
+
+function renderMainCal(year, month) {
+  const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  document.getElementById("cal-title").textContent = months[month] + " " + year;
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const startOffset = firstDay === 0 ? 6 : firstDay - 1;
+  const todayStr = new Date().toISOString().split("T")[0];
+  const activeTypes = getActiveTypes();
+  const events = LawLibra.DB.events.forMonth(year, month);
+  let html = "";
+  for (let i = 0; i < startOffset; i++) {
+    html += `<div class="day-cell border-r border-b border-surface-container-low bg-surface-container-low/20 p-2"></div>`;
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${year}-${String(month+1).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+    const isToday = dateStr === todayStr;
+    const isSelected = dateStr === selectedDate;
+    const dayEvents = events.filter(e => e.date === dateStr && activeTypes.includes(e.type));
+    const isLastCol = (startOffset + d) % 7 === 0;
+    html += `<div class="day-cell ${isLastCol?"":"border-r"} border-b border-surface-container-low p-2 hover:bg-surface-container-low/30 transition-colors cursor-pointer ${isSelected?"ring-2 ring-inset ring-primary-container":""}" onclick="selectDay('${dateStr}')">
+      <span class="text-xs font-bold ${isToday?"inline-flex w-6 h-6 rounded-full bg-primary-container text-white items-center justify-center":"text-on-primary-container/60"}">${d}</span>
+      <div class="mt-1 space-y-0.5">
+        ${dayEvents.slice(0,3).map(ev => {
+          const c = getColor(ev.type);
+          return `<div class="${c.bg} ${c.text} text-[10px] font-bold px-1.5 py-0.5 rounded border-l-2 ${c.border} truncate" title="${LawLibra.Utils.esc(ev.title)}">${LawLibra.Utils.esc(ev.title)}</div>`;
+        }).join("")}
+        ${dayEvents.length > 3 ? `<div class="text-[10px] text-on-surface-variant font-semibold pl-1">+${dayEvents.length-3} more</div>` : ""}
+      </div>
+    </div>`;
+  }
+  // Fill remaining cells
+  const total = startOffset + daysInMonth;
+  const remainder = total % 7;
+  if (remainder > 0) {
+    for (let i = 0; i < 7 - remainder; i++) html += `<div class="day-cell border-b border-surface-container-low bg-surface-container-low/20 p-2"></div>`;
+  }
+  document.getElementById("cal-grid").innerHTML = html;
+}
+
+function renderDayEvents(dateStr) {
+  if (!dateStr) return;
+  const d = new Date(dateStr + "T00:00:00");
+  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  document.getElementById("selected-day-title").textContent = months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+  const events = LawLibra.DB.events.forDate(dateStr).sort((a,b) => a.time.localeCompare(b.time));
+  const el = document.getElementById("day-events");
+  if (events.length === 0) {
+    el.innerHTML = `<div class="py-6 text-center"><span class="material-symbols-outlined text-slate-300 text-3xl block mb-2">event_available</span><p class="text-xs text-on-surface-variant">No events scheduled</p><button onclick="openEventModal('${dateStr}')" class="mt-3 text-xs font-bold text-secondary hover:underline">Add event</button></div>`;
+    return;
+  }
+  el.innerHTML = events.map(ev => {
+    const c = getColor(ev.type);
+    const cas = LawLibra.DB.cases.byId(ev.caseId);
+    return `<div class="p-3 rounded-lg border-l-2 ${c.border} ${c.bg} group relative">
+      <p class="text-[10px] font-bold ${c.text} uppercase mb-0.5">${ev.time} · ${ev.type}</p>
+      <h4 class="text-sm font-bold text-on-surface leading-snug">${LawLibra.Utils.esc(ev.title)}</h4>
+      ${cas?`<p class="text-[11px] text-on-surface-variant truncate mt-0.5">${LawLibra.Utils.esc(cas.title)}</p>`:""}
+      <p class="text-[11px] text-on-surface-variant mt-0.5">${LawLibra.Utils.esc(ev.location||"")} ${ev.duration?"· "+ev.duration+"m":""}</p>
+      <button onclick="deleteEvent('${ev.id}')" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-red-400 hover:text-red-600"><span class="material-symbols-outlined text-sm">delete</span></button>
+    </div>`;
+  }).join("");
+}
+
+function selectDay(dateStr) {
+  selectedDate = dateStr;
+  renderMiniCal(viewYear, viewMonth);
+  renderMainCal(viewYear, viewMonth);
+  renderDayEvents(dateStr);
+}
+
+function deleteEvent(id) {
+  LawLibra.Modal.confirm("Delete Event", "Remove this event from the calendar?", () => {
+    LawLibra.DB.events.delete(id);
+    LawLibra.Modal.hide();
+    LawLibra.Toast.success("Event deleted.");
+    renderMainCal(viewYear, viewMonth);
+    renderDayEvents(selectedDate);
+  }, "Delete", true);
+}
+
+function openEventModal(preDate) {
+  const cases = LawLibra.DB.cases.all().filter(c => c.status === "OPEN");
+  LawLibra.Modal.show(`
+    <div class="p-6">
+      <h3 class="font-headline font-bold text-xl text-slate-900 mb-5">Schedule Event</h3>
+      <div class="space-y-4">
+        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Event Title *</label><input id="ev-title" placeholder="e.g. Client Settlement Call" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container"/></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Date *</label><input id="ev-date" type="date" value="${preDate||selectedDate||new Date().toISOString().split("T")[0]}" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container"/></div>
+          <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Time *</label><input id="ev-time" type="time" value="09:00" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container"/></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Type</label><select id="ev-type" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container appearance-none"><option value="HEARING">Hearing</option><option value="MEETING">Meeting</option><option value="REMINDER">Reminder</option></select></div>
+          <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Duration (min)</label><input id="ev-duration" type="number" value="60" min="15" step="15" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container"/></div>
+        </div>
+        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Linked Case</label><select id="ev-case" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container appearance-none"><option value="">— None —</option>${cases.map(c=>`<option value="${c.id}">${LawLibra.Utils.esc(c.title)}</option>`).join("")}</select></div>
+        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Location</label><input id="ev-location" placeholder="e.g. Court Room 3B" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container"/></div>
+        <div id="ev-error" class="hidden text-red-600 text-xs bg-red-50 px-3 py-2 rounded-lg"></div>
+      </div>
+      <div class="flex gap-3 mt-6">
+        <button id="ll-modal-cancel" class="flex-1 py-2.5 border border-slate-200 rounded-lg text-sm font-semibold">Cancel</button>
+        <button id="ll-modal-confirm" class="flex-1 py-2.5 rounded-lg text-sm font-bold text-white" style="background:linear-gradient(135deg,#101c2e,#3c475b)">Create Event</button>
+      </div>
+    </div>`, function() {
+    const title = document.getElementById("ev-title").value.trim();
+    const date  = document.getElementById("ev-date").value;
+    const time  = document.getElementById("ev-time").value;
+    if (!title || !date || !time) { document.getElementById("ev-error").textContent="Title, date and time are required."; document.getElementById("ev-error").classList.remove("hidden"); return; }
+    const u = LawLibra.Auth.currentUser();
+    LawLibra.DB.events.create({
+      title, date, time,
+      type:     document.getElementById("ev-type").value,
+      duration: parseInt(document.getElementById("ev-duration").value)||60,
+      location: document.getElementById("ev-location").value,
+      caseId:   document.getElementById("ev-case").value || null,
+      createdBy: u?.id
+    });
+    LawLibra.Toast.success("Event scheduled!");
+    LawLibra.Modal.hide();
+    renderMainCal(viewYear, viewMonth);
+    renderMiniCal(viewYear, viewMonth);
+    if (date === selectedDate) renderDayEvents(selectedDate);
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const u = LawLibra.Auth.currentUser();
+  if (u) document.getElementById("hdr-avatar").textContent = LawLibra.Utils.initials(u.name);
+
+  const today = new Date();
+  viewYear  = today.getFullYear();
+  viewMonth = today.getMonth();
+  selectedDate = today.toISOString().split("T")[0];
+
+  renderMiniCal(viewYear, viewMonth);
+  renderMainCal(viewYear, viewMonth);
+  renderDayEvents(selectedDate);
+
+  // AI insight
+  const events = LawLibra.DB.events.all();
+  const upcoming = events.filter(e => e.date >= today.toISOString().split("T")[0]).length;
+  document.getElementById("ai-insight").textContent = `You have ${upcoming} upcoming events. ${upcoming > 3 ? "Your schedule is busy — consider delegating routine hearings." : "Your schedule looks manageable this month."}`;
+
+  document.getElementById("prev-month").addEventListener("click", () => {
+    viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; }
+    renderMiniCal(viewYear, viewMonth); renderMainCal(viewYear, viewMonth);
+  });
+  document.getElementById("next-month").addEventListener("click", () => {
+    viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; }
+    renderMiniCal(viewYear, viewMonth); renderMainCal(viewYear, viewMonth);
+  });
+  document.querySelectorAll(".type-filter").forEach(cb => cb.addEventListener("change", () => renderMainCal(viewYear, viewMonth)));
+  document.getElementById("dark-toggle")?.addEventListener("click", () => LawLibra.DarkMode.toggle());
+
+  const unread = LawLibra.DB.notifications.all("*").filter(n=>!n.read).length;
+  if (unread) document.getElementById("notif-badge")?.classList.remove("hidden");
+});
+</script>
 </body></html>

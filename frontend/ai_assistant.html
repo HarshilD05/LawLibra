@@ -1,382 +1,367 @@
 <!DOCTYPE html>
-
 <html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>LawLibra | AI Chat</title>
+<title>LawLibra | AI Counsel</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-surface": "#191c1e",
-                    "on-surface-variant": "#45474c",
-                    "inverse-primary": "#bbc7df",
-                    "background": "#f7f9fc",
-                    "on-secondary-fixed": "#241a00",
-                    "primary-fixed": "#d7e3fc",
-                    "inverse-surface": "#2d3133",
-                    "primary-container": "#101c2e",
-                    "primary": "#000000",
-                    "error": "#ba1a1a",
-                    "on-tertiary-fixed-variant": "#374766",
-                    "error-container": "#ffdad6",
-                    "surface": "#f7f9fc",
-                    "on-primary-fixed": "#101c2e",
-                    "on-error-container": "#93000a",
-                    "surface-variant": "#e0e3e6",
-                    "on-tertiary-container": "#7484a6",
-                    "outline": "#75777d",
-                    "secondary": "#755b00",
-                    "on-tertiary-fixed": "#081b38",
-                    "tertiary-fixed-dim": "#b6c7ec",
-                    "on-background": "#191c1e",
-                    "on-primary-fixed-variant": "#3c475b",
-                    "surface-bright": "#f7f9fc",
-                    "outline-variant": "#c5c6cd",
-                    "on-primary": "#ffffff",
-                    "primary-fixed-dim": "#bbc7df",
-                    "on-primary-container": "#79849b",
-                    "surface-dim": "#d8dadd",
-                    "surface-tint": "#535f74",
-                    "tertiary-fixed": "#d7e2ff",
-                    "on-secondary-fixed-variant": "#584400",
-                    "secondary-fixed": "#ffe08f",
-                    "on-secondary": "#ffffff",
-                    "tertiary-container": "#081b38",
-                    "surface-container-lowest": "#ffffff",
-                    "inverse-on-surface": "#eff1f4",
-                    "secondary-container": "#fed977",
-                    "surface-container-highest": "#e0e3e6",
-                    "surface-container-low": "#f2f4f7",
-                    "surface-container": "#eceef1",
-                    "secondary-fixed-dim": "#e6c364",
-                    "on-secondary-container": "#785d00",
-                    "tertiary": "#000000",
-                    "on-tertiary": "#ffffff",
-                    "on-error": "#ffffff",
-                    "surface-container-high": "#e6e8eb"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
-            },
-            "fontFamily": {
-                    "headline": ["Manrope"],
-                    "body": ["Inter"],
-                    "label": ["Inter"]
-            }
-          },
-        },
-      }
-    </script>
+  tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-surface":"#191c1e","on-surface-variant":"#45474c","background":"#f7f9fc","primary-container":"#101c2e","primary":"#000000","error":"#ba1a1a","error-container":"#ffdad6","surface":"#f7f9fc","surface-variant":"#e0e3e6","on-tertiary-container":"#7484a6","outline":"#75777d","secondary":"#755b00","tertiary-fixed-dim":"#b6c7ec","on-tertiary-fixed":"#081b38","on-background":"#191c1e","on-primary-fixed-variant":"#3c475b","outline-variant":"#c5c6cd","on-primary":"#ffffff","on-primary-container":"#79849b","secondary-container":"#fed977","on-secondary-container":"#785d00","surface-container-lowest":"#ffffff","inverse-on-surface":"#eff1f4","secondary-container-highest":"#e0e3e6","surface-container-low":"#f2f4f7","surface-container":"#eceef1","surface-container-high":"#e6e8eb","on-secondary":"#ffffff","tertiary-container":"#081b38","on-tertiary":"#ffffff","on-error":"#ffffff"},fontFamily:{"headline":["Manrope"],"body":["Inter"],"label":["Inter"]}}}}
+</script>
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(24px);
-        }
-    </style>
-
-<style id="ll-global-fixes">
-  /* Layout: prevent horizontal scroll */
-  html, body { overflow-x: hidden; max-width: 100vw; }
-  /* Sidebar width token */
-  :root { --sidebar-w: 224px; }
-  aside { width: var(--sidebar-w) !important; }
-  /* Main content area */
-  .ll-main { margin-left: var(--sidebar-w); overflow-x: hidden; }
-  /* TopNav: must not exceed viewport */
-  header.ll-topnav { left: var(--sidebar-w) !important; right: 0 !important; width: auto !important; }
-  /* Font size reductions */
-  .font-headline.text-4xl, h2.text-4xl { font-size: 1.5rem !important; line-height: 2rem !important; }
-  .font-headline.text-3xl, h2.text-3xl { font-size: 1.25rem !important; }
-  .text-3xl.font-black { font-size: 1.6rem !important; }
-  /* Table horizontal scroll only when needed */
-  .overflow-x-auto { overflow-x: auto; max-width: 100%; }
-  /* Sidebar: narrow and clean */
-  aside nav a, aside .space-y-0\.5 a, aside button { font-size: 0.8125rem !important; }
-  /* Dropdown panels */
-  #ll-notif-panel, #ll-profile-panel { position: absolute; }
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+  html,body{overflow-x:hidden;max-width:100vw}
+  :root{--sidebar-w:224px}
+  aside{width:var(--sidebar-w)!important}
+  header.ll-topnav{left:var(--sidebar-w)!important;right:0!important;width:auto!important}
+  aside nav a,aside button{font-size:0.8125rem!important}
+  #ll-notif-panel,#ll-profile-panel{position:absolute}
+  .thread-item.active{background:#fff;border-left:3px solid #755b00;box-shadow:0 1px 6px rgba(0,0,0,0.08)}
+  .ai-bubble p{margin-bottom:0.5rem} .ai-bubble strong{font-weight:700}
+  .ai-bubble ul{list-style:disc;padding-left:1.25rem;margin-top:0.25rem}
+  .ai-bubble li{margin-bottom:0.25rem}
+  .typing-dot{width:6px;height:6px;border-radius:50%;background:#101c2e;animation:blink 1.4s infinite both}
+  .typing-dot:nth-child(2){animation-delay:.2s}.typing-dot:nth-child(3){animation-delay:.4s}
+  @keyframes blink{0%,80%,100%{opacity:0}40%{opacity:1}}
+  #messages-area::-webkit-scrollbar{width:5px}
+  #messages-area::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:10px}
 </style>
-
 </head>
 <body class="bg-surface text-on-surface font-body overflow-hidden">
-<!-- SideNavBar (Authority Source: JSON) -->
-<aside id="ll-sidebar" class="bg-[#0D1F3C] dark:bg-[#06101F] h-screen w-56 fixed left-0 top-0 flex flex-col py-6 px-4 z-50 shadow-2xl dark:shadow-none">
-<div class="mb-10 px-2">
-<h1 class="text-2xl font-bold tracking-tight text-white font-headline">LawLibra</h1>
-<p class="text-xs text-on-primary-container uppercase tracking-widest mt-1">The Sovereign Counsel</p>
-</div>
-<nav class="flex-1 space-y-1">
-<a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">dashboard</span>
-<span class="font-label">Dashboard</span>
-</a>
-<a href="case_list.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">folder_open</span>
-<span class="font-label">Cases</span>
-</a>
-<a href="documents.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">description</span>
-<span class="font-label">Documents</span>
-</a>
-<a href="ai_assistant.html" class="flex items-center gap-3 px-4 py-3 bg-white/10 text-white font-semibold rounded-lg scale-[0.98] transition-all duration-200">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-<span class="font-label">AI Chat</span>
-</a>
-<a href="calendar.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">calendar_month</span>
-<span class="font-label">Calendar</span>
-</a>
 
-</nav>
-<div class="mt-auto pt-4 border-t border-white/10 space-y-1">
-<a href="user_management.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">gavel</span>
-<span class="font-label">Admin</span>
-</a>
-<a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">settings</span>
-<span class="font-label">Settings</span>
-</a>
-</div>
-</aside>
-<!-- TopNavBar (Authority Source: JSON) -->
-<header class="ll-topnav fixed top-0 right-0 left-56 h-16 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm dark:shadow-none">
-<div class="flex items-center gap-4 w-1/3">
-<div class="relative w-full max-w-md">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
-<input class="w-full bg-surface-container-low border-none rounded-xl py-2 pl-10 text-sm focus:ring-0 focus:bg-surface-container-lowest transition-all" placeholder="Search cases, documents, or insights..." type="text"/>
-</div>
-</div>
-<div class="flex items-center gap-6">
-<button class="relative text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
-<span class="material-symbols-outlined">notifications</span>
-<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
-</button>
-<div class="flex items-center gap-3 pl-4 border-l border-surface-variant">
-<div class="text-right">
-<p class="text-sm font-bold leading-none text-slate-900">Julian Thorne</p>
-<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Senior Counsel</p>
-</div>
-<img class="w-10 h-10 rounded-full object-cover shadow-sm" data-alt="professional portrait of a senior lawyer with a serious but confident expression in a dark suit" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp4eK4fy6bCP-UXri9_oTFYEP1xeJ77SdoAxtlGGvR2Dsa8Snw0v4iXPEWCQuSV45U1l93OrY4xvaRy__3pobAkm8F28YDFPrxbTJZRe7kBIcUOJ8Kaf9lRsNA8nosREgXPmf9u7w9C5eEJyHtHdanBwfFfDlCTWPsKQmpJ2pAJS76yj54DHgk13gCkdBp_7wnYXaP7NVLKAevt_bzfLN38OX1-vARBu1kVN8nrfUCy6JhpZ_gC70Y-FqwpUa3OWaJ8n6Gk-Qjxohu"/>
-</div>
-</div>
+<!-- App Nav Sidebar -->
+<aside id="ll-sidebar" class="bg-[#0D1F3C] dark:bg-[#06101F] h-screen w-56 fixed left-0 top-0 flex flex-col py-6 px-4 z-50 shadow-2xl"></aside>
+
+<!-- Top Nav -->
+<header class="ll-topnav fixed top-0 right-0 left-56 h-16 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm">
+  <div class="flex items-center gap-4 w-1/3">
+    <div class="relative w-full max-w-md">
+      <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+      <input class="w-full bg-surface-container-low border-none rounded-xl py-2 pl-10 text-sm focus:ring-0 focus:bg-surface-container-lowest transition-all" placeholder="Search cases, documents..." type="text"/>
+    </div>
+  </div>
+  <div class="flex items-center gap-6">
+    <button class="relative text-slate-500 hover:text-slate-900 transition-colors">
+      <span class="material-symbols-outlined">notifications</span>
+    </button>
+    <div class="flex items-center gap-3 pl-4 border-l border-surface-variant cursor-pointer" id="profile-trigger">
+      <div id="hdr-name-wrap" class="text-right">
+        <p id="hdr-name" class="text-sm font-bold leading-none text-slate-900">—</p>
+        <p id="hdr-role" class="text-[10px] text-on-surface-variant uppercase tracking-tighter">—</p>
+      </div>
+      <div id="hdr-avatar" class="w-10 h-10 rounded-full bg-[#101c2e] border-2 border-amber-400/40 flex items-center justify-center text-amber-400 font-bold text-sm"></div>
+    </div>
+  </div>
 </header>
-<!-- Main Content Area: Split View AI Chat -->
+
+<!-- Split Layout -->
 <main class="pt-16 ml-56 h-screen flex overflow-hidden">
-<!-- Left Sidebar: Chat Threads Grouped by Case -->
-<section class="w-[380px] bg-surface-container-low flex flex-col border-r-0">
-<div class="p-6">
-<h2 class="font-headline text-2xl font-bold tracking-tight mb-2">Consultations</h2>
-<p class="text-sm text-on-surface-variant">Intelligent legal synthesis &amp; case strategy.</p>
-</div>
-<div class="flex-1 overflow-y-auto px-4 pb-6 space-y-6">
-<!-- Case Group 1 -->
-<div>
-<div class="flex items-center gap-2 mb-3 px-2">
-<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Case: Smith v. GlobalCorp</span>
-</div>
-<div class="space-y-2">
-<!-- Active Thread -->
-<div class="p-4 rounded-xl bg-surface-container-lowest shadow-sm border-l-4 border-secondary cursor-pointer transition-all">
-<div class="flex justify-between items-start mb-1">
-<h3 class="text-sm font-bold text-on-surface">Deposition Strategy</h3>
-<span class="text-[10px] text-on-surface-variant font-medium">10:24 AM</span>
-</div>
-<p class="text-xs text-on-surface-variant line-clamp-1">Analysis of witness inconsistencies in the Q3 report...</p>
-<div class="mt-3 flex gap-2">
-<span class="bg-primary-container/5 text-on-primary-container text-[10px] font-semibold px-2 py-0.5 rounded-full">AI Synthesis</span>
-</div>
-</div>
-<!-- Inactive Thread -->
-<div class="p-4 rounded-xl hover:bg-surface-container-high cursor-pointer transition-all group">
-<div class="flex justify-between items-start mb-1">
-<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary">Liability Review</h3>
-<span class="text-[10px] text-on-surface-variant">Yesterday</span>
-</div>
-<p class="text-xs text-on-surface-variant line-clamp-1">Reviewing the tort law application for the cross-claim...</p>
-</div>
-</div>
-</div>
-<!-- Case Group 2 -->
-<div>
-<div class="flex items-center gap-2 mb-3 px-2">
-<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">Case: Estate of Harrison</span>
-</div>
-<div class="space-y-2">
-<div class="p-4 rounded-xl hover:bg-surface-container-high cursor-pointer transition-all group">
-<div class="flex justify-between items-start mb-1">
-<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary">Trust Fund Clause</h3>
-<span class="text-[10px] text-on-surface-variant">Tue</span>
-</div>
-<p class="text-xs text-on-surface-variant line-clamp-1">Synthesizing the implications of the 1994 codicil...</p>
-</div>
-<div class="p-4 rounded-xl hover:bg-surface-container-high cursor-pointer transition-all group">
-<div class="flex justify-between items-start mb-1">
-<h3 class="text-sm font-semibold text-on-surface group-hover:text-primary">Asset Distribution</h3>
-<span class="text-[10px] text-on-surface-variant">2d ago</span>
-</div>
-<p class="text-xs text-on-surface-variant line-clamp-1">Historical valuation of the real estate holdings...</p>
-</div>
-</div>
-</div>
-<!-- More Groups could follow -->
-</div>
-<div class="p-4 border-t-0 bg-surface-container-low">
-<button class="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary-container text-on-primary font-bold text-sm bg-gradient-to-br from-[#101c2e] to-[#3c475b] shadow-md hover:opacity-90 transition-opacity">
-<span class="material-symbols-outlined text-lg">add</span>
-                    New Consultation
-                </button>
-</div>
-</section>
-<!-- Right Side: Chat Interface -->
-<section class="flex-1 flex flex-col bg-surface relative">
-<!-- Chat Header -->
-<div class="h-16 flex items-center justify-between px-8 bg-surface-container-lowest/50 backdrop-blur-md">
-<div class="flex items-center gap-4">
-<div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-</div>
-<div>
-<h2 class="font-headline text-lg font-bold">Deposition Strategy</h2>
-<p class="text-[10px] font-bold text-secondary uppercase tracking-widest">Model: Libra-X Sovereign</p>
-</div>
-</div>
-<div class="flex gap-2">
-<button class="p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-colors">
-<span class="material-symbols-outlined text-xl">share</span>
-</button>
-<button class="p-2 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-colors">
-<span class="material-symbols-outlined text-xl">more_vert</span>
-</button>
-</div>
-</div>
-<!-- Messages Area -->
-<div class="flex-1 overflow-y-auto p-12 space-y-10">
-<!-- User Message -->
-<div class="flex flex-col items-end gap-3 max-w-3xl ml-auto">
-<div class="bg-surface-container-high/40 p-5 rounded-2xl rounded-tr-none">
-<p class="text-sm leading-relaxed text-on-surface">
-                            Can you analyze the conflict between Sarah Miller's testimony in Exhibit B and the internal Q3 financial report? Focus specifically on the timing of her awareness of the shortfall.
-                        </p>
-</div>
-<span class="text-[10px] font-bold text-on-surface-variant uppercase">You • 10:24 AM</span>
-</div>
-<!-- AI Response -->
-<div class="flex gap-6 max-w-4xl">
-<div class="flex-shrink-0">
-<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-white text-lg" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-</div>
-</div>
-<div class="flex flex-col gap-3">
-<div class="bg-surface-container-lowest shadow-sm p-6 rounded-2xl rounded-tl-none border border-outline-variant/10">
-<p class="text-sm leading-relaxed text-on-surface mb-4">
-                                I have analyzed the relevant sections of **Exhibit B (Miller Testimony)** and the **Q3 Internal Report (Doc-42)**. There is a demonstrable discrepancy of 14 days in her narrative.
-                            </p>
-<div class="space-y-4">
-<div class="bg-surface-container-low p-4 rounded-xl border-l-4 border-secondary-container">
-<h4 class="text-[10px] font-black text-on-secondary-container uppercase mb-1">The Conflict</h4>
-<p class="text-xs text-on-surface-variant">In Exhibit B (pg. 42, line 12), Miller states she first learned of the shortfall on **October 15th**. However, metadata and carbon copies in the Q3 Report show she was CC'd on the "Critical Risk Assessment" email sent on **October 1st**.</p>
-</div>
-<h4 class="text-xs font-bold text-on-surface">Strategic Recommendation:</h4>
-<ul class="list-disc list-inside text-xs text-on-surface-variant space-y-2 ml-2">
-<li>Confront the witness with the October 1st email timestamp first.</li>
-<li>Ask her to identify her own signature on the receipt acknowledgment.</li>
-<li>This establishes a foundation for "prior knowledge" which complicates her subsequent denial of intent.</li>
-</ul>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<span class="text-[10px] font-bold text-on-surface-variant uppercase">Libra AI • Just now</span>
-<div class="flex gap-2">
-<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">thumb_up</span></button>
-<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">content_copy</span></button>
-<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined text-sm">refresh</span></button>
-</div>
-</div>
-</div>
-</div>
-<!-- Another User Message (Placeholder/Sketch) -->
-<div class="flex flex-col items-end gap-3 max-w-3xl ml-auto opacity-50">
-<div class="bg-surface-container-high/40 p-5 rounded-2xl rounded-tr-none">
-<p class="text-sm leading-relaxed text-on-surface italic">
-                            Typing...
-                        </p>
-</div>
-</div>
-</div>
-<!-- Input Area -->
-<div class="p-8 bg-surface">
-<div class="max-w-4xl mx-auto relative group">
-<!-- Textarea Container -->
-<div class="relative bg-surface-container-low rounded-2xl p-4 shadow-inner group-focus-within:bg-surface-container-lowest transition-all">
-<textarea class="w-full bg-transparent border-none focus:ring-0 text-sm resize-none placeholder-on-surface-variant/60 pb-12" placeholder="Ask Libra to draft a memo, synthesize evidence, or check precedents..." rows="2"></textarea>
-<div class="absolute bottom-4 left-4 flex gap-3">
-<button class="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant">
-<span class="material-symbols-outlined text-xl">attach_file</span>
-</button>
-<button class="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant">
-<span class="material-symbols-outlined text-xl">image</span>
-</button>
-<button class="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant">
-<span class="material-symbols-outlined text-xl">mic</span>
-</button>
-</div>
-<div class="absolute bottom-4 right-4">
-<button class="flex items-center gap-2 bg-primary-container text-on-primary px-6 py-2.5 rounded-xl font-bold text-sm bg-gradient-to-br from-[#101c2e] to-[#3c475b] shadow-lg hover:scale-105 transition-transform">
-<span>Consult</span>
-<span class="material-symbols-outlined text-lg">north_east</span>
-</button>
-</div>
-</div>
-<!-- Context Indicator -->
-<div class="mt-4 flex items-center justify-center gap-6">
-<div class="flex items-center gap-2">
-<div class="w-1.5 h-1.5 rounded-full bg-secondary"></div>
-<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Case Files Connected</span>
-</div>
-<div class="flex items-center gap-2">
-<div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
-<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Real-time Legal Database Active</span>
-</div>
-</div>
-</div>
-</div>
-</section>
+
+  <!-- ─── LEFT PANEL: Thread List ─── -->
+  <section class="w-[340px] flex-shrink-0 bg-surface-container-low flex flex-col border-r border-outline-variant/20">
+    <div class="p-5 border-b border-outline-variant/20">
+      <h2 class="font-headline text-xl font-bold tracking-tight mb-1">AI Counsel</h2>
+      <p class="text-xs text-on-surface-variant">Legal synthesis &amp; case strategy</p>
+    </div>
+
+    <!-- Case selector -->
+    <div class="px-4 pt-4 pb-2">
+      <label class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1 block">Link to Case (optional)</label>
+      <select id="case-select" class="w-full rounded-lg border border-outline-variant/40 bg-surface-container-lowest px-3 py-2 text-xs focus:ring-1 focus:ring-secondary/30 outline-none">
+        <option value="">— General Consultation —</option>
+      </select>
+    </div>
+
+    <!-- Thread list -->
+    <div id="thread-list" class="flex-1 overflow-y-auto px-3 pb-4 space-y-1.5 mt-2"></div>
+
+    <!-- New Thread -->
+    <div class="p-4 border-t border-outline-variant/20">
+      <button id="btn-new-thread" class="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white font-bold text-sm shadow-md hover:opacity-90 transition-opacity" style="background:linear-gradient(135deg,#101c2e 0%,#3c475b 100%)">
+        <span class="material-symbols-outlined text-lg">add</span> New Consultation
+      </button>
+    </div>
+  </section>
+
+  <!-- ─── RIGHT PANEL: Chat View ─── -->
+  <section class="flex-1 flex flex-col bg-surface relative" id="chat-panel">
+
+    <!-- Chat Header -->
+    <div class="h-16 flex items-center justify-between px-8 bg-surface-container-lowest/60 backdrop-blur-md border-b border-outline-variant/20 flex-shrink-0">
+      <div class="flex items-center gap-4" id="chat-header-info">
+        <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center">
+          <span class="material-symbols-outlined text-white text-lg" style="font-variation-settings:'FILL' 1">auto_awesome</span>
+        </div>
+        <div>
+          <h2 id="chat-title" class="font-headline text-base font-bold">Select or start a consultation</h2>
+          <p id="chat-subtitle" class="text-[10px] font-bold text-secondary uppercase tracking-widest">Libra AI · Sovereign Model</p>
+        </div>
+      </div>
+      <div class="flex gap-2" id="chat-actions"></div>
+    </div>
+
+    <!-- Messages -->
+    <div id="messages-area" class="flex-1 overflow-y-auto p-8 space-y-8">
+      <!-- Empty state -->
+      <div id="empty-state" class="h-full flex flex-col items-center justify-center text-center max-w-sm mx-auto">
+        <div class="w-20 h-20 rounded-3xl bg-surface-container-low flex items-center justify-center mx-auto mb-5">
+          <span class="material-symbols-outlined text-5xl text-on-surface-variant/30">forum</span>
+        </div>
+        <h3 class="font-headline text-xl font-bold mb-2">Start a Consultation</h3>
+        <p class="text-sm text-on-surface-variant mb-6">Ask Libra AI to analyze evidence, draft strategy memos, or synthesize case law across your active matters.</p>
+        <button id="empty-new-btn" class="px-6 py-3 rounded-xl text-white font-bold text-sm hover:opacity-90 transition-opacity" style="background:linear-gradient(135deg,#101c2e 0%,#3c475b 100%)">
+          <span class="material-symbols-outlined text-[18px] mr-1" style="vertical-align:middle">add</span>New Consultation
+        </button>
+      </div>
+    </div>
+
+    <!-- Input Area -->
+    <div id="input-area" class="p-6 bg-surface border-t border-outline-variant/20 flex-shrink-0" style="display:none">
+      <div class="max-w-4xl mx-auto relative group">
+        <div class="relative bg-surface-container-low rounded-2xl p-4 shadow-inner group-focus-within:bg-surface-container-lowest transition-all">
+          <textarea id="msg-input" class="w-full bg-transparent border-none focus:ring-0 text-sm resize-none placeholder-on-surface-variant/60 pb-10 max-h-40 outline-none" placeholder="Ask Libra to draft a memo, synthesize evidence, or check precedents…" rows="2"></textarea>
+          <div class="absolute bottom-3 right-3">
+            <button id="send-btn" class="flex items-center gap-2 text-white px-5 py-2 rounded-xl font-bold text-sm shadow-lg hover:scale-105 transition-transform" style="background:linear-gradient(135deg,#101c2e 0%,#3c475b 100%)">
+              <span>Consult</span>
+              <span class="material-symbols-outlined text-lg">north_east</span>
+            </button>
+          </div>
+        </div>
+        <div class="mt-3 flex items-center justify-center gap-6">
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-secondary"></div>
+            <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Case Files Connected</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-green-500"></div>
+            <span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Libra AI Active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
-<!-- Empty State Overlay (Optional/Conditional) -->
-<!-- This would be shown if no thread is selected -->
-<div class="hidden fixed inset-0 z-10 bg-surface/90 backdrop-blur-md flex items-center justify-center ml-[224px] mt-14" id="empty-state">
-<div class="text-center max-w-sm px-12">
-<div class="w-20 h-20 bg-surface-container-low rounded-3xl flex items-center justify-center mx-auto mb-6 text-on-surface-variant/20">
-<span class="material-symbols-outlined text-5xl">forum</span>
-</div>
-<h3 class="font-headline text-xl font-bold mb-2">Select a thread</h3>
-<p class="text-sm text-on-surface-variant mb-8">Choose a consultation from the left to review AI insights or start a new strategy session.</p>
-<button class="px-6 py-3 bg-primary-container text-on-primary rounded-xl font-bold text-sm bg-gradient-to-br from-[#101c2e] to-[#3c475b]">Start New Chat</button>
-</div>
-</div>
 
-<script src="api.js"></script>
-<script>
-  // Inline auth guard — runs before nav.js to prevent login bypass
-  (function() {
-    var token = localStorage.getItem("ll_token");
-    if (!token) { window.location.replace("login_page.html"); }
-  })();
-</script>
+<script src="app.js"></script>
+<script>(function(){if(!localStorage.getItem("ll_token")){window.location.replace("login_page.html");}})();</script>
 <script src="nav.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const LL = window.LawLibra;
+  if (!LL) return;
+  const user = LL.Auth.currentUser() || {};
 
+  // Header
+  const av = document.getElementById("hdr-avatar");
+  if (av) av.textContent = LL.Utils.initials(user.name);
+  const hn = document.getElementById("hdr-name");
+  const hr = document.getElementById("hdr-role");
+  if (hn) hn.textContent = user.name || "Counselor";
+  if (hr) hr.textContent = user.role || "LAWYER";
+
+  let activeThreadId = null;
+
+  // ── Populate case selector ──
+  const sel = document.getElementById("case-select");
+  LL.DB.cases.all().filter(c => c.status === "OPEN").forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c.id;
+    opt.textContent = c.title;
+    sel.appendChild(opt);
+  });
+
+  // ── Render thread list ──
+  function renderThreads() {
+    const threads = LL.DB.threads.all();
+    const list = document.getElementById("thread-list");
+    if (threads.length === 0) {
+      list.innerHTML = `<p class="text-xs text-on-surface-variant text-center py-6 italic">No consultations yet.</p>`;
+      return;
+    }
+    list.innerHTML = threads.map(t => {
+      const c = t.caseId ? LL.DB.cases.byId(t.caseId) : null;
+      const msgs = LL.DB.messages.byThread(t.id);
+      const last = msgs[msgs.length - 1];
+      const isActive = t.id === activeThreadId;
+      return `<div class="thread-item p-3.5 rounded-xl cursor-pointer transition-all hover:bg-surface-container-high ${isActive ? 'active' : ''}" onclick="loadThread('${t.id}')">
+        <div class="flex justify-between items-start mb-1">
+          <h3 class="text-xs font-bold text-on-surface truncate flex-1 pr-2">${LL.Utils.esc(t.title)}</h3>
+          <button class="text-slate-300 hover:text-red-500 transition-colors flex-shrink-0" onclick="event.stopPropagation();deleteThread('${t.id}')" title="Delete"><span class="material-symbols-outlined text-[14px]">close</span></button>
+        </div>
+        ${c ? `<p class="text-[10px] text-secondary font-semibold truncate mb-1">${LL.Utils.esc(c.title)}</p>` : ""}
+        <p class="text-[11px] text-on-surface-variant line-clamp-1">${last ? LL.Utils.esc(last.content.slice(0, 80)) : "No messages yet"}</p>
+        <p class="text-[10px] text-on-surface-variant/60 mt-1">${LL.Utils.relTime(t.createdAt)}</p>
+      </div>`;
+    }).join("");
+  }
+
+  // ── Render messages ──
+  function formatAI(text) {
+    return text
+      .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\n\n/g, "</p><p>")
+      .replace(/\n- /g, "</p><ul><li>").replace(/\n/g, "<br/>");
+  }
+
+  function renderMessages(threadId) {
+    const msgs = LL.DB.messages.byThread(threadId);
+    const area = document.getElementById("messages-area");
+    document.getElementById("empty-state").style.display = "none";
+    document.getElementById("input-area").style.display = "block";
+
+    if (msgs.length === 0) {
+      area.innerHTML = `<div class="flex flex-col items-center justify-center h-full text-center max-w-sm mx-auto">
+        <span class="material-symbols-outlined text-5xl text-on-surface-variant/20 mb-4">chat_bubble</span>
+        <p class="text-sm text-on-surface-variant">Send your first message to start this consultation.</p>
+      </div>`;
+      return;
+    }
+
+    area.innerHTML = msgs.map(m => {
+      if (m.role === "user") {
+        return `<div class="flex flex-col items-end gap-2 max-w-3xl ml-auto">
+          <div class="bg-surface-container-high/60 p-5 rounded-2xl rounded-tr-none">
+            <p class="text-sm leading-relaxed text-on-surface">${LL.Utils.esc(m.content)}</p>
+          </div>
+          <span class="text-[10px] font-bold text-on-surface-variant uppercase">${LL.Utils.esc(user.name || "You")} · ${LL.Utils.relTime(m.createdAt)}</span>
+        </div>`;
+      } else {
+        return `<div class="flex gap-5 max-w-4xl">
+          <div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center flex-shrink-0 mt-1">
+            <span class="material-symbols-outlined text-white text-lg" style="font-variation-settings:'FILL' 1">auto_awesome</span>
+          </div>
+          <div class="flex flex-col gap-2 flex-1">
+            <div class="bg-surface-container-lowest shadow-sm p-5 rounded-2xl rounded-tl-none border border-outline-variant/10">
+              <div class="ai-bubble text-sm leading-relaxed text-on-surface"><p>${formatAI(m.content)}</p></div>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="text-[10px] font-bold text-on-surface-variant uppercase">Libra AI · ${LL.Utils.relTime(m.createdAt)}</span>
+              <button onclick="navigator.clipboard.writeText(${JSON.stringify(m.content)})" class="text-on-surface-variant hover:text-primary transition-colors" title="Copy">
+                <span class="material-symbols-outlined text-sm">content_copy</span>
+              </button>
+            </div>
+          </div>
+        </div>`;
+      }
+    }).join("");
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function showTyping() {
+    const area = document.getElementById("messages-area");
+    const el = document.createElement("div");
+    el.id = "typing-indicator";
+    el.className = "flex gap-5 max-w-4xl";
+    el.innerHTML = `<div class="w-10 h-10 rounded-xl bg-primary-container flex items-center justify-center flex-shrink-0">
+      <span class="material-symbols-outlined text-white text-lg" style="font-variation-settings:'FILL' 1">auto_awesome</span>
+    </div>
+    <div class="bg-surface-container-lowest shadow-sm p-5 rounded-2xl rounded-tl-none border border-outline-variant/10 flex items-center gap-2">
+      <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+    </div>`;
+    area.appendChild(el);
+    area.scrollTop = area.scrollHeight;
+  }
+
+  function hideTyping() {
+    document.getElementById("typing-indicator")?.remove();
+  }
+
+  // ── Load thread ──
+  window.loadThread = function(id) {
+    activeThreadId = id;
+    const t = LL.DB.threads.byId(id);
+    if (!t) return;
+    document.getElementById("chat-title").textContent = t.title;
+    const c = t.caseId ? LL.DB.cases.byId(t.caseId) : null;
+    document.getElementById("chat-subtitle").textContent = c ? `Case: ${c.title}` : "General Consultation";
+    document.getElementById("chat-actions").innerHTML = `
+      <button onclick="deleteThread('${id}')" class="p-2 rounded-lg hover:bg-red-50 text-on-surface-variant hover:text-red-600 transition-colors" title="Delete thread">
+        <span class="material-symbols-outlined text-xl">delete</span>
+      </button>`;
+    renderMessages(id);
+    renderThreads();
+    sel.value = t.caseId || "";
+  };
+
+  // ── Delete thread ──
+  window.deleteThread = function(id) {
+    LL.Modal.confirm("Delete Consultation", "This will permanently delete this thread and all messages.", () => {
+      LL.DB.threads.delete(id);
+      LL.DB.messages.deleteByThread(id);
+      LL.Modal.hide();
+      LL.Toast.success("Consultation deleted.");
+      if (activeThreadId === id) {
+        activeThreadId = null;
+        document.getElementById("chat-title").textContent = "Select or start a consultation";
+        document.getElementById("chat-subtitle").textContent = "Libra AI · Sovereign Model";
+        document.getElementById("chat-actions").innerHTML = "";
+        document.getElementById("messages-area").innerHTML = "";
+        document.getElementById("empty-state").style.display = "";
+        document.getElementById("input-area").style.display = "none";
+      }
+      renderThreads();
+    }, "Delete", true);
+  };
+
+  // ── New thread ──
+  function createNewThread() {
+    const caseId = sel.value || null;
+    const c = caseId ? LL.DB.cases.byId(caseId) : null;
+    const title = c ? `${c.title} – ${new Date().toLocaleDateString("en-US",{month:"short",day:"numeric"})}` : `Consultation – ${new Date().toLocaleDateString("en-US",{month:"short",day:"numeric"})}`;
+    const t = LL.DB.threads.create({ caseId, title, createdBy: user.id });
+    renderThreads();
+    loadThread(t.id);
+    LL.Toast.info("New consultation started.");
+  }
+
+  document.getElementById("btn-new-thread").addEventListener("click", createNewThread);
+  document.getElementById("empty-new-btn").addEventListener("click", createNewThread);
+
+  // ── Send message ──
+  async function sendMessage() {
+    if (!activeThreadId) { LL.Toast.warning("Start or select a consultation first."); return; }
+    const input = document.getElementById("msg-input");
+    const content = input.value.trim();
+    if (!content) return;
+    input.value = "";
+    input.style.height = "auto";
+    const t = LL.DB.threads.byId(activeThreadId);
+    // Add user message and re-render
+    LL.DB.messages.create({ threadId: activeThreadId, role: "user", content });
+    renderMessages(activeThreadId);
+    showTyping();
+    document.getElementById("send-btn").disabled = true;
+    try {
+      await LL.AI.sendMessage(activeThreadId, content, t?.caseId);
+      hideTyping();
+      renderMessages(activeThreadId);
+      renderThreads();
+    } catch (e) {
+      hideTyping();
+      LL.Toast.error("AI error. Check your connection.");
+      renderMessages(activeThreadId);
+    }
+    document.getElementById("send-btn").disabled = false;
+  }
+
+  document.getElementById("send-btn").addEventListener("click", sendMessage);
+  document.getElementById("msg-input").addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+
+  // Auto-resize textarea
+  document.getElementById("msg-input").addEventListener("input", function() {
+    this.style.height = "auto";
+    this.style.height = Math.min(this.scrollHeight, 160) + "px";
+  });
+
+  // ── Init ──
+  renderThreads();
+
+  // Auto-load first thread if exists
+  const threads = LL.DB.threads.all();
+  if (threads.length > 0) loadThread(threads[0].id);
+});
+</script>
 </body></html>

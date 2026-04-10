@@ -1,386 +1,252 @@
 <!DOCTYPE html>
-
 <html class="light" lang="en"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>LawLibra - Case Management</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-surface": "#191c1e",
-                    "on-surface-variant": "#45474c",
-                    "inverse-primary": "#bbc7df",
-                    "background": "#f7f9fc",
-                    "on-secondary-fixed": "#241a00",
-                    "primary-fixed": "#d7e3fc",
-                    "inverse-surface": "#2d3133",
-                    "primary-container": "#101c2e",
-                    "primary": "#000000",
-                    "error": "#ba1a1a",
-                    "on-tertiary-fixed-variant": "#374766",
-                    "error-container": "#ffdad6",
-                    "surface": "#f7f9fc",
-                    "on-primary-fixed": "#101c2e",
-                    "on-error-container": "#93000a",
-                    "surface-variant": "#e0e3e6",
-                    "on-tertiary-container": "#7484a6",
-                    "outline": "#75777d",
-                    "secondary": "#755b00",
-                    "on-tertiary-fixed": "#081b38",
-                    "tertiary-fixed-dim": "#b6c7ec",
-                    "on-background": "#191c1e",
-                    "on-primary-fixed-variant": "#3c475b",
-                    "surface-bright": "#f7f9fc",
-                    "outline-variant": "#c5c6cd",
-                    "on-primary": "#ffffff",
-                    "primary-fixed-dim": "#bbc7df",
-                    "on-primary-container": "#79849b",
-                    "surface-dim": "#d8dadd",
-                    "surface-tint": "#535f74",
-                    "tertiary-fixed": "#d7e2ff",
-                    "on-secondary-fixed-variant": "#584400",
-                    "secondary-fixed": "#ffe08f",
-                    "on-secondary": "#ffffff",
-                    "tertiary-container": "#081b38",
-                    "surface-container-lowest": "#ffffff",
-                    "inverse-on-surface": "#eff1f4",
-                    "secondary-container": "#fed977",
-                    "surface-container-highest": "#e0e3e6",
-                    "surface-container-low": "#f2f4f7",
-                    "surface-container": "#eceef1",
-                    "secondary-fixed-dim": "#e6c364",
-                    "on-secondary-container": "#785d00",
-                    "tertiary": "#000000",
-                    "on-tertiary": "#ffffff",
-                    "on-error": "#ffffff",
-                    "surface-container-high": "#e6e8eb"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
-            },
-            "fontFamily": {
-                    "headline": ["Manrope"],
-                    "body": ["Inter"],
-                    "label": ["Inter"]
-            }
-          },
-        },
-      }
-    </script>
+  tailwind.config = {
+    darkMode:"class",
+    theme:{extend:{colors:{"on-surface":"#191c1e","on-surface-variant":"#45474c","background":"#f7f9fc","primary-container":"#101c2e","primary":"#000000","error":"#ba1a1a","error-container":"#ffdad6","surface":"#f7f9fc","surface-variant":"#e0e3e6","on-tertiary-container":"#7484a6","outline":"#75777d","secondary":"#755b00","tertiary-fixed-dim":"#b6c7ec","on-tertiary-fixed":"#081b38","on-background":"#191c1e","on-primary-fixed-variant":"#3c475b","outline-variant":"#c5c6cd","on-primary":"#ffffff","on-primary-container":"#79849b","secondary-container":"#fed977","on-secondary-container":"#785d00","surface-container-lowest":"#ffffff","inverse-on-surface":"#eff1f4","surface-container-highest":"#e0e3e6","surface-container-low":"#f2f4f7","surface-container":"#eceef1","surface-container-high":"#e6e8eb","on-secondary":"#ffffff","tertiary-container":"#081b38","on-tertiary":"#ffffff","on-error":"#ffffff"},fontFamily:{"headline":["Manrope"],"body":["Inter"],"label":["Inter"]}}}
+  }
+</script>
 <style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .signature-gradient {
-            background: linear-gradient(135deg, #101c2e 0%, #3c475b 100%);
-        }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(20px);
-        }
-    </style>
-
-<style id="ll-global-fixes">
-  /* Layout: prevent horizontal scroll */
-  html, body { overflow-x: hidden; max-width: 100vw; }
-  /* Sidebar width token */
-  :root { --sidebar-w: 224px; }
-  aside { width: var(--sidebar-w) !important; }
-  /* Main content area */
-  .ll-main { margin-left: var(--sidebar-w); overflow-x: hidden; }
-  /* TopNav: must not exceed viewport */
-  header.ll-topnav { left: var(--sidebar-w) !important; right: 0 !important; width: auto !important; }
-  /* Font size reductions */
-  .font-headline.text-4xl, h2.text-4xl { font-size: 1.5rem !important; line-height: 2rem !important; }
-  .font-headline.text-3xl, h2.text-3xl { font-size: 1.25rem !important; }
-  .text-3xl.font-black { font-size: 1.6rem !important; }
-  /* Table horizontal scroll only when needed */
-  .overflow-x-auto { overflow-x: auto; max-width: 100%; }
-  /* Sidebar: narrow and clean */
-  aside nav a, aside .space-y-0\.5 a, aside button { font-size: 0.8125rem !important; }
-  /* Dropdown panels */
-  #ll-notif-panel, #ll-profile-panel { position: absolute; }
+  .material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24}
+  .signature-gradient{background:linear-gradient(135deg,#101c2e 0%,#3c475b 100%)}
+  html,body{overflow-x:hidden;max-width:100vw}
+  :root{--sidebar-w:224px}
+  aside{width:var(--sidebar-w)!important}
+  header.ll-topnav{left:var(--sidebar-w)!important;right:0!important;width:auto!important}
+  .font-headline.text-4xl,h2.text-4xl{font-size:1.5rem!important;line-height:2rem!important}
+  .text-3xl.font-black{font-size:1.6rem!important}
+  .overflow-x-auto{overflow-x:auto;max-width:100%}
+  aside nav a,aside .space-y-0\.5 a,aside button{font-size:0.8125rem!important}
+  #ll-notif-panel,#ll-profile-panel{position:absolute}
+  .filter-btn.active{background:#0D1F3C;color:#fff}
 </style>
-
 </head>
 <body class="bg-surface font-body text-on-surface antialiased">
-<!-- SideNavBar -->
-<aside id="ll-sidebar" class="bg-[#0D1F3C] dark:bg-[#06101F] h-screen w-56 fixed left-0 top-0 flex flex-col py-6 px-4 shadow-2xl z-50 overflow-y-auto">
-<div class="mb-10 px-2 flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">gavel</span>
-</div>
-<div>
-<h1 class="text-2xl font-bold tracking-tight text-white font-headline">LawLibra</h1>
-<p class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">The Sovereign Counsel</p>
-</div>
-</div>
-<nav class="flex-1 space-y-1">
-<a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">dashboard</span>
-<span class="font-label">Dashboard</span>
-</a>
-<a href="case_list.html" class="flex items-center gap-3 px-4 py-3 bg-white/10 text-white font-semibold rounded-lg scale-[0.98] transition-all duration-200">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder_open</span>
-<span class="font-label">Cases</span>
-</a>
-<a href="documents.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">description</span>
-<span class="font-label">Documents</span>
-</a>
-<a href="ai_assistant.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">auto_awesome</span>
-<span class="font-label">AI Chat</span>
-</a>
-<a href="calendar.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">calendar_month</span>
-<span class="font-label">Calendar</span>
-</a>
-
-</nav>
-<div class="mt-auto pt-4 border-t border-white/10 space-y-1">
-<a href="user_management.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">gavel</span>
-<span class="font-label">Admin</span>
-</a>
-<a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">settings</span>
-<span class="font-label">Settings</span>
-</a>
-</div>
-</aside>
-<!-- TopNavBar -->
+<aside id="ll-sidebar" class="bg-[#0D1F3C] dark:bg-[#06101F] h-screen w-56 fixed left-0 top-0 flex flex-col py-6 px-4 shadow-2xl z-50 overflow-y-auto"></aside>
 <header class="ll-topnav fixed top-0 right-0 left-56 h-16 z-40 bg-white/80 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm">
-<div class="flex-1 max-w-xl">
-<div class="relative flex items-center">
-<span class="material-symbols-outlined absolute left-3 text-slate-400">search</span>
-<input class="w-full bg-surface-container-low border-none rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-secondary/20 placeholder:text-slate-500 transition-all" placeholder="Search cases, documents, or counsel..." type="text"/>
-</div>
-</div>
-<div class="flex items-center gap-6">
-<button class="text-slate-500 hover:bg-slate-100 p-2 rounded-lg transition-all">
-<span class="material-symbols-outlined">notifications</span>
-</button>
-<div class="h-8 w-[1px] bg-outline-variant/30"></div>
-<div class="flex items-center gap-3">
-<span class="text-sm font-semibold text-slate-900 font-headline">LawLibra</span>
-<img alt="LawLibra Logo" class="w-8 h-8 rounded-lg bg-primary-container p-1" data-alt="minimalist gold scale of justice logo on a deep navy textured background representing legal authority" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeNbmqi6iCg2Rx4Xt_hWqtUwxPPxA43Bs3oxm2N3rOFRALojRD48Sc-RY226W0ZZpeyeWxnzmTOeoA_gRHWfzScnCPOslNLK2N5SjCYiZVSR7C1LxbxHNIGLTZDN2hCu4aybFkP5W2sCQuJUbA8-SrWzNhWZ6wrPHK44Uaqclk6s8IhygTuZxS_P6m2TqTCUE8RPOcESCENEBY9O-IGJZpXuO4TnZ2iZdUHosbrIOWyIAwfTYldHilzFHUo1ZHRMCpX4gUjcLkTPOC"/>
-</div>
-</div>
+  <div class="flex-1 max-w-xl">
+    <div class="relative flex items-center">
+      <span class="material-symbols-outlined absolute left-3 text-slate-400">search</span>
+      <input id="hdr-search" class="w-full bg-surface-container-low border-none rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-secondary/20 placeholder:text-slate-500 transition-all" placeholder="Search cases, clients, case numbers..." type="text"/>
+    </div>
+  </div>
+  <div class="flex items-center gap-6">
+    <button class="text-slate-500 hover:bg-slate-100 p-2 rounded-lg transition-all">
+      <span class="material-symbols-outlined">notifications</span>
+    </button>
+    <div class="h-8 w-[1px] bg-outline-variant/30"></div>
+    <div class="flex items-center gap-3 cursor-pointer" id="profile-trigger">
+      <div id="hdr-avatar" class="w-8 h-8 rounded-full bg-[#101c2e] flex items-center justify-center text-amber-400 font-bold text-xs"></div>
+    </div>
+  </div>
 </header>
-<!-- Main Content Canvas -->
 <main class="ml-[224px] mt-14 p-6 min-h-screen">
-<!-- Case Header Section -->
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-<div>
-<h2 class="text-4xl font-extrabold tracking-tight text-on-surface font-headline mb-2">Cases</h2>
-<p class="text-on-surface-variant font-medium">Manage your active litigation and legal documentation.</p>
-</div>
-<button class="signature-gradient text-white flex items-center gap-2 px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all active:scale-95">
-<span class="material-symbols-outlined">add</span>
-<span>+ New Case</span>
-</button>
-</div>
-<!-- Filter & Search Bar Bento -->
-<div class="bg-surface-container-low rounded-xl p-2 mb-8 flex flex-col lg:flex-row items-center justify-between gap-4">
-<div class="flex bg-surface-container-lowest rounded-lg p-1 shadow-sm w-full lg:w-auto">
-<button class="px-6 py-2 rounded-md bg-[#0D1F3C] text-white text-sm font-bold transition-all">All</button>
-<button class="px-6 py-2 rounded-md text-slate-500 hover:bg-slate-100 text-sm font-semibold transition-all">OPEN</button>
-<button class="px-6 py-2 rounded-md text-slate-500 hover:bg-slate-100 text-sm font-semibold transition-all">CLOSED</button>
-<button class="px-6 py-2 rounded-md text-slate-500 hover:bg-slate-100 text-sm font-semibold transition-all">ARCHIVED</button>
-</div>
-<div class="relative w-full lg:max-w-xs px-2">
-<span class="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">filter_list</span>
-<input class="w-full bg-surface-container-lowest border-none rounded-lg py-2.5 px-4 text-sm focus:ring-0 shadow-sm" placeholder="Quick filter..." type="text"/>
-</div>
-</div>
-<!-- Cases Table (Editorial Style) -->
-<div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm">
-<table class="w-full text-left border-collapse">
-<thead>
-<tr class="bg-surface-container-low/50">
-<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container font-headline">Case Title</th>
-<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container font-headline">Client</th>
-<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container font-headline">Court / Case No.</th>
-<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container font-headline text-center">Status</th>
-<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container font-headline">Next Hearing</th>
-<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container font-headline text-center">Counsel</th>
-<th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container font-headline text-right">Actions</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-surface-container-low">
-<!-- Row 1 -->
-<tr class="hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-6 py-6">
-<div class="flex items-center gap-3">
-<div class="w-2 h-8 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-<div>
-<p class="text-sm font-bold text-on-surface">Sterling v. Apex Corp</p>
-<p class="text-xs text-on-surface-variant mt-0.5">Intellectual Property Theft</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-6">
-<p class="text-sm font-semibold">Julian Sterling</p>
-<p class="text-xs text-slate-400">Private Client</p>
-</td>
-<td class="px-6 py-6">
-<p class="text-sm text-on-surface">Supreme Court of NY</p>
-<p class="text-xs font-mono text-slate-500">2023-CIV-8842</p>
-</td>
-<td class="px-6 py-6 text-center">
-<span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-green-100 text-green-700">OPEN</span>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-sm text-secondary">calendar_today</span>
-<p class="text-sm font-medium">Oct 24, 2023</p>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="flex -space-x-2 justify-center">
-<img alt="Lawyer 1" class="w-7 h-7 rounded-full border-2 border-white" data-alt="professional headshot of a legal associate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeGB9dLReyi81QhqARlwnEPmzwmakBrAoUy086wwIkUcKnCl30clRjPlVjJDBHmQMgU6pEqWpOapAn2RgkQ_jQFifzRAh6BrgPD821Ig_ZFFugPb8cmmRoRLQCTTbni8GFtPxVkAA45t-wa1swQGjtUQh36tW70hvjx6sYuygCtm3VXoMUzkxx4qEUIJ66C0KV8Ry-21JtyCsfy2NCaN0yrL1o4pcTkVGlIbCldqiSwGSeuVvZx8laa_xUZcnJk671357F9qVkT9_u"/>
-<img alt="Lawyer 2" class="w-7 h-7 rounded-full border-2 border-white" data-alt="professional headshot of a junior partner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4QVl2_VpGou53PSpi25Hh_t548hmvmV24Fp3JWAHhVZ4rR3kVPI4F06Mv2TUHrdqRHfSxFvXAL-mHVRx4CjTMmL-3llkTADIglLMWzt9m2e_VPGYTmxDvT1cyj6iA_iE5eZUjXQrtWp1yYEIFxisWn5ZoOdCe1Bt_3m4Mbmyp5ucjLO9h-FcpO-xHxY4us_hYMcW83LF0bmebgVFSuVMmYuaR1juclLaLgOYR-wgKe1rUyBVtZV2mSZFJbt_d_JodiyYRKFrAX8UL"/>
-<div class="w-7 h-7 rounded-full border-2 border-white bg-surface-container-high flex items-center justify-center text-[10px] font-bold">+1</div>
-</div>
-</td>
-<td class="px-6 py-6 text-right">
-<button class="p-2 hover:bg-surface-container-high rounded-lg transition-all text-slate-400 hover:text-primary-container">
-<span class="material-symbols-outlined">more_vert</span>
-</button>
-</td>
-</tr>
-<!-- Row 2 -->
-<tr class="hover:bg-surface-container-low/30 transition-colors group">
-<td class="px-6 py-6">
-<div class="flex items-center gap-3">
-<div class="w-2 h-8 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-<div>
-<p class="text-sm font-bold text-on-surface">Global Maritime Mergers</p>
-<p class="text-xs text-on-surface-variant mt-0.5">Corporate Acquisition</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-6">
-<p class="text-sm font-semibold">Oceanic Holdings</p>
-<p class="text-xs text-slate-400">Institutional</p>
-</td>
-<td class="px-6 py-6">
-<p class="text-sm text-on-surface">Delaware Chancery</p>
-<p class="text-xs font-mono text-slate-500">2024-MER-1102</p>
-</td>
-<td class="px-6 py-6 text-center">
-<span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-tertiary-fixed-dim text-on-tertiary-fixed">PROCESSING</span>
-</td>
-<td class="px-6 py-6">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-sm text-secondary">calendar_today</span>
-<p class="text-sm font-medium">Nov 02, 2023</p>
-</div>
-</td>
-<td class="px-6 py-6">
-<div class="flex -space-x-2 justify-center">
-<img alt="Lawyer 3" class="w-7 h-7 rounded-full border-2 border-white" data-alt="professional legal counsel portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOnWARE1jJ4Y-6AZI5LcdCqdHFG7JTcGFVg7F-v_okTMGpuQwZFZMOMboU1sniBj8wTMaY2fxTJo0Rc4GXxEZ2ZNlPCo-GXXU1zFu5Et-rM82hZ4f5TJD0_l5bCI570AC5Et8VE7DoMO7wSJQ9-52P2F1E9WUHPrTIsQY5PRzRrjTU0yTMzZ1CmADtXOJbzWLrjSUbDz-x9gpfZSXZUpq4xPZ9HyFimVki_M7A57olteVQ6SpQpfO7gSSXTLO3_Yx_E7eZqYSLwl0q"/>
-<img alt="Lawyer 4" class="w-7 h-7 rounded-full border-2 border-white" data-alt="corporate attorney headshot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtcgATtjlC4u_7WDdbk0pOSGZZxHJKo0xwJV6-IxFxdPdNiTj4T0j16pdBJLiXALgT3VORy-OUPM9wHdgMx2cIu8AaAbCZfiwU4uwe6hZkueTu8wJPyvUTB8xpm0281DSrs4D9tI2jUmkiRFCvU3tn298b-i-B0sx8TAjQJUtVmXGaXJvQ3SqQwpVYTPRQfIDPIQM8COmNhXW2wnqolua1C7DBh9dhuLVZTFV3GosToI-mI37wP6YW-rXg4Bfxn0tnQv_rsidRi8zY"/>
-</div>
-</td>
-<td class="px-6 py-6 text-right">
-<button class="p-2 hover:bg-surface-container-high rounded-lg transition-all text-slate-400 hover:text-primary-container">
-<span class="material-symbols-outlined">more_vert</span>
-</button>
-</td>
-</tr>
-<!-- Row 3 -->
-<tr class="hover:bg-surface-container-low/30 transition-colors group opacity-60">
-<td class="px-6 py-6">
-<div class="flex items-center gap-3">
-<div class="w-2 h-8 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
-<div>
-<p class="text-sm font-bold text-on-surface">Estate of Vanderbilt</p>
-<p class="text-xs text-on-surface-variant mt-0.5">Probate &amp; Succession</p>
-</div>
-</div>
-</td>
-<td class="px-6 py-6">
-<p class="text-sm font-semibold">Eleanor Vanderbilt</p>
-<p class="text-xs text-slate-400">Private Wealth</p>
-</td>
-<td class="px-6 py-6">
-<p class="text-sm text-on-surface">Surrogate's Court</p>
-<p class="text-xs font-mono text-slate-500">2022-PRB-9001</p>
-</td>
-<td class="px-6 py-6 text-center">
-<span class="inline-flex items-center px-3 py-1 rounded-full text-[10px] font-bold bg-surface-variant text-on-surface-variant">ARCHIVED</span>
-</td>
-<td class="px-6 py-6 text-slate-400 text-xs italic">Case Closed</td>
-<td class="px-6 py-6">
-<div class="flex -space-x-2 justify-center">
-<img alt="Lawyer 5" class="w-7 h-7 rounded-full border-2 border-white grayscale" data-alt="legal consultant profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbwW8NNTqKxDhJDbD5oF4SJiTFxlS0cAZC-6ONPySsaQuEPI4XqveQBemxiC0EmNa0VZfvNoq-AH1VQjrLXkt3uEv_n77B288W_c6HXjwUqMG0E1I4RKvX_njs9uIhp1Z9Me0_N-YEmznVPvC7i-gjNDw_n7IHBbLEpwFyvN01GnPRYB9yylPOrybEUi9g4lEpdqvWygljUMlIF16Vct0ZZHJTl_hAgsuCJ9aksVmrKLwp2Tqw8NsqiQJDprLFIrjkalTR4hbI5ZO4"/>
-</div>
-</td>
-<td class="px-6 py-6 text-right">
-<button class="p-2 hover:bg-surface-container-high rounded-lg transition-all text-slate-400 hover:text-primary-container">
-<span class="material-symbols-outlined">more_vert</span>
-</button>
-</td>
-</tr>
-</tbody>
-</table>
-<!-- Pagination-esque footer -->
-<div class="px-6 py-4 bg-surface-container-low/30 flex items-center justify-between">
-<p class="text-xs text-on-surface-variant font-medium">Showing 1 to 3 of 124 entries</p>
-<div class="flex items-center gap-2">
-<button class="p-1.5 rounded hover:bg-surface-container-high transition-all">
-<span class="material-symbols-outlined text-sm">chevron_left</span>
-</button>
-<button class="w-6 h-6 flex items-center justify-center rounded bg-primary-container text-white text-[10px] font-bold">1</button>
-<button class="w-6 h-6 flex items-center justify-center rounded text-on-surface-variant text-[10px] font-bold hover:bg-surface-container-high transition-all">2</button>
-<button class="p-1.5 rounded hover:bg-surface-container-high transition-all">
-<span class="material-symbols-outlined text-sm">chevron_right</span>
-</button>
-</div>
-</div>
-</div>
-<!-- AI Sidebar Overlay (Libra Panel Concept) -->
-<div id="libra-panel" class="fixed right-6 bottom-6 w-80 glass-panel rounded-2xl shadow-2xl border border-white/20 p-6 z-50">
-<div class="flex items-center justify-between mb-4">
-<div class="flex items-center gap-2">
-<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-on-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-</div>
-<span class="font-headline font-bold text-sm tracking-tight">Libra Assistant</span>
-</div>
-<button onclick="document.getElementById('libra-panel').remove()" class="text-slate-400 hover:text-on-surface transition-colors" aria-label="Close Libra Assistant"><span class="material-symbols-outlined text-sm">close</span></button>
-</div>
-<div class="bg-surface-container-low/50 rounded-xl p-3 mb-4">
-<p class="text-xs text-on-surface-variant leading-relaxed">
-                    Based on recent filings in <span class="font-bold text-primary-container">Sterling v. Apex</span>, the deadline for the "Motion to Dismiss" response is approaching in <span class="text-error font-bold">48 hours</span>.
-                </p>
-</div>
-<button class="w-full bg-secondary-container text-on-secondary-container py-2.5 rounded-lg text-xs font-bold shadow-sm hover:shadow-md transition-all">
-                Draft Response with AI
-            </button>
-</div>
+  <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+    <div>
+      <h2 class="text-4xl font-extrabold tracking-tight text-on-surface font-headline mb-2">Cases</h2>
+      <p class="text-on-surface-variant font-medium">Manage your active litigation and legal documentation.</p>
+    </div>
+    <button id="btn-new-case" class="signature-gradient text-white flex items-center gap-2 px-6 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl transition-all active:scale-95">
+      <span class="material-symbols-outlined">add</span><span>New Case</span>
+    </button>
+  </div>
+  <!-- Filter Bar -->
+  <div class="bg-surface-container-low rounded-xl p-2 mb-6 flex flex-col lg:flex-row items-center justify-between gap-4">
+    <div class="flex bg-surface-container-lowest rounded-lg p-1 shadow-sm w-full lg:w-auto gap-1">
+      <button class="filter-btn active px-5 py-2 rounded-md text-sm font-bold transition-all" data-filter="ALL">All</button>
+      <button class="filter-btn px-5 py-2 rounded-md text-slate-500 hover:bg-slate-100 text-sm font-semibold transition-all" data-filter="OPEN">Open</button>
+      <button class="filter-btn px-5 py-2 rounded-md text-slate-500 hover:bg-slate-100 text-sm font-semibold transition-all" data-filter="CLOSED">Closed</button>
+      <button class="filter-btn px-5 py-2 rounded-md text-slate-500 hover:bg-slate-100 text-sm font-semibold transition-all" data-filter="ARCHIVED">Archived</button>
+    </div>
+    <div class="relative w-full lg:max-w-xs px-2">
+      <span class="material-symbols-outlined absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 text-lg">filter_list</span>
+      <input id="quick-filter" class="w-full bg-surface-container-lowest border-none rounded-lg py-2.5 px-4 text-sm focus:ring-0 shadow-sm" placeholder="Quick filter..." type="text"/>
+    </div>
+  </div>
+  <!-- Cases Table -->
+  <div class="bg-surface-container-lowest rounded-2xl overflow-hidden shadow-sm">
+    <table class="w-full text-left border-collapse">
+      <thead>
+        <tr class="bg-surface-container-low/50">
+          <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container">Case Title</th>
+          <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container">Client</th>
+          <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container">Court / Case No.</th>
+          <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container text-center">Status</th>
+          <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container">Next Hearing</th>
+          <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-tertiary-container text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="cases-tbody" class="divide-y divide-surface-container-low">
+        <tr><td colspan="6" class="px-6 py-10 text-center text-on-surface-variant">Loading…</td></tr>
+      </tbody>
+    </table>
+    <div class="px-6 py-4 bg-surface-container-low/30 flex items-center justify-between">
+      <p id="count-label" class="text-xs text-on-surface-variant font-medium">Loading…</p>
+    </div>
+  </div>
 </main>
 
-<script src="api.js"></script>
+<!-- New Case Modal -->
+<div id="new-case-modal" class="hidden fixed inset-0 z-[8000] bg-[#101c2e]/60 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
+    <div class="signature-gradient px-6 py-5">
+      <h3 class="font-headline text-lg font-bold text-white">Create New Case</h3>
+    </div>
+    <div class="p-6 space-y-4">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Case Title *</label>
+          <input id="nc-title" type="text" placeholder="e.g. Smith vs. Acme Corp" class="w-full rounded-lg border border-outline-variant/50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-secondary/30"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Client Name *</label>
+          <input id="nc-client" type="text" placeholder="Client full name" class="w-full rounded-lg border border-outline-variant/50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-secondary/30"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Case Type</label>
+          <select id="nc-type" class="w-full rounded-lg border border-outline-variant/50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-secondary/30">
+            <option>Contract Dispute</option><option>Criminal Defense</option><option>Intellectual Property</option>
+            <option>Corporate</option><option>Tax Law</option><option>Probate &amp; Estates</option><option>Civil Litigation</option>
+          </select>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Court Name</label>
+          <input id="nc-court" type="text" placeholder="e.g. US District Court" class="w-full rounded-lg border border-outline-variant/50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-secondary/30"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Case Number</label>
+          <input id="nc-num" type="text" placeholder="e.g. CV-2025-001" class="w-full rounded-lg border border-outline-variant/50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-secondary/30"/>
+        </div>
+        <div class="col-span-2">
+          <label class="text-xs font-bold text-on-surface-variant uppercase tracking-wider mb-1 block">Description</label>
+          <textarea id="nc-desc" rows="2" placeholder="Brief description of the case…" class="w-full rounded-lg border border-outline-variant/50 px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-secondary/30 resize-none"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="px-6 pb-6 flex justify-end gap-3">
+      <button id="nc-cancel" class="px-5 py-2 rounded-lg border border-outline-variant text-sm font-semibold text-on-surface-variant hover:bg-surface-container-low transition-colors">Cancel</button>
+      <button id="nc-save" class="signature-gradient px-6 py-2 rounded-lg text-sm font-bold text-white hover:opacity-90 transition-opacity">Create Case</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
 <script>
-  // Inline auth guard — runs before nav.js to prevent login bypass
-  (function() {
-    var token = localStorage.getItem("ll_token");
-    if (!token) { window.location.replace("login_page.html"); }
-  })();
+(function(){if(!localStorage.getItem("ll_token")){window.location.replace("login_page.html");}})();
 </script>
 <script src="nav.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const LL = window.LawLibra;
+  if (!LL) return;
+  const user = LL.Auth.currentUser() || {};
+  const av = document.getElementById("hdr-avatar");
+  if (av) av.textContent = LL.Utils.initials(user.name);
 
+  let currentFilter = "ALL";
+  let currentQuery  = "";
+
+  function renderCases() {
+    const all = LL.DB.cases.search(currentQuery, currentFilter === "ALL" ? "" : currentFilter);
+    const tbody = document.getElementById("cases-tbody");
+    document.getElementById("count-label").textContent = `Showing ${all.length} case${all.length !== 1 ? "s" : ""}`;
+    if (all.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="px-6 py-12 text-center text-on-surface-variant text-sm">No cases found.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = all.map(c => `
+      <tr class="hover:bg-surface-container-low/30 transition-colors group cursor-pointer" onclick="location.href='case_detail.html?id=${c.id}'">
+        <td class="px-6 py-5">
+          <div class="flex items-center gap-3">
+            <div class="w-1.5 h-8 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div>
+              <p class="text-sm font-bold text-on-surface">${LL.Utils.esc(c.title)}</p>
+              <p class="text-xs text-on-surface-variant mt-0.5">${LL.Utils.esc(c.type)}</p>
+            </div>
+          </div>
+        </td>
+        <td class="px-6 py-5">
+          <p class="text-sm font-semibold">${LL.Utils.esc(c.clientName)}</p>
+        </td>
+        <td class="px-6 py-5">
+          <p class="text-sm text-on-surface">${LL.Utils.esc(c.courtName || "—")}</p>
+          <p class="text-xs font-mono text-slate-500">${LL.Utils.esc(c.caseNumber)}</p>
+        </td>
+        <td class="px-6 py-5 text-center">${LL.Utils.statusBadge(c.status)}</td>
+        <td class="px-6 py-5">
+          ${c.nextHearing
+            ? `<div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary">calendar_today</span><p class="text-sm font-medium">${LL.Utils.fmtDate(c.nextHearing)}</p></div>`
+            : `<span class="text-slate-400 text-xs italic">None scheduled</span>`}
+        </td>
+        <td class="px-6 py-5 text-right" onclick="event.stopPropagation()">
+          <div class="flex items-center justify-end gap-1">
+            <button class="p-2 hover:bg-surface-container-high rounded-lg transition-all text-slate-400 hover:text-primary-container" onclick="location.href='case_detail.html?id=${c.id}'" title="View">
+              <span class="material-symbols-outlined text-sm">open_in_new</span>
+            </button>
+            <button class="p-2 hover:bg-red-50 rounded-lg transition-all text-slate-400 hover:text-red-600" onclick="deleteCase('${c.id}', '${LL.Utils.esc(c.title)}')" title="Delete">
+              <span class="material-symbols-outlined text-sm">delete</span>
+            </button>
+          </div>
+        </td>
+      </tr>`).join("");
+  }
+
+  window.deleteCase = function(id, title) {
+    LL.Modal.confirm("Delete Case", `Are you sure you want to delete "${title}"? This cannot be undone.`, () => {
+      LL.DB.cases.delete(id);
+      LL.Toast.success("Case deleted.");
+      LL.Modal.hide();
+      renderCases();
+    }, "Delete", true);
+  };
+
+  // Filter buttons
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b => { b.classList.remove("active","bg-[#0D1F3C]","text-white"); b.classList.add("text-slate-500"); });
+      btn.classList.add("active");
+      btn.classList.remove("text-slate-500");
+      currentFilter = btn.dataset.filter;
+      renderCases();
+    });
+  });
+
+  // Quick filter + header search
+  ["quick-filter","hdr-search"].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.addEventListener("input", () => { currentQuery = el.value.trim(); renderCases(); });
+  });
+
+  // New Case Modal
+  const modal = document.getElementById("new-case-modal");
+  document.getElementById("btn-new-case").addEventListener("click", () => modal.classList.remove("hidden"));
+  document.getElementById("nc-cancel").addEventListener("click", () => modal.classList.add("hidden"));
+  modal.addEventListener("click", e => { if (e.target === modal) modal.classList.add("hidden"); });
+  document.getElementById("nc-save").addEventListener("click", () => {
+    const title  = document.getElementById("nc-title").value.trim();
+    const client = document.getElementById("nc-client").value.trim();
+    if (!title || !client) { LL.Toast.warning("Title and client name are required."); return; }
+    LL.DB.cases.create({
+      title, clientName: client,
+      type: document.getElementById("nc-type").value,
+      courtName: document.getElementById("nc-court").value.trim(),
+      caseNumber: document.getElementById("nc-num").value.trim() || ("LL-" + Date.now().toString(36).toUpperCase()),
+      description: document.getElementById("nc-desc").value.trim(),
+      status: "OPEN", priority: "MEDIUM", assignedTo: [user.id]
+    });
+    LL.Toast.success("Case created!");
+    modal.classList.add("hidden");
+    ["nc-title","nc-client","nc-court","nc-num","nc-desc"].forEach(id => document.getElementById(id).value = "");
+    renderCases();
+  });
+
+  renderCases();
+});
+</script>
 </body></html>

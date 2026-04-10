@@ -1,292 +1,93 @@
 <!DOCTYPE html>
-
-<html class="light" lang="en"><head>
+<html class="light" lang="en">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>LawLibra | The Sovereign Counsel Login</title>
+<title>LawLibra | The Sovereign Counsel</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-surface": "#191c1e",
-                    "on-surface-variant": "#45474c",
-                    "inverse-primary": "#bbc7df",
-                    "background": "#f7f9fc",
-                    "on-secondary-fixed": "#241a00",
-                    "primary-fixed": "#d7e3fc",
-                    "inverse-surface": "#2d3133",
-                    "primary-container": "#101c2e",
-                    "primary": "#000000",
-                    "error": "#ba1a1a",
-                    "on-tertiary-fixed-variant": "#374766",
-                    "error-container": "#ffdad6",
-                    "surface": "#f7f9fc",
-                    "on-primary-fixed": "#101c2e",
-                    "on-error-container": "#93000a",
-                    "surface-variant": "#e0e3e6",
-                    "on-tertiary-container": "#7484a6",
-                    "outline": "#75777d",
-                    "secondary": "#755b00",
-                    "on-tertiary-fixed": "#081b38",
-                    "tertiary-fixed-dim": "#b6c7ec",
-                    "on-background": "#191c1e",
-                    "on-primary-fixed-variant": "#3c475b",
-                    "surface-bright": "#f7f9fc",
-                    "outline-variant": "#c5c6cd",
-                    "on-primary": "#ffffff",
-                    "primary-fixed-dim": "#bbc7df",
-                    "on-primary-container": "#79849b",
-                    "surface-dim": "#d8dadd",
-                    "surface-tint": "#535f74",
-                    "tertiary-fixed": "#d7e2ff",
-                    "on-secondary-fixed-variant": "#584400",
-                    "secondary-fixed": "#ffe08f",
-                    "on-secondary": "#ffffff",
-                    "tertiary-container": "#081b38",
-                    "surface-container-lowest": "#ffffff",
-                    "inverse-on-surface": "#eff1f4",
-                    "secondary-container": "#fed977",
-                    "surface-container-highest": "#e0e3e6",
-                    "surface-container-low": "#f2f4f7",
-                    "surface-container": "#eceef1",
-                    "secondary-fixed-dim": "#e6c364",
-                    "on-secondary-container": "#785d00",
-                    "tertiary": "#000000",
-                    "on-tertiary": "#ffffff",
-                    "on-error": "#ffffff",
-                    "surface-container-high": "#e6e8eb"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
-            },
-            "fontFamily": {
-                    "headline": ["Manrope"],
-                    "body": ["Inter"],
-                    "label": ["Inter"]
-            }
-          },
-        },
-      }
-    </script>
-<style>
-      .material-symbols-outlined {
-        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-      }
-      .bg-law-gradient {
-        background: linear-gradient(135deg, #101c2e 0%, #3c475b 100%);
-      }
-    </style>
-
-<style id="ll-global-fixes">
-  /* Layout: prevent horizontal scroll */
-  html, body { overflow-x: hidden; max-width: 100vw; }
-  /* Sidebar width token */
-  :root { --sidebar-w: 224px; }
-  aside { width: var(--sidebar-w) !important; }
-  /* Main content area */
-  .ll-main { margin-left: var(--sidebar-w); overflow-x: hidden; }
-  /* TopNav: must not exceed viewport */
-  header.ll-topnav { left: var(--sidebar-w) !important; right: 0 !important; width: auto !important; }
-  /* Font size reductions */
-  .font-headline.text-4xl, h2.text-4xl { font-size: 1.5rem !important; line-height: 2rem !important; }
-  .font-headline.text-3xl, h2.text-3xl { font-size: 1.25rem !important; }
-  .text-3xl.font-black { font-size: 1.6rem !important; }
-  /* Table horizontal scroll only when needed */
-  .overflow-x-auto { overflow-x: auto; max-width: 100%; }
-  /* Sidebar: narrow and clean */
-  aside nav a, aside .space-y-0\.5 a, aside button { font-size: 0.8125rem !important; }
-  /* Dropdown panels */
-  #ll-notif-panel, #ll-profile-panel { position: absolute; }
-</style>
-
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-surface":"#191c1e","on-surface-variant":"#45474c","background":"#f7f9fc","primary-container":"#101c2e","primary":"#000000","error":"#ba1a1a","surface":"#f7f9fc","outline":"#75777d","secondary":"#755b00","on-background":"#191c1e","outline-variant":"#c5c6cd","on-primary":"#ffffff","on-secondary":"#ffffff","tertiary-container":"#081b38","surface-container-lowest":"#ffffff","secondary-container":"#fed977","surface-container-low":"#f2f4f7","surface-container":"#eceef1","on-secondary-container":"#785d00","on-primary-container":"#79849b"},fontFamily:{headline:["Manrope"],body:["Inter"],label:["Inter"]}}}}</script>
+<style>.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}.bg-law-gradient{background:linear-gradient(135deg,#101c2e 0%,#3c475b 100%);}</style>
 </head>
 <body class="bg-surface font-body text-on-surface antialiased">
-<!-- Main Container -->
 <main class="flex min-h-screen">
-<!-- Left Half: Branding & Quote -->
-<section class="hidden lg:flex lg:w-1/2 bg-law-gradient relative items-center justify-center p-12 overflow-hidden">
-<!-- Decorative Grain Texture -->
-<div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDs8NywMLRmw0ZTR30L4YQB80G8kI0Ek0LGsoD6nGv-ROPhCbZShNN2qz9fDTSbzG1mescT9Eafd9EjYAWgCf-sEM92zZ_ZiynwLk1SXxf6tOqU_O43vV0EhEdrrqZ2eYBAD4ozVkB3RU6QICaHRLv3vv7vTRfFK1bmbiWp7MqJUHGVAysWEXXqxuqYs74juGCEuk6ca4T0Q2BWMdXt2QCG5-oJ3S9DGm5iC_IdTH71_tZlPPFpc6YOk10CvLYnFB0Er9PfnqF_AW4-');"></div>
-<div class="relative z-10 max-w-lg">
-<div class="mb-12">
-<div class="flex items-center gap-3 mb-4">
-<span class="material-symbols-outlined text-secondary-fixed text-4xl" data-icon="balance">balance</span>
-<h1 class="font-headline font-extrabold text-4xl tracking-tight text-white">LawLibra</h1>
-</div>
-<div class="h-1 w-16 bg-secondary-container rounded-full"></div>
-</div>
-<div class="space-y-8">
-<blockquote class="text-white">
-<p class="font-headline text-3xl font-light leading-relaxed tracking-wide italic">
-                            "The law is not a end in itself, nor a rule of thumb of the counselor, but a tireless quest for justice."
-                        </p>
-<footer class="mt-4 text-on-primary-container font-label uppercase tracking-widest text-sm">
-                            — The Sovereign Counsel Philosophy
-                        </footer>
-</blockquote>
-<div class="pt-8 grid grid-cols-2 gap-6 border-t border-white/10">
-<div>
-<div class="text-secondary-fixed font-headline text-2xl font-bold">12k+</div>
-<div class="text-on-primary-container text-xs uppercase tracking-tighter">Cases Managed</div>
-</div>
-<div>
-<div class="text-secondary-fixed font-headline text-2xl font-bold">99.4%</div>
-<div class="text-on-primary-container text-xs uppercase tracking-tighter">Uptime Reliability</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Subtle Background Image Element -->
-<div class="absolute bottom-0 right-0 w-full h-1/2 opacity-20 mask-linear-gradient">
-<img class="w-full h-full object-cover" data-alt="close-up of a bronze lady justice statue focusing on the scales with dramatic cinematic lighting and deep shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArvhRvOE_gUiNC3phiIsMW_Jrzqqv5J5gQCJ0FVpSAQdJxFTsuxxW2zmLdEqb0WSpQ8b-r7W3dS_d-lt2PwEKqzPykAcBA8L1IJD9ikMnL9XKZp9qEEGtJSf-UTyaqA7qfwZRuJsUZ_lORaCaV-p2aWvLTkXrUe5SNngIrXiVQy1WpjCfEzMMQMB1qyIUuFa2aERHSNeG6zs_1koCWXUM26o7KsaKTW-juTuRZhRhr_SHoectp4nuzQDbOGdEK6JDbIb3r7hr4T8ii"/>
-</div>
-</section>
-<!-- Right Half: Login Form -->
-<section class="w-full lg:w-1/2 flex items-center justify-center bg-surface-container-lowest p-8 md:p-24">
-<div class="w-full max-w-md">
-<!-- Mobile Branding -->
-<div class="lg:hidden flex flex-col items-center mb-12">
-<span class="material-symbols-outlined text-secondary text-5xl mb-2" data-icon="balance">balance</span>
-<h1 class="font-headline font-black text-3xl text-primary-container">LawLibra</h1>
-</div>
-<div class="mb-10 text-center lg:text-left">
-<h2 class="font-headline text-2xl font-bold text-primary-container mb-2">Access Your Chamber</h2>
-<p class="text-on-surface-variant text-sm">Sign in to manage your sovereign legal portfolio.</p>
-</div>
-<form action="#" class="space-y-6">
-<!-- Email Field -->
-<div class="space-y-2">
-<label class="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant" for="email">Email Address</label>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg" data-icon="mail">mail</span>
-<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-xl focus:ring-0 focus:bg-surface-container-lowest focus:border-b-2 focus:border-secondary transition-all placeholder:text-outline-variant text-on-surface" id="email" name="email" placeholder="name@lawlibra.pro" required="" type="email"/>
-</div>
-</div>
-<!-- Password Field -->
-<div class="space-y-2">
-<div class="flex justify-between items-center">
-<label class="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant" for="password">Security Key</label>
-<a class="text-secondary text-xs font-bold hover:underline" href="#">Forgot Password?</a>
-</div>
-<div class="relative">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg" data-icon="lock">lock</span>
-<input class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-xl focus:ring-0 focus:bg-surface-container-lowest focus:border-b-2 focus:border-secondary transition-all placeholder:text-outline-variant text-on-surface" id="password" name="password" placeholder="••••••••••••" required="" type="password"/>
-</div>
-</div>
-<!-- Remember Me -->
-<div class="flex items-center space-x-3">
-<input class="w-5 h-5 rounded border-outline-variant text-primary-container focus:ring-secondary-fixed" id="remember" type="checkbox"/>
-<label class="text-sm text-on-surface-variant" for="remember">Keep me authenticated for 30 days</label>
-</div>
-<!-- Sign In Button -->
-<button class="w-full py-4 bg-secondary-container text-on-secondary-container font-headline font-bold text-lg rounded-xl shadow-lg shadow-secondary-container/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="submit">
-<span>Sign In</span>
-<span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
-</button>
-</form>
-<!-- Footer Links -->
-<div class="mt-12 text-center">
-<p class="text-on-surface-variant text-sm">
-                        New counsel? <a class="text-primary-container font-bold hover:underline" href="#">Request Credentials</a>
-</p>
-<div class="mt-8 flex justify-center space-x-6 text-outline-variant text-xs font-label uppercase tracking-widest">
-<a class="hover:text-on-surface" href="#">Terms</a>
-<a class="hover:text-on-surface" href="#">Security</a>
-<a class="hover:text-on-surface" href="#">Support</a>
-</div>
-</div>
-</div>
-</section>
+  <section class="hidden lg:flex lg:w-1/2 bg-law-gradient relative items-center justify-center p-12 overflow-hidden">
+    <div class="relative z-10 max-w-lg">
+      <div class="mb-12"><div class="flex items-center gap-3 mb-4"><span class="material-symbols-outlined text-4xl" style="color:#fed977;font-variation-settings:'FILL' 1">balance</span><h1 class="font-headline font-extrabold text-4xl tracking-tight text-white">LawLibra</h1></div><div class="h-1 w-16 rounded-full" style="background:#fed977;"></div></div>
+      <div class="space-y-8">
+        <blockquote class="text-white"><p class="font-headline text-3xl font-light leading-relaxed italic">"The law is not an end in itself, but a tireless quest for justice."</p><footer class="mt-4 text-on-primary-container font-label uppercase tracking-widest text-sm">— The Sovereign Counsel</footer></blockquote>
+        <div class="pt-8 grid grid-cols-2 gap-6 border-t border-white/10"><div><div class="font-headline text-2xl font-bold" style="color:#fed977;">12k+</div><div class="text-on-primary-container text-xs uppercase tracking-tighter">Cases Managed</div></div><div><div class="font-headline text-2xl font-bold" style="color:#fed977;">99.4%</div><div class="text-on-primary-container text-xs uppercase tracking-tighter">Uptime Reliability</div></div></div>
+        <div class="bg-white/5 border border-white/10 rounded-xl p-4 text-xs text-white/70 space-y-1"><p class="font-bold text-white/90 mb-2">⚡ Demo Credentials</p><p>Admin: <span class="font-mono" style="color:#fed977;">admin@lawlibra.pro</span> / <span class="font-mono">Admin@123</span></p><p>Lawyer: <span class="font-mono" style="color:#fed977;">lawyer@lawlibra.pro</span> / <span class="font-mono">Lawyer@123</span></p></div>
+      </div>
+    </div>
+  </section>
+  <section class="w-full lg:w-1/2 flex items-center justify-center bg-surface-container-lowest p-8 md:p-16">
+    <div class="w-full max-w-md">
+      <div class="lg:hidden flex flex-col items-center mb-10"><span class="material-symbols-outlined text-5xl mb-2" style="color:#755b00;font-variation-settings:'FILL' 1;">balance</span><h1 class="font-headline font-black text-3xl text-primary-container">LawLibra</h1></div>
+      <div class="flex mb-8 bg-surface-container rounded-xl p-1">
+        <button id="tab-login" onclick="showPanel('login')" class="flex-1 py-2.5 text-sm font-bold rounded-lg transition-all bg-white text-primary-container shadow-sm">Sign In</button>
+        <button id="tab-register" onclick="showPanel('register')" class="flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all text-on-surface-variant hover:text-on-surface">Register</button>
+      </div>
+      <div id="panel-login">
+        <div class="mb-8"><h2 class="font-headline text-2xl font-bold text-primary-container mb-1">Access Your Chamber</h2><p class="text-on-surface-variant text-sm">Sign in to manage your sovereign legal portfolio.</p></div>
+        <form id="login-form" class="space-y-5" novalidate>
+          <div id="login-error" class="hidden text-red-600 text-sm bg-red-50 border border-red-100 rounded-lg px-4 py-3"></div>
+          <div class="space-y-1.5"><label class="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Email Address</label><div class="relative"><span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">mail</span><input id="login-email" type="email" placeholder="name@lawlibra.pro" class="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-xl text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-secondary-container transition-all"/></div></div>
+          <div class="space-y-1.5"><div class="flex justify-between items-center"><label class="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Password</label><button type="button" onclick="forgotPassword()" class="text-secondary text-xs font-bold hover:underline">Forgot Password?</button></div><div class="relative"><span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">lock</span><input id="login-password" type="password" placeholder="••••••••••••" class="w-full pl-12 pr-12 py-4 bg-surface-container-low border-none rounded-xl text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-secondary-container transition-all"/><button type="button" onclick="togglePw('login-password',this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface"><span class="material-symbols-outlined text-lg">visibility</span></button></div></div>
+          <div class="flex items-center gap-3"><input id="remember" type="checkbox" class="w-4 h-4 rounded"/><label for="remember" class="text-sm text-on-surface-variant">Keep me authenticated for 30 days</label></div>
+          <button type="submit" id="login-btn" class="w-full py-4 bg-secondary-container text-on-secondary-container font-headline font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"><span>Sign In</span><span class="material-symbols-outlined">arrow_forward</span></button>
+        </form>
+        <p class="text-center text-on-surface-variant text-sm mt-8">New counsel? <button onclick="showPanel('register')" class="text-primary-container font-bold hover:underline">Request Credentials</button></p>
+      </div>
+      <div id="panel-register" class="hidden">
+        <div class="mb-8"><h2 class="font-headline text-2xl font-bold text-primary-container mb-1">Join the Sovereign Counsel</h2><p class="text-on-surface-variant text-sm">Create your secure legal practice account.</p></div>
+        <form id="register-form" class="space-y-4" novalidate>
+          <div id="register-error" class="hidden text-red-600 text-sm bg-red-50 border border-red-100 rounded-lg px-4 py-3"></div>
+          <div class="space-y-1.5"><label class="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Full Name</label><div class="relative"><span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">person</span><input id="reg-name" type="text" placeholder="Jane Hartwell, Esq." class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-none rounded-xl text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-secondary-container transition-all"/></div></div>
+          <div class="space-y-1.5"><label class="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Email Address</label><div class="relative"><span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">mail</span><input id="reg-email" type="email" placeholder="jane@lawfirm.com" class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-none rounded-xl text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-secondary-container transition-all"/></div></div>
+          <div class="space-y-1.5"><label class="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Password</label><div class="relative"><span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">lock</span><input id="reg-password" type="password" placeholder="Min. 8 characters" class="w-full pl-12 pr-12 py-3.5 bg-surface-container-low border-none rounded-xl text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-secondary-container transition-all"/><button type="button" onclick="togglePw('reg-password',this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface"><span class="material-symbols-outlined text-lg">visibility</span></button></div></div>
+          <div class="space-y-1.5"><label class="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Role</label><div class="relative"><span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">gavel</span><select id="reg-role" class="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-none rounded-xl text-on-surface focus:ring-2 focus:ring-secondary-container transition-all appearance-none"><option value="LAWYER">Attorney / Lawyer</option><option value="ADMIN">Firm Administrator</option></select></div></div>
+          <div id="pw-strength" class="hidden space-y-1"><div class="flex gap-1"><div class="h-1 flex-1 rounded-full bg-slate-200" id="ps1"></div><div class="h-1 flex-1 rounded-full bg-slate-200" id="ps2"></div><div class="h-1 flex-1 rounded-full bg-slate-200" id="ps3"></div><div class="h-1 flex-1 rounded-full bg-slate-200" id="ps4"></div></div><p id="pw-strength-label" class="text-xs text-slate-500"></p></div>
+          <button type="submit" id="register-btn" class="w-full py-4 text-white font-headline font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2" style="background:linear-gradient(135deg,#101c2e,#3c475b)"><span>Create Account</span><span class="material-symbols-outlined">how_to_reg</span></button>
+        </form>
+        <p class="text-center text-on-surface-variant text-sm mt-6">Already registered? <button onclick="showPanel('login')" class="text-primary-container font-bold hover:underline">Sign In</button></p>
+      </div>
+      <div class="mt-10 flex justify-center space-x-6 text-outline-variant text-xs font-label uppercase tracking-widest"><a class="hover:text-on-surface" href="#">Terms</a><a class="hover:text-on-surface" href="#">Security</a><a class="hover:text-on-surface" href="#">Support</a></div>
+    </div>
+  </section>
 </main>
-<!-- AI Toast (Floating Glassmorphism Example) -->
-<div class="fixed bottom-8 right-8 z-50">
-<div class="bg-surface-container-lowest/80 backdrop-blur-xl p-4 rounded-xl shadow-[0_12px_32px_0_rgba(25,28,30,0.06)] border border-outline-variant/20 flex items-center gap-4 max-w-xs">
-<div class="w-10 h-10 bg-secondary-container rounded-full flex items-center justify-center">
-<span class="material-symbols-outlined text-on-secondary-container text-xl" data-icon="auto_awesome">auto_awesome</span>
-</div>
-<div>
-<p class="text-xs font-bold text-primary-container">AI Security Active</p>
-<p class="text-[10px] text-on-surface-variant">LawLibra Sentinel is protecting this login session with biometric-aware encryption.</p>
-</div>
-</div>
-</div>
-
-<script src="api.js"></script>
-<script src="nav.js"></script>
-
-
-
-
+<div class="fixed bottom-6 right-6 z-50"><div class="bg-surface-container-lowest/90 backdrop-blur-xl p-4 rounded-xl shadow-2xl border border-outline-variant/20 flex items-center gap-4 max-w-xs"><div class="w-10 h-10 bg-secondary-container rounded-full flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-on-secondary-container text-xl" style="font-variation-settings:'FILL' 1">auto_awesome</span></div><div><p class="text-xs font-bold text-primary-container">AI Security Active</p><p class="text-[10px] text-on-surface-variant">Libra Sentinel protecting this login.</p></div></div></div>
+<script src="app.js"></script>
 <script>
-// LawLibra Login Handler
-document.addEventListener("DOMContentLoaded", function() {
-  const form = document.querySelector("form");
-  if (!form) return;
-  form.addEventListener("submit", async function(e) {
-    e.preventDefault();
-    const email    = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-    const btn      = form.querySelector('button[type="submit"]');
-    const origHTML = btn.innerHTML;
-
-    if (!email || !password) { showError("Please enter your email and password."); return; }
-
-    btn.disabled  = true;
-    btn.innerHTML = '<svg class="animate-spin h-5 w-5 mr-2 inline" viewBox="0 0 24 24" fill="none"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path></svg> Signing in...';
-
+(function(){
+  var token = localStorage.getItem("ll_token");
+  var userStr = localStorage.getItem("ll_user");
+  if (token && userStr) {
     try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-        signal: AbortSignal.timeout(4000)
-      }).then(r => r.json());
-
-      if (res.token) {
-        localStorage.setItem("ll_token", res.token);
-        localStorage.setItem("ll_user", JSON.stringify(res.user));
-        window.location.href = "dashboard.html";
-        return;
+      var user = JSON.parse(userStr);
+      // Validate user still exists and is active in the persisted DB
+      var allUsers = JSON.parse(localStorage.getItem("ll_users") || "[]");
+      var validUser = allUsers.find(function(u){ return u.id === user.id && u.active !== false; });
+      if (validUser) {
+        window.location.replace("dashboard.html");
       } else {
-        showError(res.error || "Invalid email or password.");
+        // Stale / corrupted session — clear it and show the login form
+        localStorage.removeItem("ll_token");
+        localStorage.removeItem("ll_user");
       }
-    } catch (err) {
-      // Backend not running — enter demo mode
-      console.warn("Backend offline — Demo mode active");
-      const role = email.toLowerCase().includes("admin") ? "ADMIN" : "LAWYER";
-      const demoUser = { id:"demo-001", name: email.split("@")[0].replace(/[._]/g," ").replace(/\w/g,c=>c.toUpperCase()), email, role };
-      localStorage.setItem("ll_token", "demo-token-" + Date.now());
-      localStorage.setItem("ll_user", JSON.stringify(demoUser));
-      window.location.href = "dashboard.html";
-      return;
+    } catch(e) {
+      localStorage.removeItem("ll_token");
+      localStorage.removeItem("ll_user");
     }
-
-    btn.disabled  = false;
-    btn.innerHTML = origHTML;
-  });
-
-  function showError(msg) {
-    let err = document.getElementById("ll-error");
-    if (!err) {
-      err = document.createElement("p");
-      err.id = "ll-error";
-      err.className = "text-red-600 text-sm text-center bg-red-50 border border-red-100 rounded-lg px-4 py-2";
-      document.querySelector("form").prepend(err);
-    }
-    err.textContent = msg;
   }
-
-  // If already logged in, redirect
-  if (localStorage.getItem("ll_token")) window.location.href = "dashboard.html";
-});
+})();
+function showPanel(n){["login","register"].forEach(p=>{document.getElementById("panel-"+p).classList.toggle("hidden",p!==n);var t=document.getElementById("tab-"+p);if(p===n){t.classList.add("bg-white","text-primary-container","shadow-sm");t.classList.remove("text-on-surface-variant","hover:text-on-surface");}else{t.classList.remove("bg-white","text-primary-container","shadow-sm");t.classList.add("text-on-surface-variant","hover:text-on-surface");}});}
+function togglePw(id,btn){var i=document.getElementById(id),ic=btn.querySelector(".material-symbols-outlined");if(i.type==="password"){i.type="text";ic.textContent="visibility_off";}else{i.type="password";ic.textContent="visibility";}}
+function showErr(id,msg){var e=document.getElementById(id);e.textContent=msg;e.classList.remove("hidden");setTimeout(()=>e.classList.add("hidden"),6000);}
+document.getElementById("reg-password").addEventListener("input",function(){var pw=this.value;document.getElementById("pw-strength").classList.toggle("hidden",!pw);var s=0;if(pw.length>=8)s++;if(/[A-Z]/.test(pw))s++;if(/[0-9]/.test(pw))s++;if(/[^A-Za-z0-9]/.test(pw))s++;var c=["bg-red-400","bg-amber-400","bg-yellow-400","bg-emerald-400"],l=["Too weak","Fair","Good","Strong"];[1,2,3,4].forEach(i=>{document.getElementById("ps"+i).className="h-1 flex-1 rounded-full "+(i<=s?c[s-1]:"bg-slate-200");});document.getElementById("pw-strength-label").textContent=l[s-1]||"";});
+document.getElementById("login-form").addEventListener("submit",async function(e){e.preventDefault();var em=document.getElementById("login-email").value.trim(),pw=document.getElementById("login-password").value;if(!em||!pw){showErr("login-error","Please enter your email and password.");return;}var btn=document.getElementById("login-btn");LawLibra.Loading.btn(btn,"Signing in...");var r=await LawLibra.Auth.login(em,pw);if(r.error){LawLibra.Loading.btnReset(btn);showErr("login-error",r.error);}else{LawLibra.Toast.success("Welcome back, "+r.user.name+"!");setTimeout(()=>window.location.href="dashboard.html",500);}});
+document.getElementById("register-form").addEventListener("submit",async function(e){e.preventDefault();var n=document.getElementById("reg-name").value.trim(),em=document.getElementById("reg-email").value.trim(),pw=document.getElementById("reg-password").value,role=document.getElementById("reg-role").value;if(!n||!em||!pw){showErr("register-error","All fields are required.");return;}if(pw.length<8){showErr("register-error","Password must be at least 8 characters.");return;}var btn=document.getElementById("register-btn");LawLibra.Loading.btn(btn,"Creating...");var r=await LawLibra.Auth.register(n,em,pw,role);if(r.error){LawLibra.Loading.btnReset(btn);showErr("register-error",r.error);}else{LawLibra.Toast.success("Welcome, "+r.user.name+"!");setTimeout(()=>window.location.href="dashboard.html",600);}});
+function forgotPassword(){var em=document.getElementById("login-email").value.trim();if(!em){LawLibra.Toast.warning("Enter your email address first.");return;}LawLibra.Toast.info("Password reset link sent to "+em+" (demo mode).");}
 </script>
 </body></html>

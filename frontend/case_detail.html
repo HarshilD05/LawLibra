@@ -1,394 +1,465 @@
 <!DOCTYPE html>
-
-<html class="light" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>LawLibra | Case Details - AI Chat</title>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1.0" name="viewport"/>
+<title>LawLibra - Case Details</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            "colors": {
-                    "on-surface": "#191c1e",
-                    "on-surface-variant": "#45474c",
-                    "inverse-primary": "#bbc7df",
-                    "background": "#f7f9fc",
-                    "on-secondary-fixed": "#241a00",
-                    "primary-fixed": "#d7e3fc",
-                    "inverse-surface": "#2d3133",
-                    "primary-container": "#101c2e",
-                    "primary": "#000000",
-                    "error": "#ba1a1a",
-                    "on-tertiary-fixed-variant": "#374766",
-                    "error-container": "#ffdad6",
-                    "surface": "#f7f9fc",
-                    "on-primary-fixed": "#101c2e",
-                    "on-error-container": "#93000a",
-                    "surface-variant": "#e0e3e6",
-                    "on-tertiary-container": "#7484a6",
-                    "outline": "#75777d",
-                    "secondary": "#755b00",
-                    "on-tertiary-fixed": "#081b38",
-                    "tertiary-fixed-dim": "#b6c7ec",
-                    "on-background": "#191c1e",
-                    "on-primary-fixed-variant": "#3c475b",
-                    "surface-bright": "#f7f9fc",
-                    "outline-variant": "#c5c6cd",
-                    "on-primary": "#ffffff",
-                    "primary-fixed-dim": "#bbc7df",
-                    "on-primary-container": "#79849b",
-                    "surface-dim": "#d8dadd",
-                    "surface-tint": "#535f74",
-                    "tertiary-fixed": "#d7e2ff",
-                    "on-secondary-fixed-variant": "#584400",
-                    "secondary-fixed": "#ffe08f",
-                    "on-secondary": "#ffffff",
-                    "tertiary-container": "#081b38",
-                    "surface-container-lowest": "#ffffff",
-                    "inverse-on-surface": "#eff1f4",
-                    "secondary-container": "#fed977",
-                    "surface-container-highest": "#e0e3e6",
-                    "surface-container-low": "#f2f4f7",
-                    "surface-container": "#eceef1",
-                    "secondary-fixed-dim": "#e6c364",
-                    "on-secondary-container": "#785d00",
-                    "tertiary": "#000000",
-                    "on-tertiary": "#ffffff",
-                    "on-error": "#ffffff",
-                    "surface-container-high": "#e6e8eb"
-            },
-            "borderRadius": {
-                    "DEFAULT": "0.125rem",
-                    "lg": "0.25rem",
-                    "xl": "0.5rem",
-                    "full": "0.75rem"
-            },
-            "fontFamily": {
-                    "headline": ["Manrope"],
-                    "body": ["Inter"],
-                    "label": ["Inter"]
-            }
-          },
-        },
-      }
-    </script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-surface":"#191c1e","on-surface-variant":"#45474c","background":"#f7f9fc","primary-container":"#101c2e","secondary":"#755b00","outline":"#75777d","outline-variant":"#c5c6cd","surface":"#f7f9fc","surface-container-lowest":"#ffffff","secondary-container":"#fed977","surface-container-low":"#f2f4f7","surface-container":"#eceef1","on-secondary-container":"#785d00","on-primary-container":"#79849b","error":"#ba1a1a"},fontFamily:{headline:["Manrope"],body:["Inter"]}}}}</script>
 <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f7f9fc; }
-        .font-headline { font-family: 'Manrope', sans-serif; }
-        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-        .glass-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(24px); }
-        .primary-gradient { background: linear-gradient(135deg, #101c2e 0%, #3c475b 100%); }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #e0e3e6; border-radius: 10px; }
-    </style>
-
-<style id="ll-global-fixes">
-  /* Layout: prevent horizontal scroll */
-  html, body { overflow-x: hidden; max-width: 100vw; }
-  /* Sidebar width token */
-  :root { --sidebar-w: 224px; }
-  aside { width: var(--sidebar-w) !important; }
-  /* Main content area */
-  .ll-main { margin-left: var(--sidebar-w); overflow-x: hidden; }
-  /* TopNav: must not exceed viewport */
-  header.ll-topnav { left: var(--sidebar-w) !important; right: 0 !important; width: auto !important; }
-  /* Font size reductions */
-  .font-headline.text-4xl, h2.text-4xl { font-size: 1.5rem !important; line-height: 2rem !important; }
-  .font-headline.text-3xl, h2.text-3xl { font-size: 1.25rem !important; }
-  .text-3xl.font-black { font-size: 1.6rem !important; }
-  /* Table horizontal scroll only when needed */
-  .overflow-x-auto { overflow-x: auto; max-width: 100%; }
-  /* Sidebar: narrow and clean */
-  aside nav a, aside .space-y-0\.5 a, aside button { font-size: 0.8125rem !important; }
-  /* Dropdown panels */
-  #ll-notif-panel, #ll-profile-panel { position: absolute; }
+.material-symbols-outlined{font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;}
+:root{--sidebar-w:224px;}html,body{overflow-x:hidden;}
+aside{width:var(--sidebar-w)!important;}.ll-main{margin-left:var(--sidebar-w);}
+header.ll-topnav{left:var(--sidebar-w)!important;right:0!important;width:auto!important;}
+.tab-btn.active{border-bottom-color:#755b00!important;color:#101c2e;font-weight:700;}
+.msg-ai{background:#f2f4f7;}.msg-user{background:linear-gradient(135deg,#101c2e,#3c475b);color:white;}
+.ai-typing span{display:inline-block;width:6px;height:6px;border-radius:50%;background:#75777d;animation:bounce 1.2s infinite;}
+.ai-typing span:nth-child(2){animation-delay:.2s;}.ai-typing span:nth-child(3){animation-delay:.4s;}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
 </style>
-
 </head>
-<body class="text-on-surface">
-<!-- SideNavBar -->
-<aside id="ll-sidebar" class="bg-[#0D1F3C] dark:bg-[#06101F] h-screen w-56 fixed left-0 top-0 flex flex-col py-6 px-4 z-50 shadow-2xl dark:shadow-none">
-<div class="mb-10 px-2 flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-secondary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">gavel</span>
-</div>
-<div>
-<h1 class="text-2xl font-bold tracking-tight text-white font-headline">LawLibra</h1>
-<p class="text-[10px] uppercase tracking-widest text-slate-400 font-semibold">The Sovereign Counsel</p>
-</div>
-</div>
-<nav class="flex-1 space-y-1">
-<a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">dashboard</span>
-<span class="font-label">Dashboard</span>
-</a>
-<a href="case_list.html" class="flex items-center gap-3 px-4 py-3 bg-white/10 text-white font-semibold rounded-lg scale-[0.98] transition-all duration-200">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">folder_open</span>
-<span class="font-label">Cases</span>
-</a>
-<a href="documents.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">description</span>
-<span class="font-label">Documents</span>
-</a>
-<a href="ai_assistant.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">auto_awesome</span>
-<span class="font-label">AI Chat</span>
-</a>
-<a href="calendar.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">calendar_month</span>
-<span class="font-label">Calendar</span>
-</a>
-
-</nav>
-<div class="mt-auto pt-4 border-t border-white/10 space-y-1">
-<a href="user_management.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">gavel</span>
-<span class="font-label">Admin</span>
-</a>
-<a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white hover:bg-white/5 rounded-lg transition-all duration-200">
-<span class="material-symbols-outlined" style="">settings</span>
-<span class="font-label">Settings</span>
-</a>
-</div>
-</aside>
-<!-- Main Canvas -->
-<main class="ml-[224px] min-h-screen flex flex-col">
-<!-- TopNavBar -->
-<header class="ll-topnav fixed top-0 right-0 left-56 h-16 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm dark:shadow-none transition-all duration-300 ease-in-out">
-<div class="flex items-center flex-1 max-w-xl">
-<div class="relative w-full">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-primary-container text-lg">search</span>
-<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-lg text-sm focus:ring-0 focus:bg-surface-container-lowest transition-colors" placeholder="Search case files, motions, or discovery..." type="text"/>
-</div>
-</div>
-<div class="flex items-center gap-6">
-<button class="relative text-on-surface-variant hover:bg-slate-100 p-2 rounded-lg transition-all">
-<span class="material-symbols-outlined">notifications</span>
-<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
-</button>
-<div class="flex items-center gap-3 pl-4 border-l border-outline-variant/30">
-<div class="text-right">
-<p class="text-sm font-bold text-on-surface leading-tight">Julian Thorne, Esq.</p>
-<p class="text-[10px] text-on-surface-variant font-medium">Senior Partner</p>
-</div>
-<img class="w-10 h-10 rounded-lg object-cover" data-alt="professional portrait of a senior lawyer in a dark suit with a focused and confident expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDa05Mm_5FXVaZu2F4lLkOM0uld6tFrO9mVnMlEzRxxDjbCkBpYZyiRnkzbU3qBp5qwFu4OfCa18jqrrxPtH_DAdqqi41dPQX1TPPc0i2zh6SpMMUI2GKWKMGw5DUjWTcdY0-LsnbOCyZIfbTPlrOuVyUEdc9sVA_Ywl1MXKPO4TEuIsu4teIRlAXhrHxJUiyRPoZz4KHsR01HD4ubwQYq9nETg8h-Jmvd0HIKQ7w27HbALCTGE_jp4AfVyVZ5kbOFuNjBifm4zaGrO"/>
-</div>
-</div>
+<body class="bg-background text-on-surface font-body">
+<aside id="ll-sidebar" class="bg-[#0D1F3C] h-screen fixed left-0 top-0 flex flex-col py-6 px-4 z-50 shadow-2xl"></aside>
+<header class="ll-topnav fixed top-0 right-0 h-16 z-40 bg-white/90 backdrop-blur-xl flex items-center justify-between px-8 shadow-sm">
+  <div class="flex items-center gap-4 flex-1 max-w-md"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span><input class="w-full bg-surface-container-low border-none rounded-xl pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-secondary-container transition-all" placeholder="Search..." type="text"/></div></div>
+  <div class="flex items-center gap-3">
+    <button id="dark-toggle" class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg"><span class="material-symbols-outlined">dark_mode</span></button>
+    <button class="p-2 text-slate-500 hover:bg-slate-100 rounded-lg relative"><span class="material-symbols-outlined">notifications</span></button>
+    <div class="h-8 w-px bg-outline-variant/30"></div>
+    <div id="hdr-avatar" class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-amber-400 font-bold text-sm">?</div>
+  </div>
 </header>
-<!-- Content Area -->
-<div class="mt-14 p-8 flex-1 flex flex-col gap-6">
-<!-- Breadcrumbs -->
-<nav class="flex items-center gap-2 text-xs font-semibold tracking-wider text-on-primary-container uppercase">
-<a class="hover:text-primary transition-colors" href="#">Cases</a>
-<span class="material-symbols-outlined text-sm">chevron_right</span>
-<span class="text-primary">Starlight vs. Nexus Corp.</span>
-</nav>
-<!-- Case Header -->
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-<div>
-<div class="flex items-center gap-3 mb-1">
-<h2 class="text-4xl font-extrabold font-headline tracking-tight text-on-surface">Starlight vs. Nexus Corp.</h2>
-<span class="px-3 py-1 bg-[#e6f4ea] text-[#1e7e34] text-[10px] font-bold rounded-full uppercase tracking-widest">Open</span>
-</div>
-<div class="flex flex-wrap items-center gap-x-8 gap-y-2 mt-4">
-<div class="flex flex-col">
-<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Client</span>
-<span class="text-sm font-semibold text-on-surface">Starlight Industries Ltd.</span>
-</div>
-<div class="flex flex-col">
-<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Court</span>
-<span class="text-sm font-semibold text-on-surface">Delaware Court of Chancery</span>
-</div>
-<div class="flex flex-col">
-<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Case Number</span>
-<span class="text-sm font-semibold text-on-surface">2024-CH-0892-A</span>
-</div>
-</div>
-</div>
-<div class="flex gap-3">
-<button class="flex items-center gap-2 px-5 py-2.5 border border-outline-variant/50 text-sm font-bold rounded-lg hover:bg-white transition-all">
-<span class="material-symbols-outlined text-lg">edit</span> Edit Case
-                    </button>
-<button class="primary-gradient text-white px-6 py-2.5 rounded-lg text-sm font-bold shadow-lg flex items-center gap-2">
-<span class="material-symbols-outlined text-lg">share</span> Share Brief
-                    </button>
-</div>
-</div>
-<!-- Tabs -->
-<div class="flex items-center gap-8 mt-4 border-b-0">
-<a class="pb-3 text-sm font-bold text-on-surface-variant hover:text-on-surface transition-all border-b-2 border-transparent" href="#">OVERVIEW</a>
-<a class="pb-3 text-sm font-bold text-on-surface-variant hover:text-on-surface transition-all border-b-2 border-transparent" href="#">DOCUMENTS</a>
-<a class="pb-3 text-sm font-bold text-[#0D1F3C] border-b-2 border-secondary" href="#">AI CHAT</a>
-<a class="pb-3 text-sm font-bold text-on-surface-variant hover:text-on-surface transition-all border-b-2 border-transparent" href="#">ASSIGNMENTS</a>
-</div>
-<!-- AI CHAT INTERFACE (Bento Layout) -->
-<div class="flex-1 grid grid-cols-12 gap-6 min-h-[600px]">
-<!-- Left: Chat History -->
-<div class="col-span-3 flex flex-col gap-4">
-<div class="bg-surface-container-low rounded-xl p-4 flex flex-col h-full border-0">
-<div class="flex items-center justify-between mb-4 px-2">
-<h3 class="text-[11px] font-extrabold uppercase tracking-widest text-on-surface-variant">Conversation History</h3>
-<button class="text-secondary hover:text-secondary-fixed-dim transition-colors">
-<span class="material-symbols-outlined text-lg">add_comment</span>
-</button>
-</div>
-<div class="space-y-2 overflow-y-auto pr-1">
-<button class="w-full text-left p-3 rounded-lg bg-surface-container-lowest shadow-sm group">
-<p class="text-xs font-bold text-on-surface line-clamp-1 mb-1">Contract discrepancy analysis</p>
-<p class="text-[10px] text-on-surface-variant flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">schedule</span> 14m ago
-                                </p>
-</button>
-<button class="w-full text-left p-3 rounded-lg hover:bg-surface-container-highest transition-all group">
-<p class="text-xs font-semibold text-on-surface-variant group-hover:text-on-surface line-clamp-1 mb-1">Nexus Corp ownership structure</p>
-<p class="text-[10px] text-on-tertiary-container flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">schedule</span> 2h ago
-                                </p>
-</button>
-<button class="w-full text-left p-3 rounded-lg hover:bg-surface-container-highest transition-all group">
-<p class="text-xs font-semibold text-on-surface-variant group-hover:text-on-surface line-clamp-1 mb-1">Relevant Delaware precedent</p>
-<p class="text-[10px] text-on-tertiary-container flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">schedule</span> Oct 24, 2023
-                                </p>
-</button>
-<button class="w-full text-left p-3 rounded-lg hover:bg-surface-container-highest transition-all group">
-<p class="text-xs font-semibold text-on-surface-variant group-hover:text-on-surface line-clamp-1 mb-1">Summary of Exhibit C</p>
-<p class="text-[10px] text-on-tertiary-container flex items-center gap-1">
-<span class="material-symbols-outlined text-[12px]">schedule</span> Oct 22, 2023
-                                </p>
-</button>
-</div>
-</div>
-</div>
-<!-- Right: Chat View -->
-<div class="col-span-9 flex flex-col gap-4">
-<div class="flex-1 bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden flex flex-col relative">
-<!-- Chat Header -->
-<div class="px-6 py-4 border-b border-surface-container-low flex items-center justify-between bg-surface-container-lowest/50 backdrop-blur-md sticky top-0 z-10">
-<div class="flex items-center gap-3">
-<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center">
-<span class="material-symbols-outlined text-on-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-</div>
-<div>
-<h4 class="text-sm font-bold text-on-surface">Libra AI Assistant</h4>
-<p class="text-[10px] text-[#1e7e34] font-bold flex items-center gap-1">
-<span class="w-1.5 h-1.5 rounded-full bg-[#1e7e34] animate-pulse"></span> Analyzing Case Files
-                                    </p>
-</div>
-</div>
-<div class="flex items-center gap-4">
-<span class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">32 Documents Indexed</span>
-<button class="p-2 hover:bg-surface-container-low rounded-lg transition-all">
-<span class="material-symbols-outlined text-on-surface-variant">more_vert</span>
-</button>
-</div>
-</div>
-<!-- Messages Container -->
-<div class="flex-1 overflow-y-auto p-8 space-y-10">
-<!-- AI Message -->
-<div class="flex gap-4 max-w-3xl">
-<div class="w-8 h-8 rounded-full bg-secondary-container flex-shrink-0 flex items-center justify-center">
-<span class="material-symbols-outlined text-on-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-</div>
-<div class="flex flex-col gap-3">
-<div class="bg-surface-container-low p-5 rounded-2xl rounded-tl-none">
-<p class="text-sm text-on-surface leading-relaxed">
-                                            I've analyzed the primary contract (Exhibit A) and the deposition from the CFO. There is a potential conflict in Clause 4.2 regarding the definition of "Operational Revenue." 
-                                            <br/><br/>
-                                            In Delaware, *Smith v. TechCorp* (2019) suggests that unless explicitly stated otherwise, net revenue is the default interpretation. Would you like me to draft a cross-examination outline based on this?
-                                        </p>
-</div>
-<!-- Citation Cards -->
-<div class="grid grid-cols-2 gap-3">
-<div class="p-3 rounded-lg border border-outline-variant/30 bg-surface-container-lowest flex items-start gap-3 hover:border-secondary transition-colors cursor-pointer group">
-<span class="material-symbols-outlined text-secondary text-lg">description</span>
-<div>
-<p class="text-[11px] font-bold text-on-surface mb-0.5">Exhibit A: Master Service Agreement</p>
-<p class="text-[9px] text-on-surface-variant font-medium">Page 14, Section 4.2</p>
-</div>
-</div>
-<div class="p-3 rounded-lg border border-outline-variant/30 bg-surface-container-lowest flex items-start gap-3 hover:border-secondary transition-colors cursor-pointer group">
-<span class="material-symbols-outlined text-secondary text-lg">gavel</span>
-<div>
-<p class="text-[11px] font-bold text-on-surface mb-0.5">Smith v. TechCorp (2019)</p>
-<p class="text-[9px] text-on-surface-variant font-medium">Delaware Chancery - 452 A.3d 112</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- User Message -->
-<div class="flex gap-4 justify-end">
-<div class="max-w-xl">
-<div class="primary-gradient text-white p-5 rounded-2xl rounded-tr-none shadow-lg shadow-primary-container/10">
-<p class="text-sm font-medium leading-relaxed">
-                                            Yes, please draft that. Also, check if there are any subsequent emails from the Nexus legal team that acknowledge a "gross revenue" interpretation during the discovery phase.
-                                        </p>
-</div>
-<p class="text-[10px] text-right mt-2 font-bold text-on-surface-variant/50 uppercase tracking-widest">Sent 2m ago</p>
-</div>
-<img class="w-8 h-8 rounded-full object-cover" data-alt="close up profile of professional man in lawyer attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhUzPMxlUzFnDeYCWAOipHdSQ0S2D0CIM_6M33O2JtYXvSoSm3adBTiBj1TsyOiG0bo3fgvDTh5F5yhwJrKjx-DAeOAqQckjnSLxuPJ0qF-YTJNnhVHspCxntzDy3pluPoXfu_mcPZfSLyi2R1xiOx6POU8jCKbtXJpjKvWLdzrpIeCzNZrCllH0_Ltp1JgK4_hYl7WNfsY3ODQ0LxWBhab3wqHVatEzSma2230UEUiRDdl-3yTcdoJAnj0Qebvb2jft_EJfRuXniU"/>
-</div>
-<!-- AI Message (Typing State/New Response) -->
-<div class="flex gap-4 max-w-3xl">
-<div class="w-8 h-8 rounded-full bg-secondary-container flex-shrink-0 flex items-center justify-center">
-<span class="material-symbols-outlined text-on-secondary-container text-sm" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
-</div>
-<div class="flex flex-col gap-3">
-<div class="bg-surface-container-low p-5 rounded-2xl rounded-tl-none">
-<div class="flex gap-1.5 mb-2">
-<span class="w-1.5 h-1.5 bg-on-tertiary-container/30 rounded-full animate-bounce"></span>
-<span class="w-1.5 h-1.5 bg-on-tertiary-container/30 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
-<span class="w-1.5 h-1.5 bg-on-tertiary-container/30 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
-</div>
-<p class="text-sm italic text-on-surface-variant">Searching 4,200 emails in Discovery Folder...</p>
-</div>
-</div>
-</div>
-</div>
-<!-- Input Area -->
-<div class="p-6 bg-surface-container-lowest/80 backdrop-blur-xl border-t border-surface-container-low">
-<div class="relative flex items-center gap-4">
-<button class="p-2.5 rounded-full hover:bg-surface-container-low text-on-surface-variant transition-all">
-<span class="material-symbols-outlined">attach_file</span>
-</button>
-<div class="flex-1 relative group">
-<input class="w-full pl-6 pr-12 py-4 bg-surface-container-low border-none rounded-xl text-sm focus:ring-0 focus:bg-surface-container-low transition-all" placeholder="Ask anything about the case files..." type="text"/>
-<button class="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-lg bg-secondary text-on-secondary shadow-md hover:shadow-lg transition-all flex items-center justify-center">
-<span class="material-symbols-outlined text-lg">arrow_upward</span>
-</button>
-</div>
-<button class="flex items-center gap-2 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-xl text-[11px] font-extrabold uppercase tracking-widest shadow-sm hover:shadow-md transition-all">
-<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">bolt</span> Generate Brief
-                                </button>
-</div>
-<div class="flex items-center gap-4 mt-4 px-12">
-<span class="text-[9px] font-bold text-on-surface-variant uppercase tracking-widest">Suggested:</span>
-<button class="text-[9px] font-bold bg-surface-container-high px-2.5 py-1 rounded-md text-on-surface hover:bg-surface-variant transition-colors border-none">Analyze Discovery Exhibit B</button>
-<button class="text-[9px] font-bold bg-surface-container-high px-2.5 py-1 rounded-md text-on-surface hover:bg-surface-variant transition-colors border-none">Summarize Deposition: Jane Doe</button>
-<button class="text-[9px] font-bold bg-surface-container-high px-2.5 py-1 rounded-md text-on-surface hover:bg-surface-variant transition-colors border-none">Find inconsistencies</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
+<main class="ll-main mt-16 p-6 min-h-screen bg-background">
+  <!-- Breadcrumb -->
+  <nav class="flex items-center gap-2 text-xs font-semibold text-on-primary-container mb-6">
+    <a href="case_list.html" class="hover:text-primary-container/70 transition-colors">Cases</a>
+    <span class="material-symbols-outlined text-sm">chevron_right</span>
+    <span id="bc-title" class="text-on-surface">Loading...</span>
+  </nav>
+
+  <!-- Case Header -->
+  <div id="case-header" class="mb-6">
+    <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-3 mb-3">
+          <h2 class="font-headline text-3xl font-extrabold tracking-tight text-on-surface" id="case-title">—</h2>
+          <span id="case-status-badge"></span>
+          <span id="case-priority-badge"></span>
+        </div>
+        <div class="flex flex-wrap gap-x-8 gap-y-2">
+          <div><span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter block">Client</span><span class="text-sm font-semibold" id="case-client">—</span></div>
+          <div><span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter block">Court</span><span class="text-sm font-semibold" id="case-court">—</span></div>
+          <div><span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter block">Case Number</span><span class="text-sm font-mono font-semibold" id="case-number">—</span></div>
+          <div><span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter block">Type</span><span class="text-sm font-semibold" id="case-type">—</span></div>
+          <div><span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter block">Next Hearing</span><span class="text-sm font-semibold" id="case-hearing">—</span></div>
+        </div>
+      </div>
+      <div class="flex gap-3 flex-shrink-0">
+        <button onclick="editCase()" class="flex items-center gap-2 px-4 py-2.5 border border-outline-variant/50 text-sm font-bold rounded-lg hover:bg-white transition-all"><span class="material-symbols-outlined text-lg">edit</span>Edit</button>
+        <button onclick="changeStatus()" class="flex items-center gap-2 px-4 py-2.5 border border-outline-variant/50 text-sm font-bold rounded-lg hover:bg-white transition-all"><span class="material-symbols-outlined text-lg">swap_horiz</span>Status</button>
+      </div>
+    </div>
+    <p class="mt-3 text-sm text-on-surface-variant leading-relaxed max-w-3xl" id="case-desc">—</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex items-center gap-6 border-b border-surface-container-low mb-6">
+    <button class="tab-btn active pb-3 text-sm border-b-2 border-transparent transition-all" data-tab="overview">OVERVIEW</button>
+    <button class="tab-btn pb-3 text-sm font-semibold text-on-surface-variant border-b-2 border-transparent transition-all" data-tab="documents">DOCUMENTS</button>
+    <button class="tab-btn pb-3 text-sm font-semibold text-on-surface-variant border-b-2 border-transparent transition-all" data-tab="ai">AI COUNSEL</button>
+    <button class="tab-btn pb-3 text-sm font-semibold text-on-surface-variant border-b-2 border-transparent transition-all" data-tab="team">TEAM</button>
+  </div>
+
+  <!-- Tab Panels -->
+  <div id="tab-overview">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 space-y-5">
+        <!-- Documents summary -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+          <div class="p-5 flex items-center justify-between border-b border-surface-container-low">
+            <h3 class="font-headline font-bold text-base">Documents</h3>
+            <button class="tab-btn text-xs font-bold text-secondary hover:underline" data-tab="documents">View all</button>
+          </div>
+          <div id="overview-docs" class="divide-y divide-surface-container-low"></div>
+        </div>
+        <!-- Events -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+          <div class="p-5 flex items-center justify-between border-b border-surface-container-low">
+            <h3 class="font-headline font-bold text-base">Upcoming Events</h3>
+            <a href="calendar.html" class="text-xs font-bold text-secondary hover:underline">Calendar</a>
+          </div>
+          <div id="overview-events" class="divide-y divide-surface-container-low p-3 space-y-2"></div>
+        </div>
+      </div>
+      <div class="space-y-5">
+        <!-- Case stats -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm p-5">
+          <h3 class="font-headline font-bold text-base mb-4">Case Summary</h3>
+          <div class="space-y-3" id="case-stats"></div>
+        </div>
+        <!-- AI Quick Ask -->
+        <div class="rounded-xl p-5 text-white" style="background:linear-gradient(135deg,#101c2e,#3c475b)">
+          <div class="flex items-center gap-2 mb-3"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;color:#fed977;">auto_awesome</span><span class="font-headline font-bold text-sm">Ask Libra AI</span></div>
+          <p class="text-xs text-white/70 mb-3">Get instant AI analysis of this case.</p>
+          <button class="tab-btn w-full text-center py-2 rounded-lg font-bold text-sm transition-all hover:scale-[1.02]" style="background:#fed977;color:#101c2e;" data-tab="ai">Open AI Counsel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-documents" class="hidden">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-headline font-bold text-lg">Case Documents</h3>
+      <button onclick="uploadDoc()" class="flex items-center gap-2 px-4 py-2.5 rounded-lg font-bold text-white text-sm shadow-md hover:scale-[1.02] transition-all" style="background:linear-gradient(135deg,#101c2e,#3c475b)"><span class="material-symbols-outlined text-lg">upload</span>Upload</button>
+    </div>
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+      <table class="w-full text-left">
+        <thead><tr class="bg-surface-container-low/50"><th class="px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-on-primary-container">Document</th><th class="px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-on-primary-container">Size</th><th class="px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-on-primary-container">Tags</th><th class="px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-on-primary-container">Uploaded</th><th class="px-5 py-3.5 text-xs font-bold uppercase tracking-wider text-on-primary-container text-right">Actions</th></tr></thead>
+        <tbody id="docs-tbody" class="divide-y divide-surface-container-low"></tbody>
+      </table>
+      <div id="docs-empty" class="hidden p-10 text-center"><span class="material-symbols-outlined text-4xl text-slate-300 block mb-2">description</span><p class="text-on-surface-variant text-sm">No documents yet.</p></div>
+    </div>
+  </div>
+
+  <div id="tab-ai" class="hidden">
+    <div class="flex gap-5 h-[600px]">
+      <!-- Thread list -->
+      <div class="w-56 flex-shrink-0 bg-[#0D1F3C] rounded-xl p-3 flex flex-col">
+        <button onclick="newAIThread()" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-bold text-[#101c2e] mb-3 hover:scale-[1.01] transition-all" style="background:#fed977"><span class="material-symbols-outlined text-lg">add</span>New Thread</button>
+        <div class="flex-1 overflow-y-auto space-y-1" id="ai-thread-list"></div>
+      </div>
+      <!-- Chat area -->
+      <div class="flex-1 bg-surface-container-lowest rounded-xl flex flex-col overflow-hidden">
+        <div class="px-5 py-3.5 border-b border-surface-container-low flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#101c2e,#3c475b)"><span class="material-symbols-outlined text-sm" style="color:#fed977;font-variation-settings:'FILL' 1">auto_awesome</span></div>
+          <div><p class="font-bold text-sm" id="ai-thread-name">Select a thread</p><p class="text-[10px] text-emerald-600 font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Libra AI Active</p></div>
+        </div>
+        <div class="flex-1 overflow-y-auto p-5 space-y-5" id="ai-messages"></div>
+        <div class="p-4 border-t border-surface-container-low">
+          <div class="relative bg-surface-container-low rounded-xl p-3">
+            <textarea id="ai-input" rows="2" placeholder="Ask about this case..." class="w-full bg-transparent border-none focus:ring-0 text-sm resize-none pb-8"></textarea>
+            <button onclick="sendAIMsg()" class="absolute bottom-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold text-white text-xs" style="background:linear-gradient(135deg,#101c2e,#3c475b)">Send <span class="material-symbols-outlined text-sm">send</span></button>
+          </div>
+          <div class="mt-2 flex gap-2 flex-wrap">
+            <button onclick="quickAsk('Summarize this case')" class="text-[10px] bg-surface-container border-none px-2.5 py-1 rounded-md font-bold text-on-surface hover:bg-surface-container-low transition-colors">Summarize case</button>
+            <button onclick="quickAsk('What are the key legal risks?')" class="text-[10px] bg-surface-container border-none px-2.5 py-1 rounded-md font-bold text-on-surface hover:bg-surface-container-low transition-colors">Key risks</button>
+            <button onclick="quickAsk('Draft a case strategy outline')" class="text-[10px] bg-surface-container border-none px-2.5 py-1 rounded-md font-bold text-on-surface hover:bg-surface-container-low transition-colors">Strategy outline</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-team" class="hidden">
+    <div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+      <div class="p-5 flex items-center justify-between border-b border-surface-container-low">
+        <h3 class="font-headline font-bold text-base">Assigned Counsel</h3>
+        <button onclick="assignTeam()" class="text-xs font-bold text-secondary hover:underline">Manage Team</button>
+      </div>
+      <div id="team-list" class="divide-y divide-surface-container-low"></div>
+    </div>
+  </div>
 </main>
-
-<script src="api.js"></script>
-<script>
-  // Inline auth guard — runs before nav.js to prevent login bypass
-  (function() {
-    var token = localStorage.getItem("ll_token");
-    if (!token) { window.location.replace("login_page.html"); }
-  })();
-</script>
+<script src="app.js"></script>
 <script src="nav.js"></script>
+<script>
+const params = new URLSearchParams(window.location.search);
+const caseId = params.get("id");
+let currentCase = null;
+let currentThreadId = null;
 
+function loadCase() {
+  if (!caseId) { window.location.href = "case_list.html"; return; }
+  currentCase = LawLibra.DB.cases.byId(caseId);
+  if (!currentCase) { LawLibra.Toast.error("Case not found."); window.location.href = "case_list.html"; return; }
+  
+  document.title = "LawLibra - " + currentCase.title;
+  document.getElementById("bc-title").textContent = currentCase.title;
+  document.getElementById("case-title").textContent = currentCase.title;
+  document.getElementById("case-status-badge").innerHTML = LawLibra.Utils.statusBadge(currentCase.status);
+  document.getElementById("case-client").textContent = currentCase.clientName;
+  document.getElementById("case-court").textContent = currentCase.courtName || "—";
+  document.getElementById("case-number").textContent = currentCase.caseNumber;
+  document.getElementById("case-type").textContent = currentCase.type;
+  document.getElementById("case-hearing").textContent = LawLibra.Utils.fmtDate(currentCase.nextHearing);
+  document.getElementById("case-desc").textContent = currentCase.description || "No description provided.";
+  
+  if (currentCase.priority === "HIGH") {
+    document.getElementById("case-priority-badge").innerHTML = `<span class="px-2.5 py-0.5 bg-red-100 text-red-700 border border-red-200 rounded-full text-[11px] font-bold">HIGH PRIORITY</span>`;
+  }
+
+  // Stats
+  const docs = LawLibra.DB.documents.byCaseId(caseId);
+  const events = LawLibra.DB.events.all().filter(e => e.caseId === caseId);
+  const today = new Date().toISOString().split("T")[0];
+  const upcoming = events.filter(e => e.date >= today);
+  document.getElementById("case-stats").innerHTML = [
+    { label:"Case Filed", value: LawLibra.Utils.fmtDate(currentCase.filedAt) },
+    { label:"Documents",  value: docs.length + " files" },
+    { label:"Events",     value: events.length + " total" },
+    { label:"Upcoming",   value: upcoming.length + " events" },
+    { label:"Priority",   value: currentCase.priority || "MEDIUM" },
+  ].map(s => `<div class="flex justify-between items-center py-1.5 border-b border-surface-container-low last:border-0"><span class="text-xs text-on-surface-variant">${s.label}</span><span class="text-xs font-bold text-on-surface">${s.value}</span></div>`).join("");
+
+  renderOverviewDocs();
+  renderOverviewEvents();
+  renderDocs();
+  renderTeam();
+  renderAIThreads();
+}
+
+function renderOverviewDocs() {
+  const docs = LawLibra.DB.documents.byCaseId(caseId).slice(0,4);
+  const el = document.getElementById("overview-docs");
+  if (!docs.length) { el.innerHTML = `<div class="p-5 text-sm text-on-surface-variant text-center">No documents yet.</div>`; return; }
+  el.innerHTML = docs.map(d => {
+    const icons = { pdf:"picture_as_pdf", docx:"article", xlsx:"table_chart" };
+    const colors = { pdf:"text-red-500", docx:"text-blue-500", xlsx:"text-emerald-500" };
+    return `<div class="flex items-center gap-3 px-5 py-3 hover:bg-surface-container-low transition-colors group">
+      <span class="material-symbols-outlined ${colors[d.type]||"text-slate-400"}" style="font-variation-settings:'FILL' 1">${icons[d.type]||"description"}</span>
+      <div class="flex-1 min-w-0"><p class="text-sm font-semibold truncate">${LawLibra.Utils.esc(d.name)}</p><p class="text-xs text-on-surface-variant">${LawLibra.Utils.fmtFileSize(d.size)} · ${LawLibra.Utils.fmtDate(d.uploadedAt)}</p></div>
+      <button onclick="deleteDoc('${d.id}')" class="opacity-0 group-hover:opacity-100 transition-opacity p-1 text-red-400 hover:text-red-600"><span class="material-symbols-outlined text-sm">delete</span></button>
+    </div>`;
+  }).join("");
+}
+
+function renderOverviewEvents() {
+  const today = new Date().toISOString().split("T")[0];
+  const events = LawLibra.DB.events.all().filter(e => e.caseId === caseId && e.date >= today).sort((a,b) => a.date.localeCompare(b.date)).slice(0,3);
+  const el = document.getElementById("overview-events");
+  const colors = { HEARING:"border-red-400 bg-red-50 text-red-700", MEETING:"border-blue-400 bg-blue-50 text-blue-700", REMINDER:"border-amber-400 bg-amber-50 text-amber-700" };
+  if (!events.length) { el.innerHTML = `<p class="text-xs text-on-surface-variant text-center py-3">No upcoming events.</p>`; return; }
+  el.innerHTML = events.map(ev => `<div class="p-3 rounded-lg border-l-2 ${colors[ev.type]||"border-slate-300 bg-slate-50"}"><p class="text-xs font-bold mb-0.5">${ev.date} · ${ev.time}</p><p class="text-sm font-bold">${LawLibra.Utils.esc(ev.title)}</p><p class="text-xs opacity-70">${LawLibra.Utils.esc(ev.location||"")}</p></div>`).join("");
+}
+
+function renderDocs() {
+  const docs = LawLibra.DB.documents.byCaseId(caseId);
+  const tbody = document.getElementById("docs-tbody");
+  const empty = document.getElementById("docs-empty");
+  const icons = { pdf:"picture_as_pdf", docx:"article", xlsx:"table_chart" };
+  const colors = { pdf:"text-red-500", docx:"text-blue-500", xlsx:"text-emerald-500" };
+  if (!docs.length) { tbody.innerHTML = ""; empty.classList.remove("hidden"); return; }
+  empty.classList.add("hidden");
+  tbody.innerHTML = docs.map(d => {
+    const uploader = LawLibra.DB.users.byId(d.uploadedBy);
+    return `<tr class="hover:bg-surface-container-low/30 transition-colors group">
+      <td class="px-5 py-4"><div class="flex items-center gap-3"><span class="material-symbols-outlined ${colors[d.type]||"text-slate-400"}" style="font-variation-settings:'FILL' 1">${icons[d.type]||"description"}</span><div><p class="text-sm font-semibold">${LawLibra.Utils.esc(d.name)}</p><p class="text-xs text-on-surface-variant">${uploader?LawLibra.Utils.esc(uploader.name):"Unknown"}</p></div></div></td>
+      <td class="px-5 py-4 text-sm text-on-surface-variant">${LawLibra.Utils.fmtFileSize(d.size)}</td>
+      <td class="px-5 py-4">${(d.tags||[]).map(t=>`<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-surface-container text-on-surface-variant mr-1">${t}</span>`).join("")}</td>
+      <td class="px-5 py-4 text-sm text-on-surface-variant">${LawLibra.Utils.fmtDate(d.uploadedAt)}</td>
+      <td class="px-5 py-4 text-right"><button onclick="deleteDoc('${d.id}')" class="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 text-red-400 hover:bg-red-50 rounded-lg"><span class="material-symbols-outlined text-sm">delete</span></button></td>
+    </tr>`;
+  }).join("");
+}
+
+function renderTeam() {
+  const assigned = (currentCase.assignedTo || []).map(id => LawLibra.DB.users.byId(id)).filter(Boolean);
+  document.getElementById("team-list").innerHTML = assigned.length === 0
+    ? `<div class="p-6 text-center text-on-surface-variant text-sm">No team members assigned.</div>`
+    : assigned.map(u => `<div class="flex items-center gap-4 px-5 py-4 hover:bg-surface-container-low transition-colors">
+        <div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-amber-400 font-bold text-sm flex-shrink-0">${LawLibra.Utils.initials(u.name)}</div>
+        <div class="flex-1"><p class="font-semibold text-sm">${LawLibra.Utils.esc(u.name)}</p><p class="text-xs text-on-surface-variant">${u.email}</p></div>
+        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${u.role==="ADMIN"?"bg-amber-100 text-amber-700":"bg-blue-100 text-blue-700"}">${u.role}</span>
+      </div>`).join("");
+}
+
+function renderAIThreads() {
+  const threads = LawLibra.DB.threads.byCaseId(caseId);
+  const el = document.getElementById("ai-thread-list");
+  if (!threads.length) { el.innerHTML = `<p class="text-xs text-white/30 text-center py-4">No threads yet</p>`; return; }
+  el.innerHTML = threads.map(t => `<div onclick="selectAIThread('${t.id}')" class="p-2.5 rounded-lg cursor-pointer hover:bg-white/10 transition-colors ${t.id===currentThreadId?"bg-white/15":""}"><p class="text-xs font-semibold text-white truncate">${LawLibra.Utils.esc(t.title)}</p></div>`).join("");
+}
+
+function selectAIThread(id) {
+  currentThreadId = id;
+  const t = LawLibra.DB.threads.byId(id);
+  document.getElementById("ai-thread-name").textContent = t?.title || "Consultation";
+  renderAIThreads();
+  renderAIMessages();
+}
+
+function renderAIMessages() {
+  if (!currentThreadId) return;
+  const msgs = LawLibra.DB.messages.byThread(currentThreadId);
+  const container = document.getElementById("ai-messages");
+  if (!msgs.length) { container.innerHTML = `<div class="text-center py-8 text-sm text-on-surface-variant">Start this consultation by typing a question.</div>`; return; }
+  container.innerHTML = msgs.map(m => {
+    if (m.role === "user") return `<div class="flex justify-end"><div class="msg-user p-4 rounded-2xl rounded-tr-none shadow-sm max-w-md"><p class="text-sm leading-relaxed">${LawLibra.Utils.esc(m.content)}</p></div></div>`;
+    return `<div class="flex gap-3 max-w-2xl">
+      <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-1" style="background:linear-gradient(135deg,#101c2e,#3c475b)"><span class="material-symbols-outlined text-xs" style="color:#fed977;font-variation-settings:'FILL' 1">auto_awesome</span></div>
+      <div class="msg-ai p-4 rounded-2xl rounded-tl-none flex-1"><div class="text-sm leading-relaxed text-on-surface">${m.content.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>").replace(/\n/g,"<br>")}</div></div>
+    </div>`;
+  }).join("");
+  container.scrollTop = container.scrollHeight;
+}
+
+function newAIThread() {
+  const u = LawLibra.Auth.currentUser();
+  const t = LawLibra.DB.threads.create({ title: currentCase.title + " Analysis", caseId, createdBy: u?.id });
+  currentThreadId = t.id;
+  renderAIThreads();
+  renderAIMessages();
+  document.getElementById("ai-thread-name").textContent = t.title;
+}
+
+async function sendAIMsg() {
+  if (!currentThreadId) { newAIThread(); }
+  const input = document.getElementById("ai-input");
+  const content = input.value.trim();
+  if (!content) return;
+  input.value = "";
+  const container = document.getElementById("ai-messages");
+  // Show typing
+  const typingEl = document.createElement("div");
+  typingEl.className = "flex gap-3";
+  typingEl.innerHTML = `<div class="w-7 h-7 rounded-full flex items-center justify-center" style="background:linear-gradient(135deg,#101c2e,#3c475b)"><span class="material-symbols-outlined text-xs" style="color:#fed977;font-variation-settings:'FILL' 1">auto_awesome</span></div><div class="msg-ai p-4 rounded-2xl rounded-tl-none"><div class="ai-typing flex gap-1.5"><span></span><span></span><span></span></div></div>`;
+  LawLibra.DB.messages.create({ threadId: currentThreadId, role: "user", content });
+  renderAIMessages();
+  container.appendChild(typingEl);
+  container.scrollTop = container.scrollHeight;
+  await LawLibra.AI.sendMessage(currentThreadId, content, caseId);
+  typingEl.remove();
+  renderAIMessages();
+}
+
+function quickAsk(q) {
+  if (!currentThreadId) newAIThread();
+  document.getElementById("ai-input").value = q;
+  sendAIMsg();
+}
+
+document.getElementById("ai-input")?.addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendAIMsg(); }});
+
+function uploadDoc() {
+  LawLibra.Modal.show(`
+    <div class="p-6">
+      <h3 class="font-headline font-bold text-xl text-slate-900 mb-5">Upload Document</h3>
+      <div class="space-y-4">
+        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Document Name *</label><input id="doc-name" placeholder="e.g. Exhibit_A.pdf" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container"/></div>
+        <div class="grid grid-cols-2 gap-3">
+          <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">File Type</label><select id="doc-type" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm appearance-none"><option value="pdf">PDF</option><option value="docx">DOCX</option><option value="xlsx">XLSX</option></select></div>
+          <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Size (KB)</label><input id="doc-size" type="number" value="256" min="1" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm"/></div>
+        </div>
+        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Tags (comma separated)</label><input id="doc-tags" placeholder="evidence, exhibit, brief" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container"/></div>
+      </div>
+      <div class="flex gap-3 mt-6"><button id="ll-modal-cancel" class="flex-1 py-2.5 border border-slate-200 rounded-lg text-sm font-semibold">Cancel</button><button id="ll-modal-confirm" class="flex-1 py-2.5 rounded-lg text-sm font-bold text-white" style="background:linear-gradient(135deg,#101c2e,#3c475b)">Upload</button></div>
+    </div>`, function() {
+    const name = document.getElementById("doc-name").value.trim();
+    if (!name) return;
+    const u = LawLibra.Auth.currentUser();
+    LawLibra.DB.documents.create({
+      name, caseId,
+      type: document.getElementById("doc-type").value,
+      size: parseInt(document.getElementById("doc-size").value) * 1024,
+      tags: document.getElementById("doc-tags").value.split(",").map(t=>t.trim()).filter(Boolean),
+      uploadedBy: u?.id
+    });
+    LawLibra.Toast.success("Document uploaded!");
+    LawLibra.Modal.hide();
+    renderDocs(); renderOverviewDocs();
+  });
+}
+
+function deleteDoc(id) {
+  LawLibra.Modal.confirm("Delete Document", "Remove this document? This cannot be undone.", () => {
+    LawLibra.DB.documents.delete(id);
+    LawLibra.Toast.success("Document deleted.");
+    LawLibra.Modal.hide();
+    renderDocs(); renderOverviewDocs();
+  }, "Delete", true);
+}
+
+function editCase() {
+  LawLibra.Modal.show(`
+    <div class="p-6">
+      <h3 class="font-headline font-bold text-xl text-slate-900 mb-5">Edit Case</h3>
+      <div class="space-y-4">
+        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Case Title</label><input id="edit-title" value="${LawLibra.Utils.esc(currentCase.title)}" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container"/></div>
+        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Court Name</label><input id="edit-court" value="${LawLibra.Utils.esc(currentCase.courtName||"")}" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container"/></div>
+        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Next Hearing</label><input id="edit-hearing" type="datetime-local" value="${currentCase.nextHearing?currentCase.nextHearing.slice(0,16):""}" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-secondary-container"/></div>
+        <div><label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">Description</label><textarea id="edit-desc" rows="3" class="w-full bg-slate-50 border-none rounded-lg px-4 py-3 text-sm resize-none focus:ring-2 focus:ring-secondary-container">${LawLibra.Utils.esc(currentCase.description||"")}</textarea></div>
+      </div>
+      <div class="flex gap-3 mt-6"><button id="ll-modal-cancel" class="flex-1 py-2.5 border border-slate-200 rounded-lg text-sm font-semibold">Cancel</button><button id="ll-modal-confirm" class="flex-1 py-2.5 rounded-lg text-sm font-bold text-white" style="background:linear-gradient(135deg,#101c2e,#3c475b)">Save Changes</button></div>
+    </div>`, function() {
+    LawLibra.DB.cases.update(caseId, {
+      title:       document.getElementById("edit-title").value.trim(),
+      courtName:   document.getElementById("edit-court").value.trim(),
+      nextHearing: document.getElementById("edit-hearing").value ? new Date(document.getElementById("edit-hearing").value).toISOString() : null,
+      description: document.getElementById("edit-desc").value.trim(),
+    });
+    LawLibra.Toast.success("Case updated!");
+    LawLibra.Modal.hide();
+    currentCase = LawLibra.DB.cases.byId(caseId);
+    loadCase();
+  });
+}
+
+function changeStatus() {
+  const statuses = ["OPEN","CLOSED","ARCHIVED","PENDING"].filter(s => s !== currentCase.status);
+  LawLibra.Modal.show(`
+    <div class="p-6">
+      <h3 class="font-headline font-bold text-lg text-slate-900 mb-4">Change Case Status</h3>
+      <p class="text-sm text-slate-600 mb-4">Current status: <strong>${currentCase.status}</strong></p>
+      <div class="space-y-2">
+        ${statuses.map(s => `<button onclick="setStatus('${s}')" class="w-full py-3 rounded-lg border border-slate-200 text-sm font-bold hover:bg-slate-50 transition-colors text-left px-4">${s}</button>`).join("")}
+      </div>
+      <button id="ll-modal-cancel" class="w-full mt-3 py-2.5 border border-slate-200 rounded-lg text-sm font-semibold">Cancel</button>
+    </div>`);
+}
+
+function setStatus(status) {
+  LawLibra.DB.cases.update(caseId, { status });
+  LawLibra.Toast.success(`Case status set to ${status}`);
+  LawLibra.Modal.hide();
+  currentCase = LawLibra.DB.cases.byId(caseId);
+  loadCase();
+}
+
+function assignTeam() {
+  const allUsers = LawLibra.DB.users.all().filter(u => u.active !== false);
+  const assigned = currentCase.assignedTo || [];
+  LawLibra.Modal.show(`
+    <div class="p-6">
+      <h3 class="font-headline font-bold text-lg text-slate-900 mb-4">Manage Team</h3>
+      <div class="space-y-2 max-h-64 overflow-y-auto">
+        ${allUsers.map(u => `<label class="flex items-center gap-3 p-3 rounded-lg hover:bg-slate-50 cursor-pointer"><input type="checkbox" value="${u.id}" ${assigned.includes(u.id)?"checked":""} class="team-check rounded"/><div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-amber-400 font-bold text-xs flex-shrink-0">${LawLibra.Utils.initials(u.name)}</div><div><p class="text-sm font-semibold">${LawLibra.Utils.esc(u.name)}</p><p class="text-xs text-slate-500">${u.role}</p></div></label>`).join("")}
+      </div>
+      <div class="flex gap-3 mt-5"><button id="ll-modal-cancel" class="flex-1 py-2.5 border border-slate-200 rounded-lg text-sm font-semibold">Cancel</button><button id="ll-modal-confirm" class="flex-1 py-2.5 rounded-lg text-sm font-bold text-white" style="background:linear-gradient(135deg,#101c2e,#3c475b)">Save</button></div>
+    </div>`, function() {
+    const checked = [...document.querySelectorAll(".team-check:checked")].map(cb => cb.value);
+    LawLibra.DB.cases.update(caseId, { assignedTo: checked });
+    LawLibra.Toast.success("Team updated!");
+    LawLibra.Modal.hide();
+    currentCase = LawLibra.DB.cases.byId(caseId);
+    renderTeam();
+  });
+}
+
+// Tab switching
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", function() {
+    const tab = this.dataset.tab;
+    if (!tab) return;
+    document.querySelectorAll(".tab-btn").forEach(b => { b.classList.remove("active"); b.classList.add("text-on-surface-variant"); });
+    document.querySelectorAll("[id^='tab-']").forEach(p => p.classList.add("hidden"));
+    this.classList.add("active");
+    document.getElementById("tab-"+tab)?.classList.remove("hidden");
+    if (tab === "ai" && !currentThreadId) {
+      const threads = LawLibra.DB.threads.byCaseId(caseId);
+      if (threads.length > 0) selectAIThread(threads[0].id);
+    }
+  });
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const u = LawLibra.Auth.currentUser();
+  if (u) document.getElementById("hdr-avatar").textContent = LawLibra.Utils.initials(u.name);
+  document.getElementById("dark-toggle")?.addEventListener("click", () => LawLibra.DarkMode.toggle());
+  loadCase();
+  // Auto-select first AI thread
+  const threads = LawLibra.DB.threads.byCaseId(caseId);
+  if (threads.length) { currentThreadId = threads[0].id; document.getElementById("ai-thread-name").textContent = threads[0].title; }
+});
+</script>
 </body></html>
