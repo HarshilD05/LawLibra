@@ -7,8 +7,6 @@
   const NAV = [
     { key:"dashboard",     label:"Dashboard",     icon:"dashboard",      href:"dashboard.html" },
     { key:"cases",         label:"Cases",          icon:"folder_open",    href:"case_list.html" },
-    { key:"documents",     label:"Documents",      icon:"description",    href:"documents.html" },
-    { key:"ai",            label:"AI Counsel",     icon:"auto_awesome",   href:"ai_assistant.html" },
     { key:"calendar",      label:"Calendar",       icon:"calendar_month", href:"calendar.html" },
     { key:"notifications", label:"Notifications",  icon:"notifications",  href:"notification.html" },
   ];
@@ -19,7 +17,7 @@
 
   const PAGE_MAP = {
     "dashboard.html":"dashboard","case_list.html":"cases","case_detail.html":"cases",
-    "documents.html":"documents","ai_assistant.html":"ai","calendar.html":"calendar",
+    "calendar.html":"calendar",
     "notification.html":"notifications","user_management.html":"admin","settings.html":"profile",
   };
 

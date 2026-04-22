@@ -15,7 +15,8 @@ aside{width:var(--sidebar-w)!important;}
 .ll-main{margin-left:var(--sidebar-w);}
 header.ll-topnav{left:var(--sidebar-w)!important;right:0!important;width:auto!important;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);}
-.day-cell{min-height:110px;}
+.day-cell{min-height:110px;box-sizing:border-box;}
+#cal-grid{min-height:440px;}
 </style>
 </head>
 <body class="bg-background text-on-surface font-body">
@@ -162,11 +163,11 @@ function renderMainCal(year, month) {
     html += `<div class="day-cell ${isLastCol?"":"border-r"} border-b border-surface-container-low p-2 hover:bg-surface-container-low/30 transition-colors cursor-pointer ${isSelected?"ring-2 ring-inset ring-primary-container":""}" onclick="selectDay('${dateStr}')">
       <span class="text-xs font-bold ${isToday?"inline-flex w-6 h-6 rounded-full bg-primary-container text-white items-center justify-center":"text-on-primary-container/60"}">${d}</span>
       <div class="mt-1 space-y-0.5">
-        ${dayEvents.slice(0,3).map(ev => {
+        ${dayEvents.slice(0,2).map(ev => {
           const c = getColor(ev.type);
-          return `<div class="${c.bg} ${c.text} text-[10px] font-bold px-1.5 py-0.5 rounded border-l-2 ${c.border} truncate" title="${LawLibra.Utils.esc(ev.title)}">${LawLibra.Utils.esc(ev.title)}</div>`;
+          return `<div class="${c.bg} ${c.text} text-[10px] font-semibold px-1.5 py-0.5 rounded border-l-2 ${c.border} truncate leading-tight" title="${LawLibra.Utils.esc(ev.title)}">${LawLibra.Utils.esc(ev.title)}</div>`;
         }).join("")}
-        ${dayEvents.length > 3 ? `<div class="text-[10px] text-on-surface-variant font-semibold pl-1">+${dayEvents.length-3} more</div>` : ""}
+        ${dayEvents.length > 2 ? `<div class="text-[10px] text-on-surface-variant font-semibold pl-1">+${dayEvents.length-2} more</div>` : ""}
       </div>
     </div>`;
   }
@@ -203,6 +204,31 @@ function renderDayEvents(dateStr) {
   }).join("");
 }
 
+function updateAIInsight() {
+  const today    = new Date().toISOString().split("T")[0];
+  const allEvents = LawLibra.DB.events.all();
+  const upcoming  = allEvents.filter(e => e.date >= today);
+  const hearings  = upcoming.filter(e => e.type === "HEARING");
+  const thisMonth = LawLibra.DB.events.forMonth(viewYear, viewMonth);
+  const thisMonthHearings = thisMonth.filter(e => e.type === "HEARING");
+
+  let insight = "";
+  if (!upcoming.length) {
+    insight = "Your calendar is clear — no upcoming events scheduled. A quiet period is a good time to prepare briefs and review pending documents.";
+  } else if (hearings.length >= 4) {
+    insight = `You have ${hearings.length} upcoming hearings — a heavy court schedule. Prioritize preparation for the soonest hearing and consider delegating document review.`;
+  } else if (hearings.length >= 2) {
+    insight = `${hearings.length} hearings coming up alongside ${upcoming.length - hearings.length} other event(s). Ensure all briefs are filed at least 7 days before each hearing date.`;
+  } else if (upcoming.length >= 5) {
+    insight = `${upcoming.length} upcoming events across ${[...new Set(upcoming.map(e=>e.caseId))].length} case(s). Your schedule is active — review conflicts between dates.`;
+  } else if (thisMonthHearings.length > 0) {
+    const next = thisMonthHearings.sort((a,b)=>a.date.localeCompare(b.date))[0];
+    insight = `Next hearing: <strong>${next.title}</strong> on ${next.date}. Prepare your arguments and evidence at least one week in advance.`;
+  } else {
+    insight = `${upcoming.length} upcoming event${upcoming.length!==1?"s":""} on your calendar. Schedule looks manageable — use this time to advance your cases strategically.`;
+  }
+  document.getElementById("ai-insight").innerHTML = insight;
+}
 function selectDay(dateStr) {
   selectedDate = dateStr;
   renderMiniCal(viewYear, viewMonth);
@@ -216,7 +242,9 @@ function deleteEvent(id) {
     LawLibra.Modal.hide();
     LawLibra.Toast.success("Event deleted.");
     renderMainCal(viewYear, viewMonth);
+    renderMiniCal(viewYear, viewMonth);
     renderDayEvents(selectedDate);
+    updateAIInsight();
   }, "Delete", true);
 }
 
@@ -262,6 +290,7 @@ function openEventModal(preDate) {
     renderMainCal(viewYear, viewMonth);
     renderMiniCal(viewYear, viewMonth);
     if (date === selectedDate) renderDayEvents(selectedDate);
+    updateAIInsight();
   });
 }
 
@@ -277,19 +306,17 @@ document.addEventListener("DOMContentLoaded", () => {
   renderMiniCal(viewYear, viewMonth);
   renderMainCal(viewYear, viewMonth);
   renderDayEvents(selectedDate);
-
-  // AI insight
-  const events = LawLibra.DB.events.all();
-  const upcoming = events.filter(e => e.date >= today.toISOString().split("T")[0]).length;
-  document.getElementById("ai-insight").textContent = `You have ${upcoming} upcoming events. ${upcoming > 3 ? "Your schedule is busy — consider delegating routine hearings." : "Your schedule looks manageable this month."}`;
+  updateAIInsight();
 
   document.getElementById("prev-month").addEventListener("click", () => {
     viewMonth--; if (viewMonth < 0) { viewMonth = 11; viewYear--; }
     renderMiniCal(viewYear, viewMonth); renderMainCal(viewYear, viewMonth);
+    updateAIInsight();
   });
   document.getElementById("next-month").addEventListener("click", () => {
     viewMonth++; if (viewMonth > 11) { viewMonth = 0; viewYear++; }
     renderMiniCal(viewYear, viewMonth); renderMainCal(viewYear, viewMonth);
+    updateAIInsight();
   });
   document.querySelectorAll(".type-filter").forEach(cb => cb.addEventListener("change", () => renderMainCal(viewYear, viewMonth)));
   document.getElementById("dark-toggle")?.addEventListener("click", () => LawLibra.DarkMode.toggle());

@@ -226,6 +226,34 @@
         return docs;
       }
     },
+    folders: {
+      all: ()              => Store.get("folders") || [],
+      byId: (id)           => DB.folders.all().find(f => f.id === id),
+      byCaseId: (caseId)   => DB.folders.all().filter(f => f.caseId === caseId && !f.parentId),
+      byParent: (parentId) => DB.folders.all().filter(f => f.parentId === parentId),
+      save: (folders)      => Store.set("folders", folders),
+      create: (data)       => {
+        const folders = DB.folders.all();
+        const folder = { id: Utils.uid(), ...data, createdAt: new Date().toISOString() };
+        folders.push(folder);
+        DB.folders.save(folders);
+        return folder;
+      },
+      rename: (id, name)   => {
+        const folders = DB.folders.all().map(f => f.id === id ? { ...f, name } : f);
+        DB.folders.save(folders);
+      },
+      delete: (id)         => {
+        // Recursively collect folder ids
+        const collectIds = (fid) => {
+          const children = DB.folders.all().filter(f => f.parentId === fid).map(f => f.id);
+          return [fid, ...children.flatMap(collectIds)];
+        };
+        const ids = collectIds(id);
+        DB.folders.save(DB.folders.all().filter(f => !ids.includes(f.id)));
+        DB.documents.save(DB.documents.all().filter(d => !ids.includes(d.folderId)));
+      }
+    },
     events: {
       all: ()           => Store.get("events") || [],
       byId: (id)        => DB.events.all().find(e => e.id === id),
@@ -273,7 +301,7 @@
     threads: {
       all: ()              => Store.get("chatThreads") || [],
       byId: (id)           => DB.threads.all().find(t => t.id === id),
-      byCaseId: (caseId)   => DB.threads.all().filter(t => !caseId || t.caseId === caseId),
+      byCaseId: (caseId)   => DB.threads.all().filter(t => t.caseId === caseId),
       save: (threads)      => Store.set("chatThreads", threads),
       create: (data)       => {
         const threads = DB.threads.all();
@@ -512,19 +540,51 @@
   ═══════════════════════════════════════════════════════════ */
 
   const AI = {
+    // Keyword/template-based mock responses for offline use
+    _mockResponse: (content, caseData, docs) => {
+      const q = content.toLowerCase();
+      const caseName = caseData ? caseData.title : "this case";
+      const caseType = caseData ? caseData.type : "Legal";
+      const client   = caseData ? caseData.clientName : "the client";
+      const docList  = docs.length ? docs.map(d => `• ${d.name}`).join("\n") : "No documents uploaded yet.";
+
+      if (/summarize|summary|overview|brief me|tell me about/.test(q)) {
+        return `**Case Summary — ${caseName}**\n\n**Client:** ${client}\n**Type:** ${caseType}\n**Status:** ${caseData?.status || "Active"}\n\n${caseData?.description || "No description provided."}\n\n**Available Evidence:**\n${docList}\n\n**Key Observations:**\n- Case appears to be in ${caseData?.status === "OPEN" ? "active litigation" : "resolution phase"}\n- ${docs.length} document(s) on file requiring review\n- Next hearing: ${caseData?.nextHearing ? new Date(caseData.nextHearing).toLocaleDateString() : "Not scheduled"}\n\nRecommend a comprehensive document review prior to next court date.`;
+      }
+      if (/risk|exposure|weakness|vulnerab/.test(q)) {
+        return `**Legal Risk Assessment — ${caseName}**\n\n**Identified Risk Factors:**\n\n1. **Evidentiary Gaps** — ${docs.length === 0 ? "No documents have been uploaded. This is a critical gap." : `${docs.length} document(s) on file — ensure chain of custody is documented.`}\n\n2. **Procedural Risks** — Missing filing deadlines or improper service can result in dismissal or default judgment.\n\n3. **Opposing Counsel Strategy** — Anticipate discovery requests targeting ${caseType.toLowerCase()} communications and internal records.\n\n4. **Witness Credibility** — Prepare witnesses with mock cross-examination sessions at least 2 weeks before trial.\n\n**Mitigation Recommendations:**\n- File all protective orders promptly\n- Establish a privilege log for attorney-client communications\n- Engage expert witnesses for technical ${caseType.toLowerCase()} testimony\n- Document all client communications in writing`;
+      }
+      if (/strategy|outline|plan|approach|recommend/.test(q)) {
+        return `**Strategic Litigation Plan — ${caseName}**\n\n**Phase 1: Pre-Trial Preparation**\n- Complete document review and privilege log\n- Serve initial disclosures within statutory deadlines\n- File any necessary motions in limine\n- Conduct depositions of key witnesses\n\n**Phase 2: Discovery Management**\n- Issue targeted interrogatories focusing on core disputed facts\n- Request production of all ${caseType.toLowerCase()}-related communications\n- Retain subject matter expert for technical opinions\n\n**Phase 3: Motion Practice**\n- Evaluate viability of summary judgment motion\n- Prepare opposition to anticipated opposing motions\n- File Daubert challenges if expert testimony is vulnerable\n\n**Phase 4: Trial Readiness**\n- Prepare trial exhibits and demonstratives\n- Conduct jury consultant review (if applicable)\n- Draft opening statement and closing argument outlines\n\n**Recommended Timeline:** Begin Phase 1 immediately given current case posture.`;
+      }
+      if (/document|evidence|exhibit|file|pdf/.test(q)) {
+        return `**Document Analysis — ${caseName}**\n\n**Current Document Inventory:**\n${docList}\n\n**Review Priorities:**\n1. Authenticate all exhibits — confirm date, author, and chain of custody\n2. Flag any documents containing **admissions** or **contradictions**\n3. Organize by chronology for timeline construction\n4. Identify privileged materials for redaction before production\n\n**Discovery Considerations:**\n- Ensure all responsive documents are produced to avoid spoliation claims\n- Metadata should be preserved in original native format\n- Consider requesting in camera review for disputed privilege claims\n\n_Tip: Upload additional documents to this case for deeper analysis._`;
+      }
+      if (/deadline|date|hearing|schedule|calendar/.test(q)) {
+        return `**Deadline & Schedule Review — ${caseName}**\n\n**Upcoming Key Dates:**\n- Next Hearing: ${caseData?.nextHearing ? new Date(caseData.nextHearing).toLocaleDateString("en-US", { weekday:"long", year:"numeric", month:"long", day:"numeric" }) : "Not yet scheduled"}\n\n**Recommended Preparatory Timeline:**\n- **T-30 days:** Complete all discovery responses\n- **T-21 days:** File all pre-trial motions\n- **T-14 days:** Exchange exhibit lists with opposing counsel\n- **T-7 days:** Conduct full trial rehearsal with client\n- **T-2 days:** Confirm witness availability and court logistics\n\n**Critical Reminders:**\n- Statute of limitations must be monitored for any counterclaims\n- Court-ordered deadlines are non-negotiable — request extensions proactively\n- Ensure client is available for all scheduled appearances`;
+      }
+      if (/settlement|negotiate|offer|resolve|mediat/.test(q)) {
+        return `**Settlement Analysis — ${caseName}**\n\n**Settlement Viability Assessment:**\nBased on the current case posture (${caseData?.status || "Active"}), settlement exploration is **advisable** at this stage.\n\n**Factors Favoring Settlement:**\n- Reduced litigation costs and time\n- Certainty of outcome vs. trial risk\n- Preservation of business relationships (if applicable)\n- Avoidance of adverse public record\n\n**Factors Against Early Settlement:**\n- Insufficient discovery may undervalue the claim\n- Opposing party may interpret early settlement interest as weakness\n- Full damages not yet quantified\n\n**Recommended Approach:**\n1. Establish internal settlement authority range with client\n2. Propose mediation through a neutral third party\n3. Prepare comprehensive damages analysis before any demand\n4. Set clear walk-away thresholds in writing before negotiations begin\n\n_Note: All settlement communications should be marked "Confidential — For Settlement Purposes Only" per FRE 408._`;
+      }
+      // Default response
+      return `**Libra AI — Legal Analysis**\n\nRegarding your query about **${caseName}**:\n\nI've reviewed the case context and available materials. Here are my observations:\n\n**Case Context:**\n- Type: ${caseType}\n- Client: ${client}\n- Current Status: ${caseData?.status || "Active"}\n- Documents on File: ${docs.length}\n\n**General Guidance:**\nFor this type of ${caseType.toLowerCase()} matter, I recommend focusing on three key areas: (1) thorough documentary evidence organization, (2) clear legal theory development, and (3) proactive communication with the client regarding expectations and timeline.\n\nFor more specific analysis, try asking me to:\n- _Summarize this case_\n- _Identify key legal risks_\n- _Draft a strategy outline_\n- _Analyze documents_\n- _Review upcoming deadlines_\n- _Assess settlement options_`;
+    },
+
     sendMessage: async (threadId, content, caseId) => {
-      DB.messages.create({ threadId, role: "user", content });
-      const history = DB.messages.byThread(threadId);
       const caseData = caseId ? DB.cases.byId(caseId) : null;
       const docs = caseId ? DB.documents.byCaseId(caseId) : [];
-      const systemPrompt = `You are Libra AI, a highly intelligent legal assistant for LawLibra — The Sovereign Counsel.${caseData ? `\n\nYou are assisting with case: "${caseData.title}" (${caseData.caseNumber}). Client: ${caseData.clientName}. Type: ${caseData.type}. Status: ${caseData.status}.\nCase description: ${caseData.description}\nAvailable documents: ${docs.map(d => d.name).join(", ") || "None"}` : ""}\nYou provide expert legal analysis, strategy recommendations, and research synthesis. Be precise, professional, and structured. Use bold for key terms. Provide actionable insights. Keep responses concise but thorough.`;
 
       // Retrieve the user-configured Anthropic API key
       const apiKey = Store.get("anthropicApiKey");
       if (!apiKey) {
-        const reply = "⚠️ **No API key configured.** To enable Libra AI responses, go to **Settings → AI Configuration** and enter your Anthropic API key. You can obtain one at [console.anthropic.com](https://console.anthropic.com).";
+        // Use mock keyword-based response with a realistic delay
+        await Utils.delay(900);
+        const reply = AI._mockResponse(content, caseData, docs);
         return DB.messages.create({ threadId, role: "assistant", content: reply });
       }
+
+      const history = DB.messages.byThread(threadId);
+      const systemPrompt = `You are Libra AI, a highly intelligent legal assistant for LawLibra — The Sovereign Counsel.${caseData ? `\n\nYou are assisting with case: "${caseData.title}" (${caseData.caseNumber}). Client: ${caseData.clientName}. Type: ${caseData.type}. Status: ${caseData.status}.\nCase description: ${caseData.description}\nAvailable documents: ${docs.map(d => d.name).join(", ") || "None"}` : ""}\nYou provide expert legal analysis, strategy recommendations, and research synthesis. Be precise, professional, and structured. Use bold for key terms. Provide actionable insights. Keep responses concise but thorough.`;
 
       try {
         const response = await fetch("https://api.anthropic.com/v1/messages", {
@@ -545,13 +605,14 @@
         const data = await response.json();
         if (data.error) {
           const errMsg = data.error.message || "Unknown API error.";
-          const reply = `⚠️ **API Error:** ${errMsg}\n\nPlease verify your API key in **Settings → AI Configuration**.`;
+          const reply = `⚠️ **API Error:** ${errMsg}\n\nFalling back to offline analysis...\n\n` + AI._mockResponse(content, caseData, docs);
           return DB.messages.create({ threadId, role: "assistant", content: reply });
         }
         const reply = data.content?.map(b => b.text || "").join("") || "I apologize, I was unable to process your request at this time.";
         return DB.messages.create({ threadId, role: "assistant", content: reply });
       } catch (err) {
-        const reply = "⚠️ **Connection error.** Please check your internet connection and ensure your API key in **Settings → AI Configuration** is correct.";
+        await Utils.delay(700);
+        const reply = AI._mockResponse(content, caseData, docs);
         return DB.messages.create({ threadId, role: "assistant", content: reply });
       }
     },
@@ -597,11 +658,12 @@
 
   window.LawLibra = {
     Auth, DB, Utils, Toast, Modal, Loading, Search, DarkMode, AI, Dashboard, Store,
-    Cases:  DB.cases,
-    Docs:   DB.documents,
-    Events: DB.events,
-    Users:  DB.users,
-    Notifs: DB.notifications,
+    Cases:   DB.cases,
+    Docs:    DB.documents,
+    Folders: DB.folders,
+    Events:  DB.events,
+    Users:   DB.users,
+    Notifs:  DB.notifications,
   };
 
   document.addEventListener("DOMContentLoaded", () => {
