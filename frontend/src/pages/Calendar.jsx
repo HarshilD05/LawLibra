@@ -1,0 +1,293 @@
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { DB, Auth, fmtDate } from '../store/db.js'
+import { Modal, Field, Input, Select, Btn, ConfirmModal, toast } from '../components/UI.jsx'
+
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December']
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+const TYPE_COLORS = {
+  HEARING: { pill:'bg-red-100 text-red-700 border border-red-200', dot:'bg-red-500', icon:'gavel' },
+  MEETING: { pill:'bg-blue-100 text-blue-700 border border-blue-200', dot:'bg-blue-500', icon:'groups' },
+  REMINDER:{ pill:'bg-amber-100 text-amber-700 border border-amber-200', dot:'bg-amber-500', icon:'notifications_active' },
+  DEADLINE:{ pill:'bg-purple-100 text-purple-700 border border-purple-200', dot:'bg-purple-500', icon:'schedule' },
+}
+
+export default function Calendar() {
+  const navigate = useNavigate()
+  const user = Auth.currentUser() || {}
+  const now = new Date()
+  const [year, setYear]   = useState(now.getFullYear())
+  const [month, setMonth] = useState(now.getMonth())
+  const [showNew, setShowNew]   = useState(false)
+  const [showDetail, setShowDetail] = useState(null)
+  const [confirm, setConfirm]   = useState(null)
+  const [, forceUpdate] = useState(0)
+  const refresh = () => forceUpdate(n => n+1)
+
+  const [form, setForm] = useState({ title:'', date:'', time:'09:00', type:'HEARING', caseId:'', location:'', duration:60, notes:'' })
+
+  const cases = DB.cases.all()
+  const allEvents = DB.events.all()
+
+  /* ── Calendar grid helpers ── */
+  const firstDay = new Date(year, month, 1).getDay()
+  const daysInMonth = new Date(year, month+1, 0).getDate()
+  const todayStr = now.toISOString().split('T')[0]
+
+  const prevMonth = () => { if (month === 0) { setMonth(11); setYear(y=>y-1) } else setMonth(m=>m-1) }
+  const nextMonth = () => { if (month === 11) { setMonth(0); setYear(y=>y+1) } else setMonth(m=>m+1) }
+
+  const eventsOnDay = (d) => {
+    const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`
+    return allEvents.filter(e => e.date === ds)
+  }
+
+  const createEvent = () => {
+    if (!form.title || !form.date) { toast.warning('Title and date are required.'); return }
+    if (form.date < todayStr) { toast.warning('Cannot schedule events in the past. Please select today or a future date.'); return }
+    DB.events.create({ ...form, createdBy: user.id, duration: Number(form.duration) })
+    DB.notifications.create({ userId: '*', title: 'Event Scheduled', message: `"${form.title}" on ${form.date}`, type: 'hearing' })
+    toast.success('Event scheduled!')
+    setShowNew(false)
+    setForm({ title:'', date:'', time:'09:00', type:'HEARING', caseId:'', location:'', duration:60, notes:'' })
+    refresh()
+  }
+
+  const deleteEvent = (ev) => {
+    setShowDetail(null)
+    setConfirm(ev)
+  }
+
+  // Upcoming events (next 30 days) for sidebar
+  const in30 = new Date(now.getTime() + 30*86400000).toISOString().split('T')[0]
+  const upcoming = allEvents.filter(e => e.date >= todayStr && e.date <= in30).sort((a,b)=>a.date.localeCompare(b.date))
+
+  return (
+    <div className="p-6 min-h-screen bg-background">
+
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 className="font-headline font-extrabold tracking-tight text-on-surface mb-1" style={{fontSize:'1.5rem'}}>Calendar</h2>
+          <p className="text-on-surface-variant text-sm font-medium">Manage hearings, meetings &amp; deadlines</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {/* Legend inline in header */}
+          <div className="hidden md:flex items-center gap-3 mr-2">
+            {Object.entries(TYPE_COLORS).map(([type, tc]) => (
+              <div key={type} className="flex items-center gap-1.5">
+                <span className={`w-2 h-2 rounded-full ${tc.dot}`} />
+                <span className="text-[11px] font-semibold text-on-surface-variant capitalize">{type.charAt(0)+type.slice(1).toLowerCase()}</span>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => setShowNew(true)}
+            className="ai-gradient text-white flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold shadow-lg hover:opacity-90 transition-all">
+            <span className="material-symbols-outlined text-lg">add</span>New Event
+          </button>
+        </div>
+      </div>
+
+      {/* Full-width calendar card */}
+      <div className="bg-white rounded-2xl shadow-sm border border-surface-container-low overflow-hidden">
+
+        {/* Month navigation */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-container-low bg-surface-container-lowest/60">
+          <button onClick={prevMonth} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors">
+            <span className="material-symbols-outlined text-on-surface-variant">chevron_left</span>
+          </button>
+          <div className="flex items-center gap-4">
+            <h3 className="font-headline font-extrabold text-xl text-on-surface">{MONTHS[month]} {year}</h3>
+            <button onClick={() => { setYear(now.getFullYear()); setMonth(now.getMonth()) }}
+              className="text-xs px-3 py-1 rounded-full border border-outline-variant/50 font-bold text-secondary hover:bg-surface-container-low transition-colors">
+              Today
+            </button>
+          </div>
+          <button onClick={nextMonth} className="w-9 h-9 flex items-center justify-center rounded-full hover:bg-surface-container-low transition-colors">
+            <span className="material-symbols-outlined text-on-surface-variant">chevron_right</span>
+          </button>
+        </div>
+
+        {/* Day-of-week headers */}
+        <div className="grid grid-cols-7 border-b border-surface-container-low">
+          {DAYS.map(d => (
+            <div key={d} className="py-3 text-center text-[11px] font-black uppercase tracking-widest text-on-surface-variant border-r border-surface-container-low/60 last:border-r-0">{d}</div>
+          ))}
+        </div>
+
+        {/* Day cells */}
+        <div className="grid grid-cols-7">
+          {Array.from({ length: firstDay }).map((_, i) => (
+            <div key={`empty-${i}`} className="h-[130px] border-r border-b border-surface-container-low/60 last:border-r-0 bg-slate-50/40" />
+          ))}
+          {Array.from({ length: daysInMonth }).map((_, i) => {
+            const d = i + 1
+            const ds = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`
+            const isToday = ds === todayStr
+            const isPast = ds < todayStr
+            const evs = eventsOnDay(d)
+            const colPos = (firstDay + i) % 7
+            return (
+              <div key={d}
+                className={`h-[130px] border-r border-b border-surface-container-low/60 p-1.5 transition-colors cursor-pointer group ${colPos === 6 ? 'border-r-0' : ''} ${isToday ? 'bg-blue-50/60' : ''} ${isPast ? 'bg-slate-50/80 opacity-60' : 'hover:bg-blue-50/40'}`}
+                onClick={() => {
+                  if (isPast) { toast.warning('This date has already passed. You can only schedule events for today or future dates.'); return }
+                  setForm(f=>({...f,date:ds})); setShowNew(true)
+                }}>
+                {/* Date number */}
+                <div className="flex items-center justify-between mb-1">
+                  <div className={`w-7 h-7 flex items-center justify-center rounded-full text-sm font-bold transition-colors ${isToday ? 'ai-gradient text-white' : isPast ? 'text-slate-400' : 'text-on-surface group-hover:bg-blue-100'}`}>{d}</div>
+                  {evs.length > 0 && <span className="text-[9px] font-bold text-on-surface-variant opacity-0 group-hover:opacity-100">{evs.length}</span>}
+                </div>
+                {/* Events */}
+                <div className="space-y-0.5 overflow-hidden" style={{maxHeight:'82px'}}>
+                  {evs.slice(0,3).map(ev => {
+                    const tc = TYPE_COLORS[ev.type] || TYPE_COLORS.MEETING
+                    return (
+                      <div key={ev.id}
+                        className={`flex items-center gap-1 rounded-md px-1.5 py-[3px] text-[10px] font-semibold cursor-pointer hover:opacity-80 truncate ${tc.pill}`}
+                        onClick={e => { e.stopPropagation(); setShowDetail(ev) }}>
+                        <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${tc.dot}`} />
+                        <span className="truncate">{ev.time} {ev.title}</span>
+                      </div>
+                    )
+                  })}
+                  {evs.length > 3 && (
+                    <div className="text-[9px] font-bold text-secondary pl-1">+{evs.length-3} more</div>
+                  )}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Upcoming events strip */}
+      {upcoming.length > 0 && (
+        <div className="mt-5 bg-white rounded-2xl shadow-sm border border-surface-container-low overflow-hidden">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-surface-container-low">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-secondary text-lg" style={{fontVariationSettings:"'FILL' 1"}}>event_upcoming</span>
+              <h3 className="font-headline font-bold text-sm text-on-surface">Upcoming — Next 30 Days</h3>
+            </div>
+            <span className="text-xs bg-secondary-container text-on-secondary-container px-2.5 py-0.5 rounded-full font-bold">{upcoming.length}</span>
+          </div>
+          <div className="overflow-x-auto">
+            <div className="flex gap-3 p-4" style={{minWidth:'max-content'}}>
+              {upcoming.slice(0, 12).map(ev => {
+                const tc = TYPE_COLORS[ev.type] || TYPE_COLORS.MEETING
+                const isToday = ev.date === todayStr
+                const c = DB.cases.byId(ev.caseId)
+                const dateObj = new Date(ev.date + 'T12:00:00')
+                return (
+                  <div key={ev.id}
+                    className={`w-44 flex-shrink-0 rounded-xl border p-3 cursor-pointer hover:shadow-md transition-all ${isToday ? 'border-amber-300 bg-amber-50' : 'border-surface-container-low hover:border-secondary/30'}`}
+                    onClick={() => setShowDetail(ev)}>
+                    <div className={`text-[10px] font-black uppercase tracking-wider mb-1 ${isToday ? 'text-amber-600' : 'text-secondary'}`}>
+                      {isToday ? 'TODAY' : dateObj.toLocaleDateString('en',{weekday:'short',month:'short',day:'numeric'})}
+                    </div>
+                    <p className="text-xs font-bold text-on-surface truncate leading-snug mb-1">{ev.title}</p>
+                    <div className="flex items-center gap-1.5">
+                      <span className={`w-1.5 h-1.5 rounded-full ${tc.dot}`} />
+                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded ${tc.pill}`}>{ev.type}</span>
+                    </div>
+                    <p className="text-[10px] text-on-surface-variant mt-1">{ev.time}{c ? ` · ${c.title.slice(0,18)}` : ''}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* New Event Modal */}
+      <Modal open={showNew} onClose={() => setShowNew(false)} title="Schedule New Event">
+        <div className="space-y-4">
+          <Field label="Event Title"><Input value={form.title} onChange={e=>setForm(f=>({...f,title:e.target.value}))} placeholder="e.g. Pre-trial Hearing"/></Field>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Date"><Input type="date" value={form.date} min={todayStr} onChange={e=>setForm(f=>({...f,date:e.target.value}))}/></Field>
+            <Field label="Time"><Input type="time" value={form.time} onChange={e=>setForm(f=>({...f,time:e.target.value}))}/></Field>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Type">
+              <Select value={form.type} onChange={e=>setForm(f=>({...f,type:e.target.value}))}>
+                <option>HEARING</option><option>MEETING</option><option>REMINDER</option><option>DEADLINE</option>
+              </Select>
+            </Field>
+            <Field label="Duration (min)"><Input type="number" value={form.duration} onChange={e=>setForm(f=>({...f,duration:e.target.value}))} min="15" step="15"/></Field>
+          </div>
+          <Field label="Related Case">
+            <Select value={form.caseId} onChange={e=>setForm(f=>({...f,caseId:e.target.value}))}>
+              <option value="">— None —</option>
+              {cases.map(c => <option key={c.id} value={c.id}>{c.title}</option>)}
+            </Select>
+          </Field>
+          <Field label="Location"><Input value={form.location} onChange={e=>setForm(f=>({...f,location:e.target.value}))} placeholder="Court, virtual, office…"/></Field>
+          <div className="flex justify-end gap-3 pt-2">
+            <Btn variant="secondary" onClick={() => setShowNew(false)}>Cancel</Btn>
+            <Btn variant="primary" onClick={createEvent}>Schedule</Btn>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Event Detail Modal */}
+      {showDetail && (() => {
+        const ev = showDetail
+        const tc = TYPE_COLORS[ev.type] || TYPE_COLORS.MEETING
+        const c  = DB.cases.byId(ev.caseId)
+        return (
+          <div className="fixed inset-0 z-[8000] bg-[#101c2e]/50 backdrop-blur-sm flex items-center justify-center p-4"
+            onClick={e => { if (e.target === e.currentTarget) setShowDetail(null) }}>
+            <div className="bg-white rounded-2xl w-full max-w-md shadow-2xl overflow-hidden">
+              <div className="ai-gradient px-6 py-5">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold mb-2 ${tc.pill}`}>{ev.type}</span>
+                    <h3 className="font-headline text-lg font-bold text-white">{ev.title}</h3>
+                    <p className="text-slate-300 text-sm mt-1">{fmtDate(ev.date)} at {ev.time}</p>
+                  </div>
+                  <button onClick={() => setShowDetail(null)} className="text-slate-300 hover:text-white">
+                    <span className="material-symbols-outlined">close</span>
+                  </button>
+                </div>
+              </div>
+              <div className="p-6 space-y-4">
+                {[
+                  { label:'Location', value: ev.location || '—', icon:'location_on' },
+                  { label:'Duration', value: ev.duration ? `${ev.duration} minutes` : '—', icon:'schedule' },
+                  { label:'Case',     value: c ? c.title : '—', icon:'folder_open', click: c ? () => { setShowDetail(null); navigate(`/cases/${c.id}`) } : null },
+                ].map(f => (
+                  <div key={f.label} className="flex items-center gap-3">
+                    <span className="material-symbols-outlined text-on-surface-variant text-lg">{f.icon}</span>
+                    <div>
+                      <p className="text-[10px] font-bold uppercase text-on-surface-variant">{f.label}</p>
+                      {f.click
+                        ? <button onClick={f.click} className="text-sm font-semibold text-secondary hover:underline">{f.value}</button>
+                        : <p className="text-sm font-semibold text-on-surface">{f.value}</p>}
+                    </div>
+                  </div>
+                ))}
+                <div className="flex justify-end gap-3 pt-2 border-t border-surface-container-low">
+                  <button onClick={() => deleteEvent(ev)} className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-bold text-red-600 hover:bg-red-50 transition-colors">
+                    <span className="material-symbols-outlined text-base">delete</span>Delete
+                  </button>
+                  <button onClick={() => setShowDetail(null)} className="px-4 py-2 rounded-lg text-sm font-semibold border border-outline-variant/50 hover:bg-surface-container-low transition-colors">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
+
+      <ConfirmModal
+        open={!!confirm}
+        onClose={() => setConfirm(null)}
+        onConfirm={() => { DB.events.delete(confirm.id); toast.success('Event deleted.'); refresh() }}
+        title="Delete Event"
+        message={`Delete "${confirm?.title}"?`}
+        confirmLabel="Delete"
+        danger
+      />
+    </div>
+  )
+}
