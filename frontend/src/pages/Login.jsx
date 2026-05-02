@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Auth, delay } from '../store/db.js'
+import { login, register } from '../api/auth.js'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -27,12 +27,16 @@ export default function Login() {
     e.preventDefault()
     if (!loginForm.email || !loginForm.password) { setLoginError('Please enter your email and password.'); return }
     setLoading(true)
-    await delay(800)
-    const user = Auth.login(loginForm.email, loginForm.password)
-    setLoading(false)
-    if (!user) { setLoginError('Invalid credentials. Please try again.'); return }
-    window.dispatchEvent(new Event('auth-change'))
-    navigate('/dashboard')
+    setLoginError('')
+    try {
+      await login({ email: loginForm.email, password: loginForm.password })
+      // auth.js fires 'auth-change' and saves session to sessionStorage
+      navigate('/dashboard')
+    } catch (err) {
+      setLoginError(err.message || 'Invalid credentials. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleRegister = async (e) => {
@@ -40,9 +44,17 @@ export default function Login() {
     if (!regForm.name || !regForm.email || !regForm.password) { setRegError('All fields are required.'); return }
     if (regForm.password.length < 8) { setRegError('Password must be at least 8 characters.'); return }
     setLoading(true)
-    await delay(800)
-    setLoading(false)
-    setRegError('Registration is disabled in demo mode. Use the demo credentials below.')
+    setRegError('')
+    try {
+      await register({ name: regForm.name, email: regForm.email, password: regForm.password, role: regForm.role })
+      // On success switch to login panel so user can sign in with new credentials
+      setPanel('login')
+      setLoginForm(f => ({ ...f, email: regForm.email }))
+    } catch (err) {
+      setRegError(err.message || 'Registration failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const strengthColors = ['bg-red-400', 'bg-amber-400', 'bg-yellow-400', 'bg-emerald-400']
@@ -52,14 +64,14 @@ export default function Login() {
     <main className="flex min-h-screen font-body text-on-surface bg-surface antialiased">
       {/* Left panel */}
       <section className="hidden lg:flex lg:w-1/2 relative items-center justify-center p-12 overflow-hidden"
-        style={{background:'linear-gradient(135deg,#101c2e 0%,#3c475b 100%)'}}>
+        style={{ background: 'linear-gradient(135deg,#101c2e 0%,#3c475b 100%)' }}>
         <div className="relative z-10 max-w-lg w-full">
           <div className="mb-12">
             <div className="flex items-center gap-3 mb-4">
-              <span className="material-symbols-outlined text-4xl" style={{color:'#fed977',fontVariationSettings:"'FILL' 1"}}>balance</span>
+              <span className="material-symbols-outlined text-4xl" style={{ color: '#fed977', fontVariationSettings: "'FILL' 1" }}>balance</span>
               <h1 className="font-headline font-extrabold text-4xl tracking-tight text-white">LawLibra</h1>
             </div>
-            <div className="h-1 w-16 rounded-full" style={{background:'#fed977'}} />
+            <div className="h-1 w-16 rounded-full" style={{ background: '#fed977' }} />
           </div>
           <div className="space-y-8">
             <blockquote className="text-white">
@@ -72,18 +84,18 @@ export default function Login() {
             </blockquote>
             <div className="pt-8 grid grid-cols-2 gap-6 border-t border-white/10">
               <div>
-                <div className="font-headline text-2xl font-bold" style={{color:'#fed977'}}>12k+</div>
+                <div className="font-headline text-2xl font-bold" style={{ color: '#fed977' }}>12k+</div>
                 <div className="text-on-primary-container text-xs uppercase tracking-tighter">Cases Managed</div>
               </div>
               <div>
-                <div className="font-headline text-2xl font-bold" style={{color:'#fed977'}}>99.4%</div>
+                <div className="font-headline text-2xl font-bold" style={{ color: '#fed977' }}>99.4%</div>
                 <div className="text-on-primary-container text-xs uppercase tracking-tighter">Uptime Reliability</div>
               </div>
             </div>
             <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-xs text-white/70 space-y-1">
               <p className="font-bold text-white/90 mb-2">⚡ Demo Credentials</p>
-              <p>Admin: <span className="font-mono" style={{color:'#fed977'}}>admin@lawlibra.pro</span> / <span className="font-mono">Admin@123</span></p>
-              <p>Lawyer: <span className="font-mono" style={{color:'#fed977'}}>lawyer@lawlibra.pro</span> / <span className="font-mono">Lawyer@123</span></p>
+              <p>Admin: <span className="font-mono" style={{ color: '#fed977' }}>admin@lawlibra.pro</span> / <span className="font-mono">Admin@123</span></p>
+              <p>Lawyer: <span className="font-mono" style={{ color: '#fed977' }}>lawyer@lawlibra.pro</span> / <span className="font-mono">Lawyer@123</span></p>
             </div>
           </div>
         </div>
@@ -94,7 +106,7 @@ export default function Login() {
         <div className="w-full max-w-md">
           {/* Mobile logo */}
           <div className="lg:hidden flex flex-col items-center mb-10">
-            <span className="material-symbols-outlined text-5xl mb-2" style={{color:'#755b00',fontVariationSettings:"'FILL' 1"}}>balance</span>
+            <span className="material-symbols-outlined text-5xl mb-2" style={{ color: '#755b00', fontVariationSettings: "'FILL' 1" }}>balance</span>
             <h1 className="font-headline font-black text-3xl text-primary-container">LawLibra</h1>
           </div>
 
@@ -125,7 +137,7 @@ export default function Login() {
                   <label className="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Email Address</label>
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">mail</span>
-                    <input type="email" value={loginForm.email} onChange={e => setLoginForm(f=>({...f,email:e.target.value}))}
+                    <input type="email" value={loginForm.email} onChange={e => setLoginForm(f => ({ ...f, email: e.target.value }))}
                       placeholder="name@lawlibra.pro"
                       className="w-full pl-12 pr-4 py-4 bg-surface-container-low border-none rounded-xl text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-secondary-container transition-all outline-none" />
                   </div>
@@ -137,10 +149,10 @@ export default function Login() {
                   </div>
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">lock</span>
-                    <input type={showPw ? 'text' : 'password'} value={loginForm.password} onChange={e => setLoginForm(f=>({...f,password:e.target.value}))}
+                    <input type={showPw ? 'text' : 'password'} value={loginForm.password} onChange={e => setLoginForm(f => ({ ...f, password: e.target.value }))}
                       placeholder="••••••••••••"
                       className="w-full pl-12 pr-12 py-4 bg-surface-container-low border-none rounded-xl text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-secondary-container transition-all outline-none" />
-                    <button type="button" onClick={() => setShowPw(v=>!v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface">
+                    <button type="button" onClick={() => setShowPw(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface">
                       <span className="material-symbols-outlined text-lg">{showPw ? 'visibility_off' : 'visibility'}</span>
                     </button>
                   </div>
@@ -149,8 +161,8 @@ export default function Login() {
                   className="w-full py-4 bg-secondary-container text-on-secondary-container font-headline font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-70">
                   {loading ? (
                     <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                     </svg>
                   ) : <><span>Sign In</span><span className="material-symbols-outlined">arrow_forward</span></>}
                 </button>
@@ -176,7 +188,7 @@ export default function Login() {
                   <label className="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Full Name</label>
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">person</span>
-                    <input type="text" value={regForm.name} onChange={e => setRegForm(f=>({...f,name:e.target.value}))}
+                    <input type="text" value={regForm.name} onChange={e => setRegForm(f => ({ ...f, name: e.target.value }))}
                       placeholder="Jane Hartwell, Esq."
                       className="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-none rounded-xl text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-secondary-container transition-all outline-none" />
                   </div>
@@ -185,7 +197,7 @@ export default function Login() {
                   <label className="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Email Address</label>
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">mail</span>
-                    <input type="email" value={regForm.email} onChange={e => setRegForm(f=>({...f,email:e.target.value}))}
+                    <input type="email" value={regForm.email} onChange={e => setRegForm(f => ({ ...f, email: e.target.value }))}
                       placeholder="jane@lawfirm.com"
                       className="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-none rounded-xl text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-secondary-container transition-all outline-none" />
                   </div>
@@ -195,21 +207,21 @@ export default function Login() {
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">lock</span>
                     <input type={showRegPw ? 'text' : 'password'} value={regForm.password}
-                      onChange={e => { setRegForm(f=>({...f,password:e.target.value})); setPwStrength(calcStrength(e.target.value)) }}
+                      onChange={e => { setRegForm(f => ({ ...f, password: e.target.value })); setPwStrength(calcStrength(e.target.value)) }}
                       placeholder="Min. 8 characters"
                       className="w-full pl-12 pr-12 py-3.5 bg-surface-container-low border-none rounded-xl text-on-surface placeholder:text-outline-variant focus:ring-2 focus:ring-secondary-container transition-all outline-none" />
-                    <button type="button" onClick={() => setShowRegPw(v=>!v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface">
+                    <button type="button" onClick={() => setShowRegPw(v => !v)} className="absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface">
                       <span className="material-symbols-outlined text-lg">{showRegPw ? 'visibility_off' : 'visibility'}</span>
                     </button>
                   </div>
                   {regForm.password && (
                     <div className="space-y-1">
                       <div className="flex gap-1">
-                        {[1,2,3,4].map(i => (
-                          <div key={i} className={`h-1 flex-1 rounded-full ${i <= pwStrength ? strengthColors[pwStrength-1] : 'bg-slate-200'}`} />
+                        {[1, 2, 3, 4].map(i => (
+                          <div key={i} className={`h-1 flex-1 rounded-full ${i <= pwStrength ? strengthColors[pwStrength - 1] : 'bg-slate-200'}`} />
                         ))}
                       </div>
-                      <p className="text-xs text-slate-500">{strengthLabels[pwStrength-1] || ''}</p>
+                      <p className="text-xs text-slate-500">{strengthLabels[pwStrength - 1] || ''}</p>
                     </div>
                   )}
                 </div>
@@ -217,7 +229,7 @@ export default function Login() {
                   <label className="font-label text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Role</label>
                   <div className="relative">
                     <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-lg">gavel</span>
-                    <select value={regForm.role} onChange={e => setRegForm(f=>({...f,role:e.target.value}))}
+                    <select value={regForm.role} onChange={e => setRegForm(f => ({ ...f, role: e.target.value }))}
                       className="w-full pl-12 pr-4 py-3.5 bg-surface-container-low border-none rounded-xl text-on-surface focus:ring-2 focus:ring-secondary-container transition-all outline-none appearance-none">
                       <option value="LAWYER">Attorney / Lawyer</option>
                       <option value="ADMIN">Firm Administrator</option>
@@ -228,8 +240,8 @@ export default function Login() {
                   className="w-full py-4 text-white font-headline font-bold text-lg rounded-xl shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-2 disabled:opacity-70 ai-gradient">
                   {loading ? (
                     <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
                     </svg>
                   ) : <><span>Create Account</span><span className="material-symbols-outlined">how_to_reg</span></>}
                 </button>

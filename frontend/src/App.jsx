@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import { Auth } from './store/db.js'
+import { isLoggedIn } from './api/auth.js'
 import Layout from './components/Layout.jsx'
 import Login from './pages/Login.jsx'
 import Dashboard from './pages/Dashboard.jsx'
@@ -20,7 +20,7 @@ function RequireAuth({ children }) {
     window.addEventListener('auth-change', handler)
     return () => window.removeEventListener('auth-change', handler)
   }, [])
-  if (!Auth.isLoggedIn()) return <Navigate to="/login" replace />
+  if (!isLoggedIn()) return <Navigate to="/login" replace />
   return children
 }
 

@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
-import { Auth, DB, initials } from '../store/db.js'
+import { getSession, clearSession } from '../api/auth.js'
 import { ToastContainer } from './UI.jsx'
+
+// Derive initials from a display name
+const initials = (name = '') =>
+  name.split(/[\s,]+/).filter(Boolean).slice(0, 2).map(w => w[0]?.toUpperCase()).join('')
 
 const NAV = [
   { to: '/dashboard',     icon: 'dashboard',      label: 'Dashboard' },
@@ -21,28 +25,15 @@ const TYPE_COLOR = { hearing: 'bg-amber-100 text-amber-600', document: 'bg-blue-
 
 export default function Layout() {
   const navigate = useNavigate()
-  const user = Auth.currentUser() || {}
+  const session = getSession() || {}
+  const user = { name: session.name, email: session.email, role: session.role }
   const isAdmin = user.role === 'ADMIN'
-  const [unread, setUnread] = useState(0)
   const [notifOpen, setNotifOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
-  const [notifs, setNotifs] = useState([])
   const notifRef = useRef(null)
   const profileRef = useRef(null)
 
-  const refreshUnread = () => {
-    const ns = DB.notifications.all()
-    setNotifs(ns)
-    setUnread(ns.filter(n => !n.read).length)
-  }
 
-  useEffect(() => {
-    refreshUnread()
-    const interval = setInterval(refreshUnread, 3000)
-    return () => clearInterval(interval)
-  }, [])
-
-  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e) => {
       if (notifRef.current && !notifRef.current.contains(e.target)) setNotifOpen(false)
@@ -53,13 +44,12 @@ export default function Layout() {
   }, [])
 
   const logout = () => {
-    Auth.logout()
+    clearSession()
     navigate('/login')
   }
 
   const markAllRead = () => {
-    DB.notifications.markAllRead()
-    refreshUnread()
+    // Placeholder — will call notifications API when Notifications page is wired
   }
 
   return (
@@ -163,53 +153,14 @@ export default function Layout() {
           </div>
 
           <div className="flex items-center gap-6">
-            {/* Notifications */}
+            {/* Notifications — navigate to full page */}
             <div className="relative" ref={notifRef}>
               <button
-                onClick={() => { setNotifOpen(o => !o); setProfileOpen(false) }}
+                onClick={() => navigate('/notifications')}
                 className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors relative"
               >
                 <span className="material-symbols-outlined text-[22px] text-slate-500">notifications</span>
-                {unread > 0 && <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white" />}
               </button>
-
-              {notifOpen && (
-                <div className="absolute right-0 top-12 w-80 bg-white rounded-xl shadow-2xl border border-slate-100 z-[9000] overflow-hidden">
-                  <div className="px-4 py-3 border-b border-slate-100 flex items-center justify-between">
-                    <span className="font-semibold text-slate-800 text-sm">
-                      Notifications {unread > 0 && <span className="text-xs bg-red-100 text-red-600 font-bold px-1.5 py-0.5 rounded-full ml-1">{unread}</span>}
-                    </span>
-                    <button onClick={markAllRead} className="text-xs text-blue-600 hover:underline font-medium">Mark all read</button>
-                  </div>
-                  <div className="max-h-72 overflow-y-auto divide-y divide-slate-50">
-                    {notifs.length === 0 ? (
-                      <div className="p-6 text-center text-slate-500 text-sm">No notifications</div>
-                    ) : notifs.slice(0, 6).map(n => (
-                      <div
-                        key={n.id}
-                        className={`flex gap-3 px-4 py-3 hover:bg-slate-50 cursor-pointer ${n.read ? 'opacity-60' : ''}`}
-                        onClick={() => { navigate('/notifications'); setNotifOpen(false) }}
-                      >
-                        <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center ${TYPE_COLOR[n.type] || 'bg-slate-100 text-slate-600'}`}>
-                          <span className="material-symbols-outlined text-[16px]" style={{fontVariationSettings:"'FILL' 1"}}>
-                            {TYPE_ICON[n.type] || 'notifications'}
-                          </span>
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className={`text-xs ${n.read ? 'font-medium' : 'font-bold'} text-slate-800`}>{n.title}</p>
-                          <p className="text-xs text-slate-500 truncate">{n.message}</p>
-                        </div>
-                        {!n.read && <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0 mt-1.5" />}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="px-4 py-2.5 border-t border-slate-100 text-center">
-                    <button onClick={() => { navigate('/notifications'); setNotifOpen(false) }} className="text-xs text-blue-600 hover:underline font-medium">
-                      View all notifications
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className="h-8 w-[1px] bg-outline-variant/30" />
