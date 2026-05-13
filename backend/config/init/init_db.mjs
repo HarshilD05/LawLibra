@@ -18,9 +18,9 @@
  */
 
 // ─── Edit these before running ───────────────────────────────────────────────
-const PGSQL_USER     = "your_postgreSQL_username";
-const PGSQL_PASSWORD = "you_postgresSQL_password";
-const DB_NAME        = "lawlibra";
+const PGSQL_USER     = "postgres";
+const PGSQL_PASSWORD = "";
+const DB_NAME        = "lawlibra_gemini";
 
 // ─────────────────────────────────────────────────────────────────────────────
 

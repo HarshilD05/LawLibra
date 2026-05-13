@@ -9,7 +9,7 @@ package-lock.json
 **.env
 
 # Generated secrets — never commit
-config/init/password.txt
+config/init/*.txt
 
 # DB Initialisation Values Dont Commit
 config/init/init_db.mjs

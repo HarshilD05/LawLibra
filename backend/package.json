@@ -5,6 +5,8 @@
     "dev": "node --watch server.mjs",
     "worker": "node workers/doc_ingestion.worker.mjs",
     "worker:dev": "node --watch workers/doc_ingestion.worker.mjs",
+    "worker:reminders": "node workers/event_reminder.worker.mjs",
+    "worker:reminders:dev": "node --watch workers/event_reminder.worker.mjs",
     "db:init": "node config/init/init_db.mjs"
   },
   "dependencies": {

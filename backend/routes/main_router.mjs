@@ -12,6 +12,8 @@ import casesRouter    from "./cases.routes.mjs";
 import docsRouter     from "./documents.routes.mjs";
 import foldersRouter  from "./folders.routes.mjs";
 import chatRouter     from "./chat.routes.mjs";
+import eventsRouter        from "./events.routes.mjs";
+import notificationsRouter from "./notifications.routes.mjs";
 
 const mainRouter = Router();
 
@@ -29,5 +31,11 @@ mainRouter.use("/documents", docsRouter);
 
 // --- Chat ---
 mainRouter.use("/chat/threads", chatRouter);
+
+// --- Events ---
+mainRouter.use("/events", eventsRouter);
+
+// --- Notifications ---
+mainRouter.use("/notifications", notificationsRouter);
 
 export default mainRouter;

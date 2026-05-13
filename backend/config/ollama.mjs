@@ -9,7 +9,7 @@ let ollamaProcess = null;
 
 export async function initOllama() {
     const useLocalEmbed = (process.env.EMBEDDING_METHOD || "").toLowerCase() === "ollama_local";
-    const useLocalLLM   = (process.env.LLM_PROVIDER || "").toLowerCase() === "ollama_local";
+    const useLocalLLM = (process.env.LLM_PROVIDER || "").toLowerCase() === "ollama_local";
 
     if (!useLocalEmbed && !useLocalLLM) {
         return; // Server is not configured to use local Ollama, skip checks.
@@ -48,7 +48,7 @@ export async function initOllama() {
     // 3. Spawn process if not running
     if (!isRunning) {
         console.log("[Ollama Init] Service is not running. Spawning background service...");
-        
+
         // Ensure logs directory exists
         const logsDir = path.resolve(__dirname, "../logs");
         if (!fs.existsSync(logsDir)) {
@@ -56,8 +56,8 @@ export async function initOllama() {
         }
 
         const logStream = fs.createWriteStream(path.join(logsDir, "ollama.log"), { flags: "a" });
-        
-        ollamaProcess = spawn("ollama", ["serve"], { 
+
+        ollamaProcess = spawn("ollama", ["serve"], {
             stdio: ["ignore", "pipe", "pipe"],
             windowsHide: true // Prevents a command window from popping up on Windows
         });
@@ -94,7 +94,7 @@ export async function initOllama() {
                 ollamaProcess = null;
             }
         };
-        
+
         process.on("exit", killOllama);
         process.on("SIGINT", () => { killOllama(); process.exit(0); });
         process.on("SIGTERM", () => { killOllama(); process.exit(0); });
@@ -111,11 +111,11 @@ export async function initOllama() {
         const installedModels = data.models?.map(m => m.name) || [];
 
         const verifyModel = (type, modelName) => {
-            if (!modelName) return; 
-            
+            if (!modelName) return;
+
             // Ollama stores tags, e.g. "llama3.2" -> "llama3.2:latest"
             const isInstalled = installedModels.some(m => m === modelName || m.startsWith(`${modelName}:`));
-            
+
             if (!isInstalled) {
                 console.warn(`[Ollama Init] ⚠️ WARNING: Your requested ${type} ("${modelName}") is not installed.`);
                 console.warn(`              Please run: ollama pull ${modelName}\n`);

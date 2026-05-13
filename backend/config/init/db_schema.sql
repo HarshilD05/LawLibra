@@ -120,6 +120,95 @@ CREATE TABLE chat_messages (
     UNIQUE (thread_id, position_index)                             -- Prevent duplicate positions within a thread
 );
 
+-- 9. Events Table (Personal Lawyer Calendar)
+-- Stores calendar events created by individual lawyers.
+-- Events are personal — they belong to the user, not to a case.
+-- Lawyers manually add events (e.g. from a case hearing notification).
+CREATE TABLE events (
+    id                    UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id               UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+
+    type                  VARCHAR(50) NOT NULL
+                              CHECK (type IN ('HEARING', 'DEADLINE', 'MEETING', 'REMINDER')),
+
+    name                  VARCHAR(255) NOT NULL,
+    description           TEXT,
+
+    start_time            TIMESTAMP WITH TIME ZONE NOT NULL,
+    end_time              TIMESTAMP WITH TIME ZONE,         -- NULL = point-in-time / open-ended
+    all_day               BOOLEAN NOT NULL DEFAULT FALSE,
+
+    remind_before_minutes INTEGER,                          -- NULL = no reminder; e.g. 60 = 1hr before
+
+    created_at            TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at            TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT chk_event_times   CHECK (end_time IS NULL OR end_time > start_time),
+    CONSTRAINT chk_remind_before CHECK (remind_before_minutes IS NULL OR remind_before_minutes > 0)
+);
+
+-- Index for fetching all events belonging to a user
+CREATE INDEX idx_events_user_id ON events (user_id);
+-- Composite index for calendar range queries (WHERE user_id = ? AND start_time BETWEEN ? AND ?)
+CREATE INDEX idx_events_user_start ON events (user_id, start_time);
+
+-- 10. Notifications Table
+-- Per-user notification feed. Each row targets one user.
+-- `entity_type` is a real column (not buried in JSONB) so the feed can be
+-- filtered by tab efficiently with a plain WHERE clause.
+--
+-- Metadata shapes by notification_type:
+--   CASE_ASSIGNED          : { case_id, case_title, access_level, action_url }
+--   CASE_UNASSIGNED        : { case_id, case_title }                           -- no action_url (access revoked)
+--   CASE_UPDATED           : { case_id, case_title, updated_fields[], action_url }
+--   HEARING_SCHEDULED      : { case_id, case_title, hearing_date, court_name, action_url }
+--   DOCUMENT_PROCESSED     : { case_id, case_title, document_id, document_name, action_url }
+--   DOCUMENT_ERROR         : { case_id, case_title, document_id, document_name, error_message, action_url }
+--   CHAT_RESPONSE_READY    : { case_id, case_title, thread_id, thread_title, action_url }
+--   CHAT_ERROR             : { case_id, case_title, thread_id, thread_title, error_message, action_url }
+--   CHAT_DOCUMENT_PROCESSED: { case_id, case_title, thread_id, thread_title, document_id, document_name, action_url }
+--   CHAT_DOCUMENT_ERROR    : { case_id, case_title, thread_id, thread_title, document_id, document_name, error_message, action_url }
+--   EVENT_REMINDER         : { event_id, event_name, event_type, start_time, action_url }
+CREATE TABLE notifications (
+    id                UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id           UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+
+    notification_type VARCHAR(50) NOT NULL
+                          CHECK (notification_type IN (
+                              'CASE_ASSIGNED',
+                              'CASE_UNASSIGNED',
+                              'CASE_UPDATED',
+                              'HEARING_SCHEDULED',
+                              'DOCUMENT_PROCESSED',
+                              'DOCUMENT_ERROR',
+                              'CHAT_RESPONSE_READY',
+                              'CHAT_ERROR',
+                              'CHAT_DOCUMENT_PROCESSED',
+                              'CHAT_DOCUMENT_ERROR',
+                              'EVENT_REMINDER'
+                          )),
+
+    entity_type       VARCHAR(10) NOT NULL
+                          CHECK (entity_type IN ('CASE', 'CHAT', 'EVENT')),
+
+    msg               TEXT NOT NULL,                   -- Human-readable body shown in the UI
+    metadata          JSONB NOT NULL DEFAULT '{}',     -- Type-specific payload (see shapes above)
+
+    is_read           BOOLEAN NOT NULL DEFAULT FALSE,
+    read_at           TIMESTAMP WITH TIME ZONE,        -- Populated when is_read flips to TRUE
+
+    created_at        TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Unread-count badge query  (WHERE user_id = ? AND is_read = FALSE)
+CREATE INDEX idx_notifications_user_unread ON notifications (user_id, is_read);
+-- Notification feed ordered by recency  (WHERE user_id = ? ORDER BY created_at DESC)
+CREATE INDEX idx_notifications_user_feed  ON notifications (user_id, created_at DESC);
+-- Feed filtered by entity tab  (WHERE user_id = ? AND entity_type = ?)
+CREATE INDEX idx_notifications_entity     ON notifications (user_id, entity_type);
+-- GIN index for payload queries  (e.g. WHERE metadata->>'case_id' = ?)
+CREATE INDEX idx_notifications_metadata   ON notifications USING gin (metadata);
+
 -- Create HNSW index for fast similarity search on chunks
 CREATE INDEX ON doc_chunks USING hnsw (embedding vector_cosine_ops);
 -- Create GIN index for JSONB metadata searching

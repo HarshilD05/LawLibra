@@ -17,3 +17,6 @@ Authorization: Bearer <jwt_token>
 | Cases & Assignments | [cases.api.md](cases.api.md) | Case CRUD and lawyer assignment management |
 | Folders | [folders.api.md](folders.api.md) | Virtual folder tree within a case |
 | Documents | [documents.api.md](documents.api.md) | Upload, list, status polling, delete + ingestion pipeline |
+| Chat | [chat.api.md](chat.api.md) | AI chat threads and messages within a case |
+| Events | [events.api.md](events.api.md) | Personal lawyer calendar — create, list, update, delete |
+| Notifications | [notifications.api.md](notifications.api.md) | Per-user notification feed — read, mark-read, delete |

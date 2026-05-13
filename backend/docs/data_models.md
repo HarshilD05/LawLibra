@@ -16,7 +16,9 @@ Complete reference for every table in the LawLibra PostgreSQL database.
 6. [doc_chunks](#6-doc_chunks)
 7. [chat_threads](#7-chat_threads)
 8. [chat_messages](#8-chat_messages)
-9. [Indexes](#9-indexes)
+9. [events](#9-events)
+10. [notifications](#10-notifications)
+11. [Indexes](#11-indexes)
 
 ---
 
@@ -172,9 +174,97 @@ Individual messages within a thread. Uses `BIGSERIAL` for strict ordering.
 
 ---
 
-## 9. Indexes
+## 9. `events`
 
-| Index | Table | Column | Type | Purpose |
+Personal calendar events created by individual lawyers. Events are **user-owned**, not case-owned — a lawyer opts in to add an event (e.g. from a hearing notification). Overlapping events are intentional and permitted.
+
+| Column | Type | Nullable | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | `UUID` | NO | `gen_random_uuid()` | Primary key |
+| `user_id` | `UUID` | NO | — | FK → `users.id` · `ON DELETE CASCADE` |
+| `type` | `VARCHAR(50)` | NO | — | `HEARING`, `DEADLINE`, `MEETING`, or `REMINDER` |
+| `name` | `VARCHAR(255)` | NO | — | Short event title |
+| `description` | `TEXT` | YES | — | Optional longer notes |
+| `start_time` | `TIMESTAMPTZ` | NO | — | Event start (timezone-aware) |
+| `end_time` | `TIMESTAMPTZ` | YES | — | Event end; `NULL` = point-in-time (e.g. a deadline) |
+| `all_day` | `BOOLEAN` | NO | `FALSE` | `TRUE` for full-day events (court dates, etc.) |
+| `remind_before_minutes` | `INTEGER` | YES | `NULL` | Minutes before `start_time` to fire an `EVENT_REMINDER` notification. `NULL` = no reminder |
+| `created_at` | `TIMESTAMPTZ` | NO | `CURRENT_TIMESTAMP` | — |
+| `updated_at` | `TIMESTAMPTZ` | NO | `CURRENT_TIMESTAMP` | — |
+
+**Constraints:** `type IN ('HEARING', 'DEADLINE', 'MEETING', 'REMINDER')` · `chk_event_times: end_time IS NULL OR end_time > start_time` · `chk_remind_before: remind_before_minutes IS NULL OR remind_before_minutes > 0`
+
+> **Design note:** No `status` column and no `case_id` FK by design. Events are personal — a lawyer deletes events they no longer need rather than tracking cancellation state. The link back to a case (if any) is carried by the notification that prompted the event creation.
+>
+> When `remind_before_minutes` is set, the event controller enqueues a delayed BullMQ job (queue: `event-reminders`). The job fires at `start_time − remind_before_minutes` and inserts an `EVENT_REMINDER` notification. Updating the event re-schedules the job using a deterministic job ID (`reminder:<event_id>`).
+
+---
+
+## 10. `notifications`
+
+Per-user notification feed. Each row targets exactly one user.
+- `entity_type` is a **real column** (not inside JSONB) so the feed can be filtered by tab (`CASE` / `CHAT` / `EVENT`) with a plain `WHERE` clause.
+- `metadata` JSONB holds all type-specific context; its shape is contractually defined per `notification_type`.
+
+| Column | Type | Nullable | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `id` | `UUID` | NO | `gen_random_uuid()` | Primary key |
+| `user_id` | `UUID` | NO | — | FK → `users.id` · `ON DELETE CASCADE` |
+| `notification_type` | `VARCHAR(50)` | NO | — | See type enum below |
+| `entity_type` | `VARCHAR(10)` | NO | — | `CASE`, `CHAT`, or `EVENT` |
+| `msg` | `TEXT` | NO | — | Human-readable body rendered in the UI |
+| `metadata` | `JSONB` | NO | `'{}'` | Type-specific payload — shape defined per `notification_type` |
+| `is_read` | `BOOLEAN` | NO | `FALSE` | Whether the user has dismissed the notification |
+| `read_at` | `TIMESTAMPTZ` | YES | `NULL` | Timestamp set when `is_read` flips to `TRUE` |
+| `created_at` | `TIMESTAMPTZ` | NO | `CURRENT_TIMESTAMP` | For ordering and TTL-based archival |
+
+**Constraints:** `notification_type IN (...)` · `entity_type IN ('CASE','CHAT','EVENT')`
+
+### `notification_type` Enum
+
+| Type | `entity_type` | Trigger |
+| :--- | :--- | :--- |
+| `CASE_ASSIGNED` | `CASE` | Admin assigns you to a case |
+| `CASE_UNASSIGNED` | `CASE` | Admin removes you from a case |
+| `CASE_UPDATED` | `CASE` | Case details changed |
+| `HEARING_SCHEDULED` | `CASE` | Hearing date added or updated |
+| `DOCUMENT_PROCESSED` | `CASE` | Document finished RAG ingestion |
+| `DOCUMENT_ERROR` | `CASE` | Document RAG ingestion failed |
+| `CHAT_RESPONSE_READY` | `CHAT` | AI finished generating a response |
+| `CHAT_ERROR` | `CHAT` | AI response generation failed |
+| `CHAT_DOCUMENT_PROCESSED` | `CHAT` | Document processed in a chat context |
+| `CHAT_DOCUMENT_ERROR` | `CHAT` | Document error in a chat context |
+| `EVENT_REMINDER` | `EVENT` | BullMQ delayed job fired at `start_time − remind_before_minutes` |
+
+### Metadata Payload Shapes
+
+Each `notification_type` has a strict payload contract. `action_url` is the frontend route the user is redirected to on click.
+
+| Type | Metadata fields |
+| :--- | :--- |
+| `CASE_ASSIGNED` | `case_id`, `case_title`, `access_level`, `action_url` |
+| `CASE_UNASSIGNED` | `case_id`, `case_title` — **no `action_url`** (access revoked) |
+| `CASE_UPDATED` | `case_id`, `case_title`, `updated_fields[]`, `action_url` |
+| `HEARING_SCHEDULED` | `case_id`, `case_title`, `hearing_date` (ISO 8601), `court_name`, `action_url` |
+| `DOCUMENT_PROCESSED` | `case_id`, `case_title`, `document_id`, `document_name`, `action_url` |
+| `DOCUMENT_ERROR` | `case_id`, `case_title`, `document_id`, `document_name`, `error_message`, `action_url` |
+| `CHAT_RESPONSE_READY` | `case_id`, `case_title`, `thread_id`, `thread_title`, `action_url` |
+| `CHAT_ERROR` | `case_id`, `case_title`, `thread_id`, `thread_title`, `error_message`, `action_url` |
+| `CHAT_DOCUMENT_PROCESSED` | `case_id`, `case_title`, `thread_id`, `thread_title`, `document_id`, `document_name`, `action_url` |
+| `CHAT_DOCUMENT_ERROR` | `case_id`, `case_title`, `thread_id`, `thread_title`, `document_id`, `document_name`, `error_message`, `action_url` |
+| `EVENT_REMINDER` | `event_id`, `event_name`, `event_type`, `start_time` (ISO 8601), `action_url` |
+
+---
+
+## 11. `indexes`
+
+| Index | Table | Column(s) | Type | Purpose |
 | :--- | :--- | :--- | :--- | :--- |
 | *(auto)* | `doc_chunks` | `embedding` | `HNSW (vector_cosine_ops)` | Fast approximate nearest-neighbour search for RAG |
 | `idx_cases_metadata` | `cases` | `metadata` | `GIN` | Fast JSONB key/value queries |
+| `idx_events_user_id` | `events` | `user_id` | `BTREE` | Fetch all events for a user |
+| `idx_events_user_start` | `events` | `(user_id, start_time)` | `BTREE` | Calendar range queries — `WHERE user_id = ? AND start_time BETWEEN ? AND ?` |
+| `idx_notifications_user_unread` | `notifications` | `(user_id, is_read)` | `BTREE` | Unread-count badge — `WHERE user_id = ? AND is_read = FALSE` |
+| `idx_notifications_user_feed` | `notifications` | `(user_id, created_at DESC)` | `BTREE` | Notification feed ordered by recency |
+| `idx_notifications_entity` | `notifications` | `(user_id, entity_type)` | `BTREE` | Feed filtered by entity tab — `WHERE user_id = ? AND entity_type = ?` |
+| `idx_notifications_metadata` | `notifications` | `metadata` | `GIN` | Query inside payload — e.g. `WHERE metadata->>'case_id' = ?` |
