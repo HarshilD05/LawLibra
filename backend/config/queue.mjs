@@ -11,6 +11,7 @@
 
 import { Queue } from "bullmq";
 import { redisConnection } from "./redis.mjs";
+import logger from "./logger.mjs";
 
 // ─── Document Ingestion ───────────────────────────────────────────────────────
 
@@ -30,7 +31,7 @@ export const docIngestionQueue = new Queue(DOC_INGESTION_QUEUE, {
 });
 
 docIngestionQueue.on("error", (err) => {
-    console.error("[Queue] doc-ingestion error:", err.message);
+    logger.error({ type: "queue", queue: "doc-ingestion", err: err.message });
 });
 
 // ─── Event Reminders ─────────────────────────────────────────────────────────
@@ -48,5 +49,5 @@ export const eventReminderQueue = new Queue(EVENT_REMINDER_QUEUE, {
 });
 
 eventReminderQueue.on("error", (err) => {
-    console.error("[Queue] event-reminders error:", err.message);
+    logger.error({ type: "queue", queue: "event-reminders", err: err.message });
 });

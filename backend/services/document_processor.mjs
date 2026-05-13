@@ -12,9 +12,8 @@
 import fs from "fs/promises";
 import path from "path";
 import mammoth from "mammoth";
-// pdfjs-dist v5 default build targets browsers and requires DOM APIs (DOMMatrix etc.).
-// The "legacy" build strips browser dependencies and works in plain Node.js.
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf.mjs";
+import logger from "../config/logger.mjs";
 
 // In Node.js, the legacy build disables real web workers internally and falls
 // back to pdfjs"s built-in fake-worker path. Do not overwrite workerSrc here:
@@ -66,7 +65,7 @@ class DocumentProcessor {
      * @private
      */
     static async _extractFromPDF(filePath) {
-        console.log(`[DocumentProcessor] PDF: ${path.basename(filePath)}`);
+        logger.debug({ type: "processor", event: "extract_start", format: "PDF", file: path.basename(filePath) });
 
         const dataBuffer = await fs.readFile(filePath);
         const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(dataBuffer) });
@@ -106,7 +105,7 @@ class DocumentProcessor {
             }
         }
 
-        console.log(`[DocumentProcessor] PDF: extracted ${pageTexts.length} pages`);
+        logger.debug({ type: "processor", event: "extract_done", format: "PDF", file: path.basename(filePath), pages: pageTexts.length });
         return pageTexts;
     }
 
@@ -119,7 +118,7 @@ class DocumentProcessor {
      * @private
      */
     static async _extractFromDOCX(filePath) {
-        console.log(`[DocumentProcessor] DOCX: ${path.basename(filePath)}`);
+        logger.debug({ type: "processor", event: "extract_start", format: "DOCX", file: path.basename(filePath) });
 
         const result = await mammoth.extractRawText({ path: filePath });
         const text   = result.value;
@@ -147,7 +146,7 @@ class DocumentProcessor {
             pageTexts = [{ text: text.trim(), pageNo: 1 }];
         }
 
-        console.log(`[DocumentProcessor] DOCX: extracted ${pageTexts.length} sections`);
+        logger.debug({ type: "processor", event: "extract_done", format: "DOCX", file: path.basename(filePath), sections: pageTexts.length });
         return pageTexts;
     }
 
@@ -158,7 +157,7 @@ class DocumentProcessor {
      * @private
      */
     static async _extractFromTXT(filePath) {
-        console.log(`[DocumentProcessor] TXT: ${path.basename(filePath)}`);
+        logger.debug({ type: "processor", event: "extract_start", format: "TXT", file: path.basename(filePath) });
 
         const text     = await fs.readFile(filePath, "utf-8");
         const sections = text.split(/\n{4,}/).filter(s => s.trim());
@@ -191,7 +190,7 @@ class DocumentProcessor {
             pageTexts = [{ text: text.trim(), pageNo: 1 }];
         }
 
-        console.log(`[DocumentProcessor] TXT: extracted ${pageTexts.length} sections`);
+        logger.debug({ type: "processor", event: "extract_done", format: "TXT", file: path.basename(filePath), sections: pageTexts.length });
         return pageTexts;
     }
 

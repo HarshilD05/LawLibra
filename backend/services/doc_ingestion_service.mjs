@@ -22,6 +22,7 @@ import Document, { PROCESSING_STATUS } from "../models/document.model.mjs";
 import DocumentProcessor              from "./document_processor.mjs";
 import DocumentUtils                  from "./document_utils.mjs";
 import { createEmbeddingService }     from "./embedding_factory.mjs";
+import logger                         from "../config/logger.mjs";
 
 class DocIngestionService {
     /**
@@ -38,7 +39,7 @@ class DocIngestionService {
             throw new Error(`Invalid job payload: ${JSON.stringify(job.data)}`);
         }
 
-        console.log(`[Ingestion] Starting job ${job.id} for document ${documentId}`);
+        logger.info({ type: "ingest", event: "start", jobId: job.id, docId: documentId });
 
         // ── Step 1: Mark as PROCESSING ──────────────────────────────────────────
         await Document.updateProcessingStatus(documentId, PROCESSING_STATUS.PROCESSING);
@@ -46,7 +47,7 @@ class DocIngestionService {
 
         try {
             // ── Step 2: Extract page texts ────────────────────────────────────────
-            console.log(`[Ingestion] Extracting text from ${filePath} (${mimeType})`);
+            logger.debug({ type: "ingest", event: "extract_start", jobId: job.id, docId: documentId, filePath, mimeType });
             const pageTexts = await DocumentProcessor.extractPageTexts(filePath, mimeType);
             await job.updateProgress(30);
 
@@ -57,7 +58,7 @@ class DocIngestionService {
             const pageCount = pageTexts.length;
 
             // ── Step 3: Clean + Chunk + TF-IDF keywords ───────────────────────────
-            console.log(`[Ingestion] Processing ${pageCount} pages into chunks`);
+            logger.debug({ type: "ingest", event: "chunk_start", jobId: job.id, docId: documentId, pages: pageCount });
             const chunks = await DocumentUtils.processDocument(pageTexts);
             await job.updateProgress(50);
 
@@ -66,7 +67,7 @@ class DocIngestionService {
             }
 
             // ── Step 4: Generate embeddings (Adaptive Batching) ───────────────────
-            console.log(`[Ingestion] Embedding ${chunks.length} chunks`);
+            logger.debug({ type: "ingest", event: "embed_start", jobId: job.id, docId: documentId, chunks: chunks.length });
             const embeddingService = await createEmbeddingService();
             
             const BATCH_SIZE = parseInt(process.env.EMBEDDING_BATCH_SIZE) || 50;
@@ -77,7 +78,7 @@ class DocIngestionService {
 
             for (let i = 0; i < chunkTexts.length; i += BATCH_SIZE) {
                 const batchTexts = chunkTexts.slice(i, i + BATCH_SIZE);
-                console.log(`[Ingestion] Processing batch ${i / BATCH_SIZE + 1} of ${Math.ceil(chunkTexts.length / BATCH_SIZE)}`);
+                logger.debug({ type: "ingest", event: "embed_batch", jobId: job.id, batch: i / BATCH_SIZE + 1, total: Math.ceil(chunkTexts.length / BATCH_SIZE) });
                 
                 const batchVectors = await embeddingService.embed(batchTexts, false); // false for RETRIEVAL_DOCUMENT
                 vectors.push(...batchVectors);
@@ -93,7 +94,7 @@ class DocIngestionService {
             await job.updateProgress(80);
 
             // ── Step 5: Store chunks in DB ────────────────────────────────────────
-            console.log(`[Ingestion] Storing ${embeddedChunks.length} chunks in DB`);
+            logger.debug({ type: "ingest", event: "store_start", jobId: job.id, docId: documentId, chunks: embeddedChunks.length });
             await Document.insertChunks(documentId, embeddedChunks);
             await job.updateProgress(95);
 
@@ -102,13 +103,13 @@ class DocIngestionService {
             await db_updatePageCount(documentId, pageCount);
             await job.updateProgress(100);
 
-            console.log(`[Ingestion] Job ${job.id} complete. ${embeddedChunks.length} chunks stored.`);
+            logger.info({ type: "ingest", event: "complete", jobId: job.id, docId: documentId, chunks: embeddedChunks.length, pages: pageCount });
 
         } catch (err) {
             // Mark failed BEFORE re-throwing so the DB reflects the failure even
             // if BullMQ is about to retry (status will flip back to PROCESSING on
             // next attempt via step 1 above).
-            console.error(`[Ingestion] Job ${job.id} failed:`, err.message);
+            logger.error({ type: "ingest", event: "failed", jobId: job.id, docId: documentId, err: err.message });
             await Document.updateProcessingStatus(
                 documentId,
                 PROCESSING_STATUS.FAILED,

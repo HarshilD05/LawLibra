@@ -14,6 +14,7 @@
 
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { createRequire } from "module";
+import logger from "../config/logger.mjs";
 
 // natural"s TfIdf is CJS; load via createRequire inside ESM
 const require     = createRequire(import.meta.url);
@@ -193,11 +194,11 @@ class DocumentUtils {
 
         // Step 2 — chunk across all pages
         const chunks = await this.chunkTextWithMetadata(cleanedPages);
-        console.log(`[DocumentUtils] ${chunks.length} chunks created from ${pageTexts.length} pages`);
+        logger.debug({ type: "utils", event: "chunks_created", chunks: chunks.length, pages: pageTexts.length });
 
         // Step 3 — bulk TF-IDF keywords (no API calls needed)
         const chunksWithKeywords = this.extractKeywordsTFIDF(chunks);
-        console.log(`[DocumentUtils] TF-IDF keywords extracted for all chunks`);
+        logger.debug({ type: "utils", event: "keywords_done", chunks: chunksWithKeywords.length });
 
         return chunksWithKeywords;
     }

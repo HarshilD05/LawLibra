@@ -11,6 +11,7 @@
 
 import { Redis } from "ioredis";
 import "dotenv/config";
+import logger from "./logger.mjs";
 
 export const redisConnection = new Redis({
     host:     process.env.REDIS_HOST     || "localhost",
@@ -20,9 +21,9 @@ export const redisConnection = new Redis({
 });
 
 redisConnection.on("error", (err) => {
-    console.error("[Redis] Connection error:", err.message);
+    logger.error({ type: "redis", event: "connection_error", err: err.message });
 });
 
 redisConnection.on("connect", () => {
-    console.log(`[Redis] Connected to ${process.env.REDIS_HOST || "localhost"}:${process.env.REDIS_PORT || 6379}`);
+    logger.info({ type: "redis", event: "connected", host: process.env.REDIS_HOST || "localhost", port: process.env.REDIS_PORT || 6379 });
 });

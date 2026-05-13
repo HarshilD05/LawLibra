@@ -1,6 +1,7 @@
 import { generateSalt, hashPassword, verifyPassword } from "../utils/auth.utils.mjs";
 import { signToken } from "../utils/jwt.utils.mjs";
 import { User } from "../models/user.model.mjs";
+import logger from "../config/logger.mjs";
 
 /**
  * POST /api/auth/register
@@ -30,7 +31,7 @@ export const register = async (req, res) => {
 
         return res.status(201).json({ user: newUser.toSafeObject(), token });
     } catch (err) {
-        console.error("[Auth] register error:", err.message);
+        logger.error({ type: "auth", op: "register", err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -62,7 +63,7 @@ export const login = async (req, res) => {
 
         return res.status(200).json({ user: user.toSafeObject(), token });
     } catch (err) {
-        console.error("[Auth] login error:", err.message);
+        logger.error({ type: "auth", op: "login", err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -79,7 +80,7 @@ export const getMe = async (req, res) => {
         }
         return res.status(200).json({ user: user.toSafeObject() });
     } catch (err) {
-        console.error("[Auth] getMe error:", err.message);
+        logger.error({ type: "auth", op: "getMe", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -102,7 +103,7 @@ export const getAllUsers = async (req, res) => {
             offset,
         });
     } catch (err) {
-        console.error("[Auth] getAllUsers error:", err.message);
+        logger.error({ type: "auth", op: "getAllUsers", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -142,7 +143,7 @@ export const changePassword = async (req, res) => {
 
         return res.status(200).json({ message: "Password updated successfully." });
     } catch (err) {
-        console.error("[Auth] changePassword error:", err.message);
+        logger.error({ type: "auth", op: "changePassword", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -159,7 +160,7 @@ export const getUserById = async (req, res) => {
         }
         return res.status(200).json({ user: user.toSafeObject() });
     } catch (err) {
-        console.error("[Auth] getUserById error:", err.message);
+        logger.error({ type: "auth", op: "getUserById", targetId: req.params?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -184,7 +185,7 @@ export const deleteUser = async (req, res) => {
 
         return res.status(200).json({ message: "User deleted successfully." });
     } catch (err) {
-        console.error("[Auth] deleteUser error:", err.message);
+        logger.error({ type: "auth", op: "deleteUser", targetId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };

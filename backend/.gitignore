@@ -18,3 +18,5 @@ config/init/init_db.mjs
 uploads/
 data/
 
+# Log files
+logs/

@@ -25,9 +25,10 @@
 import "dotenv/config";
 import { Worker } from "bullmq";
 
-import { redisConnection }    from "../config/redis.mjs";
+import { redisConnection } from "../config/redis.mjs";
 import { EVENT_REMINDER_QUEUE } from "../config/queue.mjs";
-import Notification           from "../models/notification.model.mjs";
+import Notification from "../models/notification.model.mjs";
+import logger, { closeLogger } from "../config/logger.mjs";
 
 const worker = new Worker(
     EVENT_REMINDER_QUEUE,
@@ -38,10 +39,10 @@ const worker = new Worker(
         await Notification.create({
             userId,
             notificationType: "EVENT_REMINDER",
-            entityType:       "EVENT",
-            msg:              `Reminder: "${eventName}" starts at ${new Date(startTime).toLocaleString()}.`,
+            entityType: "EVENT",
+            msg: `Reminder: "${eventName}" starts at ${new Date(startTime).toLocaleString()}.`,
             metadata: {
-                event_id:   eventId,
+                event_id: eventId,
                 event_name: eventName,
                 event_type: eventType,
                 start_time: startTime,
@@ -59,26 +60,26 @@ const worker = new Worker(
 // ── Event Listeners ────────────────────────────────────────────────────────────
 
 worker.on("completed", (job) => {
-    console.log(`[ReminderWorker] ✓ Reminder sent for event ${job.data.eventId} (job: ${job.id})`);
+    logger.info({ type: "job", queue: EVENT_REMINDER_QUEUE, jobId: job.id, event: "completed", eventId: job.data.eventId });
 });
 
 worker.on("failed", (job, err) => {
-    console.error(`[ReminderWorker] ✗ Job ${job?.id} failed: ${err.message}`);
+    logger.error({ type: "job", queue: EVENT_REMINDER_QUEUE, jobId: job?.id, event: "failed", err: err.message });
 });
 
 worker.on("error", (err) => {
-    console.error("[ReminderWorker] Worker error:", err.message);
+    logger.error({ type: "job", queue: EVENT_REMINDER_QUEUE, event: "worker_error", err: err.message });
 });
 
-console.log(`[ReminderWorker] Started. Listening on queue "${EVENT_REMINDER_QUEUE}"`);
+logger.info({ type: "server", event: "start", queue: EVENT_REMINDER_QUEUE });
 
 // ── Graceful Shutdown ──────────────────────────────────────────────────────────
 async function shutdown(signal) {
-    console.log(`\n[ReminderWorker] ${signal} received — shutting down gracefully...`);
+    logger.info({ type: "server", event: "shutdown", signal, queue: EVENT_REMINDER_QUEUE });
     await worker.close();
-    console.log("[ReminderWorker] Done. Exiting.");
+    await closeLogger();
     process.exit(0);
 }
 
 process.on("SIGTERM", () => shutdown("SIGTERM"));
-process.on("SIGINT",  () => shutdown("SIGINT"));
+process.on("SIGINT", () => shutdown("SIGINT"));

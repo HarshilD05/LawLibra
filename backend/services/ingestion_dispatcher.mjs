@@ -23,6 +23,7 @@
 import path         from "path";
 import { fork }     from "child_process";
 import { fileURLToPath } from "url";
+import logger           from "../config/logger.mjs";
 
 import DocIngestionService from "./doc_ingestion_service.mjs";
 
@@ -63,7 +64,7 @@ export async function dispatchIngestion({ documentId, filePath, mimeType, caseId
             const job = await docIngestionQueue.add("ingest", {
                 documentId, filePath, mimeType, caseId,
             });
-            console.log(`[Dispatcher] Enqueued BullMQ job ${job.id} for document ${documentId}`);
+            logger.info({ type: "dispatch", method: "bullmq", event: "enqueued", jobId: String(job.id), docId: documentId });
             return { jobId: String(job.id), completed: false };
         }
 
@@ -79,25 +80,23 @@ export async function dispatchIngestion({ documentId, filePath, mimeType, caseId
 
             child.on("exit", (code) => {
                 if (code !== 0) {
-                    console.error(
-                        `[Dispatcher] ingest_once exited with code ${code} for document ${documentId}`,
-                    );
+                    logger.warn({ type: "dispatch", method: "spawn", event: "child_exit", code, docId: documentId, pid: child.pid });
                 }
             });
 
             child.on("error", (err) => {
-                console.error(`[Dispatcher] fork error for document ${documentId}:`, err.message);
+                logger.error({ type: "dispatch", method: "spawn", event: "fork_error", docId: documentId, err: err.message });
             });
 
             const jobId = `spawn-${child.pid}`;
-            console.log(`[Dispatcher] Forked child process ${child.pid} for document ${documentId}`);
+            logger.info({ type: "dispatch", method: "spawn", event: "forked", jobId, docId: documentId, pid: child.pid });
             return { jobId, completed: false };
         }
 
         // ── Sync (inline, blocking) ─────────────────────────────────────────────
         case "sync":
         default: {
-            console.log(`[Dispatcher] Running sync ingestion for document ${documentId}`);
+            logger.info({ type: "dispatch", method: "sync", event: "start", docId: documentId });
             const job = makeJobShim(documentId, filePath, mimeType);
             await DocIngestionService.process(job); // throws on failure — caught by controller
             return { jobId: null, completed: true };

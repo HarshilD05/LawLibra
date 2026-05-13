@@ -27,6 +27,7 @@ import {
     deleteDirRecursive,
 } from "../utils/storage.utils.mjs";
 import fs from "fs/promises";
+import logger from "../config/logger.mjs";
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -92,7 +93,7 @@ export const createFolder = async (req, res) => {
         return res.status(201).json({ folder: folder.toObject() });
 
     } catch (err) {
-        console.error("[Folders] createFolder error:", err.message);
+        logger.error({ type: "folder", op: "createFolder", caseId: req.body?.caseId, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -118,7 +119,7 @@ export const getFolderTree = async (req, res) => {
         return res.status(200).json({ tree });
 
     } catch (err) {
-        console.error("[Folders] getFolderTree error:", err.message);
+        logger.error({ type: "folder", op: "getFolderTree", caseId: req.query?.caseId, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -139,7 +140,7 @@ export const getFolderById = async (req, res) => {
         return res.status(200).json({ folder: folder.toObject() });
 
     } catch (err) {
-        console.error("[Folders] getFolderById error:", err.message);
+        logger.error({ type: "folder", op: "getFolderById", folderId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -170,7 +171,7 @@ export const renameFolder = async (req, res) => {
         return res.status(200).json({ folder: updated.toObject() });
 
     } catch (err) {
-        console.error("[Folders] renameFolder error:", err.message);
+        logger.error({ type: "folder", op: "renameFolder", folderId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -214,13 +215,12 @@ export const deleteFolder = async (req, res) => {
             // Delete individual files
             ...storagePaths.map(sp =>
                 fs.unlink(resolveAbsolutePath(sp)).catch(e =>
-                    console.warn(`[Folders] Could not delete file ${sp}: ${e.message}`)
+                    logger.warn({ type: "folder", op: "deleteFolder", event: "file_cleanup_failed", path: sp, err: e.message })
                 )
             ),
-            // Delete the folder directories (this folder + all descendants)
             ...descendantIds.map(fid =>
                 deleteDirRecursive(getDocumentDirPath(folder.caseId, fid)).catch(e =>
-                    console.warn(`[Folders] Could not delete dir for folder ${fid}: ${e.message}`)
+                    logger.warn({ type: "folder", op: "deleteFolder", event: "dir_cleanup_failed", folderId: fid, err: e.message })
                 )
             ),
         ];
@@ -233,7 +233,7 @@ export const deleteFolder = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("[Folders] deleteFolder error:", err.message);
+        logger.error({ type: "folder", op: "deleteFolder", folderId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };

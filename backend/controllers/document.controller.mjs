@@ -29,6 +29,7 @@ import {
     resolveAbsolutePath,
     ensureDir,
 } from "../utils/storage.utils.mjs";
+import logger from "../config/logger.mjs";
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -150,7 +151,7 @@ export const uploadDocument = async (req, res) => {
             return res.status(400).json({ error: err.message });
         }
 
-        console.error("[Documents] uploadDocument error:", err.message);
+        logger.error({ type: "doc", op: "uploadDocument", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -189,7 +190,7 @@ export const getDocuments = async (req, res) => {
         return res.status(200).json({ data: documents, total, limit, offset });
 
     } catch (err) {
-        console.error("[Documents] getDocuments error:", err.message);
+        logger.error({ type: "doc", op: "getDocuments", caseId: req.query?.caseId, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -215,7 +216,7 @@ export const getDocumentById = async (req, res) => {
         return res.status(200).json({ document: doc });
 
     } catch (err) {
-        console.error("[Documents] getDocumentById error:", err.message);
+        logger.error({ type: "doc", op: "getDocumentById", docId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -240,7 +241,7 @@ export const getDocumentChunks = async (req, res) => {
         return res.status(200).json({ chunks });
 
     } catch (err) {
-        console.error("[Documents] getDocumentChunks error:", err.message);
+        logger.error({ type: "doc", op: "getDocumentChunks", docId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -272,7 +273,7 @@ export const deleteDocument = async (req, res) => {
         // Delete file from disk (non-fatal if already missing)
         const absPath = resolveAbsolutePath(doc.storagePath);
         await fs.unlink(absPath).catch((e) => {
-            console.warn(`[Documents] File not found on disk at ${absPath}: ${e.message}`);
+            logger.warn({ type: "doc", op: "deleteDocument", event: "disk_cleanup_failed", docId: req.params?.id, path: absPath, err: e.message });
         });
 
         // Delete DB record — doc_chunks cascade via FK
@@ -281,7 +282,7 @@ export const deleteDocument = async (req, res) => {
         return res.status(200).json({ message: "Document deleted successfully." });
 
     } catch (err) {
-        console.error("[Documents] deleteDocument error:", err.message);
+        logger.error({ type: "doc", op: "deleteDocument", docId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };

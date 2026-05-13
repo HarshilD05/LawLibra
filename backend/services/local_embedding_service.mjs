@@ -1,4 +1,5 @@
 import { Ollama } from "ollama";
+import logger from "../config/logger.mjs";
 
 const EXPECTED_DIMS = 768; // E.g., nomic-embed-text
 const DEFAULT_OLLAMA_URL = "http://localhost:11434";
@@ -18,7 +19,7 @@ class LocalEmbeddingService {
         // Initialize the official Ollama JS client
         this.client = new Ollama({ host: this.baseUrl });
         
-        console.log(`[LocalEmbeddingService] Initialized — Model: ${this.modelName} | URL: ${this.baseUrl}`);
+        logger.info({ type: "embed", event: "init", provider: "ollama", model: this.modelName, url: this.baseUrl });
     }
 
     /**
@@ -31,7 +32,7 @@ class LocalEmbeddingService {
             const response = await fetch(this.baseUrl);
             return response.ok;
         } catch (err) {
-            console.error(`[LocalEmbeddingService] Failed to reach Ollama at ${this.baseUrl}:`, err.message);
+            logger.error({ type: "embed", event: "ping_failed", provider: "ollama", url: this.baseUrl, err: err.message });
             return false;
         }
     }
@@ -60,13 +61,13 @@ class LocalEmbeddingService {
 
         const valid = texts.filter(t => typeof t === "string" && t.trim());
         if (valid.length !== texts.length) {
-            console.warn(`[LocalEmbeddingService] embed: skipped ${texts.length - valid.length} empty items`);
+            logger.warn({ type: "embed", event: "skipped_empty", provider: "ollama", skipped: texts.length - valid.length });
         }
 
         // Before sending the payload, aggressively check if the service is up
         await this.checkConnection();
 
-        console.log(`[LocalEmbeddingService] Embedding batch of ${valid.length} chunks via Ollama (isQuery: ${isQuery})...`);
+        logger.debug({ type: "embed", event: "batch_start", provider: "ollama", count: valid.length, isQuery });
 
         try {
             // Using the official Ollama JS package
@@ -83,12 +84,12 @@ class LocalEmbeddingService {
 
             // Verify the dimensions
             embeddings.forEach((v, i) => this._validateDims(v, `batch[${i}]`));
-            console.log(`[LocalEmbeddingService] Batch complete — ${embeddings.length} vectors generated`);
+            logger.debug({ type: "embed", event: "batch_done", provider: "ollama", count: embeddings.length });
 
             return embeddings;
 
         } catch (err) {
-            console.error(`[LocalEmbeddingService] embed failed:`, err.message);
+            logger.error({ type: "embed", event: "batch_failed", provider: "ollama", err: err.message });
             throw err;
         }
     }

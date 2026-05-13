@@ -23,6 +23,7 @@ import { HumanMessage, AIMessage, SystemMessage }      from "@langchain/core/mes
 import db                                              from "../config/db.mjs";
 import { createEmbeddingService }                      from "../services/embedding_factory.mjs";
 import { createLLM }                                   from "../services/llm_factory.mjs";
+import logger                                          from "../config/logger.mjs";
 
 // ─── RAG singletons (lazy-initialized on first chat request) ─────────────────
 // _llm is created lazily so the HTTP server starts even if the API key is
@@ -104,7 +105,7 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
         [pgVector, caseId, GLOBAL_CASE_ID, threshold],
     );
 
-    console.log(`[Chat RAG] Query matched ${chunks.length} chunks (threshold: ${threshold}, caseId: ${caseId})`);
+    logger.debug({ type: "chat", op: "rag_query", caseId, chunks: chunks.length, threshold });
 
     // ── 4. Guard — no chunks above threshold ─────────────────────────────────
     if (chunks.length === 0) {
@@ -193,7 +194,7 @@ export const createThread = async (req, res) => {
         return res.status(201).json({ thread: thread.toObject() });
 
     } catch (err) {
-        console.error("[Chat] createThread error:", err.message);
+        logger.error({ type: "chat", op: "createThread", caseId: req.body?.caseId, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -222,7 +223,7 @@ export const getThreads = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("[Chat] getThreads error:", err.message);
+        logger.error({ type: "chat", op: "getThreads", caseId: req.query?.caseId, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -242,7 +243,7 @@ export const getThreadById = async (req, res) => {
         return res.status(200).json({ thread: thread.toObject() });
 
     } catch (err) {
-        console.error("[Chat] getThreadById error:", err.message);
+        logger.error({ type: "chat", op: "getThreadById", threadId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -272,7 +273,7 @@ export const renameThread = async (req, res) => {
         return res.status(200).json({ thread: updated.toObject() });
 
     } catch (err) {
-        console.error("[Chat] renameThread error:", err.message);
+        logger.error({ type: "chat", op: "renameThread", threadId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -297,7 +298,7 @@ export const deleteThread = async (req, res) => {
         return res.status(200).json({ message: "Thread deleted successfully." });
 
     } catch (err) {
-        console.error("[Chat] deleteThread error:", err.message);
+        logger.error({ type: "chat", op: "deleteThread", threadId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -327,7 +328,7 @@ export const getMessages = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("[Chat] getMessages error:", err.message);
+        logger.error({ type: "chat", op: "getMessages", threadId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -378,7 +379,7 @@ export const sendMessage = async (req, res) => {
         });
 
     } catch (err) {
-        console.error("[Chat] sendMessage error:", err.message);
+        logger.error({ type: "chat", op: "sendMessage", threadId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };

@@ -1,5 +1,6 @@
 import Event from "../models/event.model.mjs";
 import { eventReminderQueue } from "../config/queue.mjs";
+import logger from "../config/logger.mjs";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -96,7 +97,7 @@ export const createEvent = async (req, res) => {
 
         return res.status(201).json({ event: event.toObject() });
     } catch (err) {
-        console.error("[Events] createEvent error:", err.message);
+        logger.error({ type: "event", op: "createEvent", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -127,7 +128,7 @@ export const getEvents = async (req, res) => {
             offset,
         });
     } catch (err) {
-        console.error("[Events] getEvents error:", err.message);
+        logger.error({ type: "event", op: "getEvents", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -146,7 +147,7 @@ export const getEventById = async (req, res) => {
 
         return res.status(200).json({ event: event.toObject() });
     } catch (err) {
-        console.error("[Events] getEventById error:", err.message);
+        logger.error({ type: "event", op: "getEventById", eventId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -205,7 +206,7 @@ export const updateEvent = async (req, res) => {
 
         return res.status(200).json({ event: updated.toObject() });
     } catch (err) {
-        console.error("[Events] updateEvent error:", err.message);
+        logger.error({ type: "event", op: "updateEvent", eventId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -224,7 +225,7 @@ export const deleteEvent = async (req, res) => {
 
         return res.status(200).json({ message: "Event deleted successfully." });
     } catch (err) {
-        console.error("[Events] deleteEvent error:", err.message);
+        logger.error({ type: "event", op: "deleteEvent", eventId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };

@@ -1,6 +1,8 @@
+import logger from "../config/logger.mjs";
+
 /**
  * ExternalEmbeddingService
- * Connects to an external REST endpoint (e.g., HuggingFace Inference Endpoints, 
+ * Connects to an external REST endpoint (e.g., HuggingFace Inference Endpoints,
  * a hosted Colab server, or an OpenAI-compatible API) to generate embeddings.
  */
 class ExternalEmbeddingService {
@@ -13,7 +15,7 @@ class ExternalEmbeddingService {
             throw new Error(`[ExternalEmbeddingService] EXTERNAL_EMBEDDING_ENDPOINT is not defined in .env`);
         }
 
-        console.log(`[ExternalEmbeddingService] Initialized — Endpoint: ${this.endpoint} | Dims: ${this.expectedDims}`);
+        logger.info({ type: "embed", event: "init", provider: "external", endpoint: this.endpoint, dims: this.expectedDims });
     }
 
     /**
@@ -29,10 +31,10 @@ class ExternalEmbeddingService {
 
         const valid = texts.filter(t => typeof t === "string" && t.trim());
         if (valid.length !== texts.length) {
-            console.warn(`[ExternalEmbeddingService] embed: skipped ${texts.length - valid.length} empty items`);
+            logger.warn({ type: "embed", event: "skipped_empty", provider: "external", skipped: texts.length - valid.length });
         }
 
-        console.log(`[ExternalEmbeddingService] Embedding batch of ${valid.length} chunks via External API (isQuery: ${isQuery})...`);
+        logger.debug({ type: "embed", event: "batch_start", provider: "external", count: valid.length, isQuery });
 
         try {
             const headers = { 
@@ -75,12 +77,12 @@ class ExternalEmbeddingService {
 
             // Verify dimensions
             embeddings.forEach((v, i) => this._validateDims(v, `batch[${i}]`));
-            console.log(`[ExternalEmbeddingService] Batch complete — ${embeddings.length} vectors generated`);
+            logger.debug({ type: "embed", event: "batch_done", provider: "external", count: embeddings.length });
 
             return embeddings;
 
         } catch (err) {
-            console.error(`[ExternalEmbeddingService] embed failed:`, err.message);
+            logger.error({ type: "embed", event: "batch_failed", provider: "external", err: err.message });
             throw err;
         }
     }

@@ -1,5 +1,6 @@
 import { Case } from "../models/case.model.mjs";
 import { getCaseDirPath, getDocumentDirPath, ensureDir, deleteDirRecursive } from "../utils/storage.utils.mjs";
+import logger from "../config/logger.mjs";
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -51,7 +52,7 @@ export const createCase = async (req, res) => {
 
         return res.status(201).json({ case: newCase.toSafeObject() });
     } catch (err) {
-        console.error("[Cases] createCase error:", err.message);
+        logger.error({ type: "case", op: "createCase", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -88,7 +89,7 @@ export const getCases = async (req, res) => {
             total, limit, offset,
         });
     } catch (err) {
-        console.error("[Cases] getCases error:", err.message);
+        logger.error({ type: "case", op: "getCases", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -107,7 +108,7 @@ export const getCaseById = async (req, res) => {
 
         return res.status(200).json({ case: access.kase.toSafeObject() });
     } catch (err) {
-        console.error("[Cases] getCaseById error:", err.message);
+        logger.error({ type: "case", op: "getCaseById", caseId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -138,7 +139,7 @@ export const updateCase = async (req, res) => {
 
         return res.status(200).json({ case: updated.toSafeObject() });
     } catch (err) {
-        console.error("[Cases] updateCase error:", err.message);
+        logger.error({ type: "case", op: "updateCase", caseId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -162,12 +163,12 @@ export const deleteCase = async (req, res) => {
 
         // Delete all case files from disk (non-fatal — DB is the source of truth)
         await deleteDirRecursive(getCaseDirPath(req.params.id)).catch((e) => {
-            console.warn(`[Cases] Could not delete data directory for case ${deleted.id}: ${e.message}`);
+            logger.warn({ type: "case", op: "deleteCase", event: "disk_cleanup_failed", caseId: deleted.id, err: e.message });
         });
 
         return res.status(200).json({ message: "Case deleted successfully." });
     } catch (err) {
-        console.error("[Cases] deleteCase error:", err.message);
+        logger.error({ type: "case", op: "deleteCase", caseId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -200,7 +201,7 @@ export const assignLawyer = async (req, res) => {
         const assignment = await Case.assignLawyer(req.params.id, lawyerId, accessLevel);
         return res.status(200).json({ assignment });
     } catch (err) {
-        console.error("[Cases] assignLawyer error:", err.message);
+        logger.error({ type: "case", op: "assignLawyer", caseId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -219,7 +220,7 @@ export const removeAssignment = async (req, res) => {
 
         return res.status(200).json({ message: "Lawyer removed from case successfully." });
     } catch (err) {
-        console.error("[Cases] removeAssignment error:", err.message);
+        logger.error({ type: "case", op: "removeAssignment", caseId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -238,7 +239,7 @@ export const getAssignments = async (req, res) => {
         const assignments = await Case.getAssignments(req.params.id);
         return res.status(200).json({ assignments });
     } catch (err) {
-        console.error("[Cases] getAssignments error:", err.message);
+        logger.error({ type: "case", op: "getAssignments", caseId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };

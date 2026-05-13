@@ -20,6 +20,7 @@
  */
 
 import { GoogleGenAI } from "@google/genai";
+import logger from "../config/logger.mjs";
 
 const EXPECTED_DIMS = 768;
 const EMBEDDING_BATCH_SIZE = parseInt(process.env.EMBEDDING_BATCH_SIZE || "100", 10);
@@ -41,10 +42,7 @@ class EmbeddingService {
             apiKey: process.env.GOOGLE_EMBEDDING_API_KEY,
         });
 
-        console.log(
-            `[EmbeddingService] Initialized — ${MODEL_NAME} (${EXPECTED_DIMS} dims) ` +
-            `| doc task: ${TASK_RETRIEVAL_DOCUMENT} | query task: ${TASK_QUESTION_ANSWERING}`,
-        );
+        logger.info({ type: "embed", event: "init", provider: "google", model: MODEL_NAME, dims: EXPECTED_DIMS });
     }
 
     /**
@@ -60,11 +58,11 @@ class EmbeddingService {
 
         const valid = texts.filter(t => typeof t === "string" && t.trim());
         if (valid.length !== texts.length) {
-            console.warn(`[EmbeddingService] embed: skipped ${texts.length - valid.length} empty items`);
+            logger.warn({ type: "embed", event: "skipped_empty", provider: "google", skipped: texts.length - valid.length });
         }
 
         const taskType = isQuery ? TASK_QUESTION_ANSWERING : TASK_RETRIEVAL_DOCUMENT;
-        console.log(`[EmbeddingService] Embedding batch of ${valid.length} items (Task: ${taskType})...`);
+        logger.debug({ type: "embed", event: "batch_start", provider: "google", count: valid.length, taskType });
 
         try {
             // Google"s batchEmbedContents typically limits requests to 100 chunks at a time.
@@ -73,7 +71,7 @@ class EmbeddingService {
             
             for (let i = 0; i < valid.length; i += EMBEDDING_BATCH_SIZE) {
                 const batch = valid.slice(i, i + EMBEDDING_BATCH_SIZE);
-                console.log(`[EmbeddingService] Processing sub-batch ${Math.floor(i / EMBEDDING_BATCH_SIZE) + 1} (${batch.length} chunks)...`);
+                logger.debug({ type: "embed", event: "sub_batch", provider: "google", batch: Math.floor(i / EMBEDDING_BATCH_SIZE) + 1, size: batch.length });
                 
                 let attempt = 0;
                 let response = null;
@@ -93,7 +91,7 @@ class EmbeddingService {
                         if (isRateLimit && attempt === 0) {
                             attempt++;
                             const retryDelay = parseInt(process.env.EMBEDDING_RETRY_DELAY_MS || "65000", 10);
-                            console.warn(`[EmbeddingService] Rate limit hit (429). Waiting ${retryDelay}ms before retry...`);
+                            logger.warn({ type: "embed", event: "rate_limit", provider: "google", retryDelayMs: retryDelay });
                             await new Promise(resolve => setTimeout(resolve, retryDelay));
                         } else {
                             throw err;
@@ -116,13 +114,11 @@ class EmbeddingService {
             }
 
             vectors.forEach((v, i) => this._validateDims(v, `batch[${i}]`));
-            console.log(`[EmbeddingService] Batch complete — ${vectors.length} vectors generated`);
+            logger.debug({ type: "embed", event: "batch_done", provider: "google", count: vectors.length });
             return vectors;
 
         } catch (err) {
-            console.warn(
-                `[EmbeddingService] embed failed (${err.message}). Falling back to per-text calls.`,
-            );
+            logger.warn({ type: "embed", event: "batch_fallback", provider: "google", err: err.message });
             return await this._embedOneByOne(valid, taskType, err);
         }
     }
@@ -158,7 +154,7 @@ class EmbeddingService {
                 vectors.push(v);
             }
 
-            console.log(`[EmbeddingService] Fallback complete — ${vectors.length} vectors generated`);
+            logger.debug({ type: "embed", event: "fallback_done", provider: "google", count: vectors.length });
             return vectors;
 
         } catch (fallbackErr) {

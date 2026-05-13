@@ -17,6 +17,8 @@
  *   external     external_embedding_service.mjs   EXTERNAL_EMBEDDING_ENDPOINT
  */
 
+import logger from "../config/logger.mjs";
+
 const EMBEDDING_METHOD = (process.env.EMBEDDING_METHOD || "google").toLowerCase();
 
 /**
@@ -27,7 +29,7 @@ const EMBEDDING_METHOD = (process.env.EMBEDDING_METHOD || "google").toLowerCase(
  * @returns {Promise<Object>} An instance of the chosen EmbeddingService.
  */
 export async function createEmbeddingService() {
-    console.log(`[EmbeddingFactory] Resolving embedding method: ${EMBEDDING_METHOD}`);
+    logger.debug({ type: "embed", event: "factory_resolve", method: EMBEDDING_METHOD });
 
     try {
         switch (EMBEDDING_METHOD) {

@@ -1,4 +1,5 @@
 import pg from "pg";
+import logger from "./logger.mjs";
 
 const { Pool } = pg;
 
@@ -10,12 +11,10 @@ const pool = new Pool({
     password: process.env.DB_PASSWORD,
 });
 
-pool.on("connect", () => {
-    console.log("[DB] Connected to PostgreSQL");
-});
+    logger.info({ type: "db", event: "connected" });
 
 pool.on("error", (err) => {
-    console.error("[DB] Unexpected error on idle client:", err.message);
+    logger.error({ type: "db", event: "idle_error", err: err.message });
     process.exit(-1);
 });
 

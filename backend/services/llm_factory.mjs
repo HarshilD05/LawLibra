@@ -28,6 +28,8 @@
  * that provider is actually requested.
  */
 
+import logger from "../config/logger.mjs";
+
 // ─── Provider registry ────────────────────────────────────────────────────────
 
 const PROVIDER_CONFIG = {
@@ -122,7 +124,7 @@ export async function createLLM({ provider, model } = {}) {
     const modelName = model || process.env.LLM_MODEL || config.defaultModel;
     const llm       = new LLMClass(config.buildArgs(apiKey, modelName));
 
-    console.log(`[LLMFactory] Initialized — provider: ${providerName}, model: ${modelName}`);
+    logger.info({ type: "llm", event: "init", provider: providerName, model: modelName });
     return llm;
 }
 

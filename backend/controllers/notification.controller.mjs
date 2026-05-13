@@ -1,4 +1,5 @@
 import Notification from "../models/notification.model.mjs";
+import logger from "../config/logger.mjs";
 
 // ─── CRUD Handlers ────────────────────────────────────────────────────────────
 
@@ -33,7 +34,7 @@ export const getNotifications = async (req, res) => {
             offset,
         });
     } catch (err) {
-        console.error("[Notifications] getNotifications error:", err.message);
+        logger.error({ type: "notif", op: "getNotifications", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -48,7 +49,7 @@ export const getUnreadCount = async (req, res) => {
         const count = await Notification.getUnreadCount(req.user.id);
         return res.status(200).json({ unreadCount: count });
     } catch (err) {
-        console.error("[Notifications] getUnreadCount error:", err.message);
+        logger.error({ type: "notif", op: "getUnreadCount", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -80,7 +81,7 @@ export const markRead = async (req, res) => {
 
         return res.status(200).json({ notification: updated.toObject() });
     } catch (err) {
-        console.error("[Notifications] markRead error:", err.message);
+        logger.error({ type: "notif", op: "markRead", notifId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -95,7 +96,7 @@ export const markAllRead = async (req, res) => {
         const count = await Notification.markAllRead(req.user.id);
         return res.status(200).json({ message: `${count} notification(s) marked as read.` });
     } catch (err) {
-        console.error("[Notifications] markAllRead error:", err.message);
+        logger.error({ type: "notif", op: "markAllRead", uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
@@ -115,7 +116,7 @@ export const deleteNotification = async (req, res) => {
 
         return res.status(200).json({ message: "Notification deleted." });
     } catch (err) {
-        console.error("[Notifications] deleteNotification error:", err.message);
+        logger.error({ type: "notif", op: "deleteNotification", notifId: req.params?.id, uid: req.user?.id, err: err.message });
         return res.status(500).json({ error: "Internal server error." });
     }
 };
