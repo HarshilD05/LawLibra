@@ -2,8 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getSession } from '../api/auth.js'
 import * as casesApi from '../api/cases.js'
-import { fmtDate } from '../store/db.js'
 import { StatusBadge, Modal, Field, Input, Select, Textarea, Btn, toast } from '../components/UI.jsx'
+
+const fmtDate = (d) => {
+  if (!d) return '—'
+  try { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }
+  catch { return String(d) }
+}
 
 const CASE_TYPES = ['Contract Dispute', 'Criminal Defense', 'Intellectual Property', 'Corporate', 'Tax Law', 'Probate & Estates', 'Civil Litigation']
 
@@ -24,8 +29,8 @@ export default function Dashboard() {
     const load = async () => {
       try {
         const data = await casesApi.getCases({ limit: 5 })
-        // Backend may return { cases: [...] } or directly an array
-        setCases(Array.isArray(data) ? data.slice(0, 5) : (data.cases || []).slice(0, 5))
+        // Backend returns { data: [...], total, limit, offset }
+        setCases((Array.isArray(data) ? data : (data.data ?? [])).slice(0, 5))
       } catch (err) {
         toast.error(err.message || 'Failed to load cases.')
       } finally {
@@ -51,12 +56,14 @@ export default function Dashboard() {
     if (!form.title || !form.clientName) { toast.warning('Title and client name are required.'); return }
     setCreating(true)
     try {
-      const newCase = await casesApi.createCase({
+      const res = await casesApi.createCase({
         ...form,
         caseNumber: form.caseNumber || 'LL-' + Date.now().toString(36).toUpperCase(),
         status: 'OPEN',
         priority: 'MEDIUM',
       })
+      // Backend returns { case: {...} }
+      const newCase = res.case ?? res
       setCases(prev => [newCase, ...prev].slice(0, 5))
       toast.success('Case created successfully!')
       setShowNewCase(false)

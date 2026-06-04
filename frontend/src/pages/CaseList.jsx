@@ -2,8 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as casesApi from '../api/cases.js'
 import { getSession } from '../api/auth.js'
-import { fmtDate } from '../store/db.js'
 import { StatusBadge, Modal, Field, Input, Select, Textarea, Btn, ConfirmModal, toast } from '../components/UI.jsx'
+
+// Pure utility — no store dependency
+const fmtDate = (d) => {
+  if (!d) return null
+  try { return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) }
+  catch { return String(d) }
+}
 
 const CASE_TYPES = ['Contract Dispute', 'Criminal Defense', 'Intellectual Property', 'Corporate', 'Tax Law', 'Probate & Estates', 'Civil Litigation']
 const FILTERS = ['ALL', 'OPEN', 'CLOSED', 'ARCHIVED']
@@ -29,7 +35,8 @@ export default function CaseList() {
       try {
         const params = filter !== 'ALL' ? { status: filter } : {}
         const data = await casesApi.getCases(params)
-        setCases(Array.isArray(data) ? data : (data.cases || []))
+        // GET /api/cases → { data: [...], total, limit, offset }
+        setCases(Array.isArray(data) ? data : (data.data ?? []))
       } catch (err) {
         toast.error(err.message || 'Failed to load cases.')
       } finally {
@@ -48,13 +55,14 @@ export default function CaseList() {
     if (!form.title || !form.clientName) { toast.warning('Title and client name are required.'); return }
     setCreating(true)
     try {
-      const newCase = await casesApi.createCase({
+      const res = await casesApi.createCase({
         ...form,
         caseNumber: form.caseNumber || 'LL-' + Date.now().toString(36).toUpperCase(),
         status: 'OPEN',
-        priority: 'MEDIUM',
       })
-      // Add to the top of the current list if it matches the active filter
+      // POST /api/cases → { case: {...} }
+      const newCase = res.case ?? res
+      // Add to list if it matches the active filter
       if (filter === 'ALL' || filter === 'OPEN') {
         setCases(prev => [newCase, ...prev])
       }
@@ -142,7 +150,8 @@ export default function CaseList() {
                       <div className="w-1.5 h-8 bg-secondary rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
                       <div>
                         <p className="text-sm font-bold text-on-surface">{c.title}</p>
-                        <p className="text-xs text-on-surface-variant mt-0.5">{c.type}</p>
+                        {/* type is not a top-level field — lives in metadata */}
+                        <p className="text-xs text-on-surface-variant mt-0.5">{c.metadata?.type || c.courtName || ''}</p>
                       </div>
                     </div>
                   </td>
@@ -153,8 +162,9 @@ export default function CaseList() {
                   </td>
                   <td className="px-6 py-5 text-center"><StatusBadge status={c.status} /></td>
                   <td className="px-6 py-5">
-                    {c.nextHearing
-                      ? <div className="flex items-center gap-2"><span className="material-symbols-outlined text-sm text-secondary">calendar_today</span><p className="text-sm font-medium">{fmtDate(c.nextHearing)}</p></div>
+                    {/* nextHearing is stored in metadata.nextHearing */}
+                  {c.metadata?.nextHearing
+                      ? <div className="flex items-center gap-2"><span className="material-symbols-outlined text-sm text-secondary">calendar_today</span><p className="text-sm font-medium">{fmtDate(c.metadata.nextHearing)}</p></div>
                       : <span className="text-slate-400 text-xs italic">None scheduled</span>}
                   </td>
                   <td className="px-6 py-5 text-right" onClick={e => e.stopPropagation()}>

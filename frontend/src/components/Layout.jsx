@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { getSession, clearSession } from '../api/auth.js'
+import { getUnreadCount } from '../api/notifications.js'
 import { ToastContainer } from './UI.jsx'
 
 // Derive initials from a display name
@@ -20,23 +21,41 @@ const BOTTOM = [
   { to: '/settings', icon: 'manage_accounts', label: 'Settings' },
 ]
 
-const TYPE_ICON  = { hearing: 'gavel', document: 'description', case: 'folder_open', ai: 'auto_awesome' }
-const TYPE_COLOR = { hearing: 'bg-amber-100 text-amber-600', document: 'bg-blue-100 text-blue-600', case: 'bg-slate-100 text-slate-600', ai: 'bg-purple-100 text-purple-600' }
-
 export default function Layout() {
-  const navigate = useNavigate()
-  const session = getSession() || {}
-  const user = { name: session.name, email: session.email, role: session.role }
-  const isAdmin = user.role === 'ADMIN'
-  const [notifOpen, setNotifOpen] = useState(false)
+  const navigate    = useNavigate()
+  const session     = getSession() || {}
+  const user        = { name: session.name, email: session.email, role: session.role }
+  const isAdmin     = user.role === 'ADMIN'
+
+  const [notifOpen,   setNotifOpen]   = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
-  const notifRef = useRef(null)
+  const [unread,      setUnread]      = useState(0)
+
+  const notifRef   = useRef(null)
   const profileRef = useRef(null)
 
+  // ── Fetch unread notification count for the bell badge ──────────────────────
+  const refreshUnread = useCallback(async () => {
+    try {
+      const data = await getUnreadCount()
+      // backend returns { unreadCount: number }
+      setUnread(typeof data?.unreadCount === 'number' ? data.unreadCount : 0)
+    } catch {
+      // Silently ignore — badge just won't show if the request fails
+    }
+  }, [])
 
   useEffect(() => {
+    refreshUnread()
+    // Re-poll every 60 seconds so the badge stays current
+    const id = setInterval(refreshUnread, 60_000)
+    return () => clearInterval(id)
+  }, [refreshUnread])
+
+  // ── Close dropdowns on outside click ───────────────────────────────────────
+  useEffect(() => {
     const handler = (e) => {
-      if (notifRef.current && !notifRef.current.contains(e.target)) setNotifOpen(false)
+      if (notifRef.current   && !notifRef.current.contains(e.target))   setNotifOpen(false)
       if (profileRef.current && !profileRef.current.contains(e.target)) setProfileOpen(false)
     }
     document.addEventListener('mousedown', handler)
@@ -48,8 +67,9 @@ export default function Layout() {
     navigate('/login')
   }
 
-  const markAllRead = () => {
-    // Placeholder — will call notifications API when Notifications page is wired
+  const goToNotifications = () => {
+    navigate('/notifications')
+    setUnread(0) // optimistically clear badge when navigating to the notifications page
   }
 
   return (
@@ -153,13 +173,18 @@ export default function Layout() {
           </div>
 
           <div className="flex items-center gap-6">
-            {/* Notifications — navigate to full page */}
+            {/* Notification bell with real unread badge */}
             <div className="relative" ref={notifRef}>
               <button
-                onClick={() => navigate('/notifications')}
+                onClick={goToNotifications}
                 className="p-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors relative"
               >
                 <span className="material-symbols-outlined text-[22px] text-slate-500">notifications</span>
+                {unread > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[16px] h-4 flex items-center justify-center px-1">
+                    {unread > 9 ? '9+' : unread}
+                  </span>
+                )}
               </button>
             </div>
 

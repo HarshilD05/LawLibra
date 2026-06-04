@@ -3,7 +3,16 @@ import { getSession } from '../api/auth.js'
 import * as chatApi from '../api/chat.js'
 import * as casesApi from '../api/cases.js'
 import { Markdown, toast } from '../components/UI.jsx'
-import { relTime } from '../store/db.js'
+
+const relTime = (iso) => {
+  if (!iso) return ''
+  const diff = Date.now() - new Date(iso).getTime()
+  const m = Math.floor(diff / 60000), h = Math.floor(diff / 3600000), d = Math.floor(diff / 86400000)
+  if (m < 1) return 'just now'
+  if (m < 60) return `${m}m ago`
+  if (h < 24) return `${h}h ago`
+  return `${d}d ago`
+}
 
 const initials = (name = '') =>
   name.split(/[\s,]+/).filter(Boolean).slice(0, 2).map(w => w[0]?.toUpperCase()).join('')
@@ -16,6 +25,8 @@ const SUGGESTIONS = [
   'Explain the difference between arbitration and mediation',
   'How do I file a motion for summary judgment?',
 ]
+
+const DEFAULT_CASE_ID = '00000000-0000-0000-0000-000000000000';
 
 export default function AIAssistant() {
   const session = getSession() || {}
@@ -41,12 +52,16 @@ export default function AIAssistant() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [threadsData, casesData] = await Promise.all([
-          chatApi.getThreads(),
+        const [casesData, threadsData] = await Promise.all([
           casesApi.getCases(),
+          chatApi.getThreads({caseId: DEFAULT_CASE_ID }),
         ])
-        setThreads(Array.isArray(threadsData) ? threadsData : (threadsData.threads || []))
-        setCases(Array.isArray(casesData) ? casesData : (casesData.cases || []))
+
+        // GET /api/chat/threads?caseId= → { data: [...] }
+        // GET /api/cases → { data: [...] }
+        setThreads(Array.isArray(threadsData) ? threadsData : (threadsData.data ?? []))
+        setCases(Array.isArray(casesData) ? casesData : (casesData.data ?? []))
+
       } catch (err) {
         toast.error(err.message || 'Failed to load chat history.')
       } finally {
@@ -61,7 +76,8 @@ export default function AIAssistant() {
     setMessages([])
     try {
       const data = await chatApi.getMessages(t.id)
-      setMessages(Array.isArray(data) ? data : (data.messages || []))
+      // GET /api/chat/threads/:id/messages → { data: [...] }
+      setMessages(Array.isArray(data) ? data : (data.data ?? []))
     } catch (err) {
       toast.error(err.message || 'Failed to load messages.')
     }
@@ -70,10 +86,12 @@ export default function AIAssistant() {
   }
 
   const newThread = async () => {
-    const caseId = chatMode === 'case' && selectedCaseId ? selectedCaseId : null
-    const caseTitle = caseId ? (cases.find(c => c.id === caseId)?.title || 'Case Chat') : null
+    const caseId = chatMode === 'case' && selectedCaseId ? selectedCaseId : DEFAULT_CASE_ID
+    const caseTitle = caseId !== DEFAULT_CASE_ID ? (cases.find(c => c.id === caseId)?.title || 'Case Chat') : null
     try {
-      const t = await chatApi.createThread({ caseId, title: caseTitle || 'New Chat' })
+      // POST /api/chat/threads → { thread: {...} }
+      const res = await chatApi.createThread({ caseId, title: caseTitle || 'New Chat' })
+      const t = res.thread ?? res
       setThreads(prev => [t, ...prev])
       setActiveThread(t)
       setMessages([])
@@ -108,17 +126,19 @@ export default function AIAssistant() {
   const send = async (msg) => {
     const text = (msg || input).trim()
     if (!text || loading) return
-    const caseId = activeThread?.caseId || (chatMode === 'case' ? selectedCaseId : null) || null
+    const caseId = activeThread?.caseId || (chatMode === 'case' ? selectedCaseId : DEFAULT_CASE_ID) || DEFAULT_CASE_ID
 
     // If no active thread, create one first
     let thread = activeThread
     if (!thread) {
-      const caseTitle = caseId ? (cases.find(c => c.id === caseId)?.title || 'Case Chat') : null
+      const caseTitle = caseId !== DEFAULT_CASE_ID ? (cases.find(c => c.id === caseId)?.title || 'Case Chat') : null
       try {
-        thread = await chatApi.createThread({
+        // POST /api/chat/threads → { thread: {...} }
+        const res = await chatApi.createThread({
           caseId,
           title: caseTitle ? `${caseTitle.slice(0, 30)}: ${text.slice(0, 20)}` : text.slice(0, 42),
         })
+        thread = res.thread ?? res
         setThreads(prev => [thread, ...prev])
         setActiveThread(thread)
         setMessages([])
@@ -130,25 +150,20 @@ export default function AIAssistant() {
 
     // Optimistically show user message
     const tempId = `temp-${Date.now()}`
-    const userMsg = { id: tempId, role: 'user', content: text, createdAt: new Date().toISOString() }
+    const userMsg = { id: tempId, senderType: 'USER', content: text, createdAt: new Date().toISOString() }
     setMessages(prev => [...prev, userMsg])
     setInput('')
     setLoading(true)
 
     try {
-      const response = await chatApi.sendMessage(thread.id, { content: text, caseId })
-      // Replace temp message with confirmed + add AI reply
-      const newMessages = Array.isArray(response) ? response : (response.messages || [{ ...userMsg, id: response.userMessageId }, response.reply].filter(Boolean))
-      if (Array.isArray(response)) {
-        setMessages(response)
-      } else {
-        // Backend returned { userMessage, assistantMessage } or similar
-        setMessages(prev => [
-          ...prev.filter(m => m.id !== tempId),
-          response.userMessage || userMsg,
-          response.assistantMessage || response.reply,
-        ].filter(Boolean))
-      }
+      const response = await chatApi.sendMessage(thread.id, { content: text })
+      // POST /api/chat/threads/:id/messages → { userMessage: {...}, aiMessage: {...} }
+      // senderType is "USER" or "AI" (not role)
+      setMessages(prev => [
+        ...prev.filter(m => m.id !== tempId),
+        response.userMessage || { ...userMsg, senderType: 'USER' },
+        response.aiMessage,
+      ].filter(Boolean))
       // Auto-title if thread was "New Chat"
       if (thread.title === 'New Chat') {
         const newTitle = text.slice(0, 42)
@@ -220,7 +235,7 @@ export default function AIAssistant() {
             <div key={t.id}
               className={`group flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-all ${activeThread?.id === t.id ? 'bg-white shadow-sm border border-outline-variant/20' : 'hover:bg-surface-container-low'}`}
               onClick={() => openThread(t)}>
-              {t.caseId && <span className="material-symbols-outlined text-[12px] text-secondary flex-shrink-0">folder_open</span>}
+              {t.caseId && t.caseId !== DEFAULT_CASE_ID && <span className="material-symbols-outlined text-[12px] text-secondary flex-shrink-0">folder_open</span>}
               {renaming === t.id ? (
                 <input autoFocus value={renameVal} onChange={e => setRenameVal(e.target.value)}
                   onBlur={saveRename} onKeyDown={e => { if (e.key === 'Enter') saveRename(); if (e.key === 'Escape') setRenaming(null) }}
@@ -295,7 +310,7 @@ export default function AIAssistant() {
                 <p className="font-headline text-sm font-bold text-on-surface truncate">{activeThread.title}</p>
                 <p className="text-[10px] font-bold text-secondary uppercase tracking-widest">Libra AI · Sovereign Model</p>
               </div>
-              {activeThread.caseId ? (
+              {activeThread.caseId && activeThread.caseId !== DEFAULT_CASE_ID ? (
                 <span className="text-xs bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full font-semibold flex items-center gap-1">
                   <span className="material-symbols-outlined text-[12px]">folder_open</span>
                   {cases.find(c => c.id === activeThread.caseId)?.title?.slice(0, 30)}
@@ -321,16 +336,16 @@ export default function AIAssistant() {
                 </div>
               )}
               {messages.map(m => (
-                <div key={m.id} className={`flex gap-4 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                  <div className={`w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold ${m.role === 'user' ? 'bg-secondary-container text-on-secondary-container' : 'ai-gradient text-amber-400'}`}>
-                    {m.role === 'user' ? initials(user.name) : <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>}
+                <div key={m.id} className={`flex gap-4 ${m.senderType === 'USER' ? 'flex-row-reverse' : ''}`}>
+                  <div className={`w-9 h-9 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold ${m.senderType === 'USER' ? 'bg-secondary-container text-on-secondary-container' : 'ai-gradient text-amber-400'}`}>
+                    {m.senderType === 'USER' ? initials(user.name) : <span className="material-symbols-outlined text-base" style={{ fontVariationSettings: "'FILL' 1" }}>auto_awesome</span>}
                   </div>
                   <div className="max-w-[75%]">
                     <p className="text-[10px] font-bold text-on-surface-variant mb-1 uppercase tracking-wider">
-                      {m.role === 'user' ? user.name : 'Libra AI'} · {relTime(m.createdAt)}
+                      {m.senderType === 'USER' ? user.name : 'Libra AI'} · {relTime(m.createdAt)}
                     </p>
-                    <div className={`px-5 py-4 text-sm leading-relaxed ${m.role === 'user' ? 'msg-user' : 'msg-ai text-on-surface'}`}>
-                      {m.role === 'assistant' ? <Markdown text={m.content} /> : m.content}
+                    <div className={`px-5 py-4 text-sm leading-relaxed ${m.senderType === 'USER' ? 'msg-user' : 'msg-ai text-on-surface'}`}>
+                      {m.senderType === 'AI' ? <Markdown text={m.content} /> : m.content}
                     </div>
                   </div>
                 </div>

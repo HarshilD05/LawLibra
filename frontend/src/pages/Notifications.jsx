@@ -1,59 +1,128 @@
-import React, { useState, useEffect } from 'react'
-import { relTime } from '../store/db.js'
+import React, { useState, useEffect, useCallback } from 'react'
 import { ConfirmModal, toast } from '../components/UI.jsx'
+import * as notificationsApi from '../api/notifications.js'
 
-// NOTE: Notifications API does not yet exist in the backend routes.
-// This page will be wired to the real API once the notifications endpoint is built.
-// For now it shows an empty state with the correct UI structure.
+/* ─── Constants ─────────────────────────────────────────────────────────────── */
 
-const TYPE_ICON = { hearing: 'gavel', document: 'description', case: 'folder_open', ai: 'auto_awesome', general: 'notifications' }
-const TYPE_COLOR = {
-  hearing:  'bg-red-100 text-red-600',
-  document: 'bg-blue-100 text-blue-600',
-  case:     'bg-emerald-100 text-emerald-600',
-  ai:       'bg-purple-100 text-purple-600',
-  general:  'bg-slate-100 text-slate-500',
+/**
+ * Backend notificationType → icon mapping
+ * notificationType values: CASE_ASSIGNED, CASE_UNASSIGNED, CASE_UPDATED,
+ *   HEARING_SCHEDULED, DOCUMENT_PROCESSED, DOCUMENT_ERROR,
+ *   CHAT_RESPONSE_READY, CHAT_ERROR, CHAT_DOCUMENT_PROCESSED,
+ *   CHAT_DOCUMENT_ERROR, EVENT_REMINDER
+ */
+const TYPE_ICON = {
+  CASE_ASSIGNED:           'folder_open',
+  CASE_UNASSIGNED:         'folder_off',
+  CASE_UPDATED:            'edit_note',
+  HEARING_SCHEDULED:       'gavel',
+  DOCUMENT_PROCESSED:      'task',
+  DOCUMENT_ERROR:          'error',
+  CHAT_RESPONSE_READY:     'auto_awesome',
+  CHAT_ERROR:              'error_outline',
+  CHAT_DOCUMENT_PROCESSED: 'description',
+  CHAT_DOCUMENT_ERROR:     'broken_image',
+  EVENT_REMINDER:          'notifications_active',
 }
 
-const FILTERS = ['ALL', 'UNREAD', 'hearing', 'document', 'case', 'ai']
+/**
+ * entityType → color mapping
+ * entityType values: CASE, CHAT, EVENT
+ */
+const ENTITY_COLOR = {
+  CASE:  'bg-emerald-100 text-emerald-600',
+  CHAT:  'bg-purple-100 text-purple-600',
+  EVENT: 'bg-amber-100 text-amber-600',
+}
+
+// Filter tabs shown in the UI — ALL, UNREAD, then entityTypes
+const FILTERS = ['ALL', 'UNREAD', 'CASE', 'CHAT', 'EVENT']
+
+/* ─── Helpers ────────────────────────────────────────────────────────────────── */
+const relTime = (iso) => {
+  if (!iso) return ''
+  const diff = Date.now() - new Date(iso).getTime()
+  const m = Math.floor(diff / 60000), h = Math.floor(diff / 3600000), d = Math.floor(diff / 86400000)
+  if (m < 1) return 'just now'
+  if (m < 60) return `${m}m ago`
+  if (h < 24) return `${h}h ago`
+  if (d < 7)  return `${d}d ago`
+  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
 
 export default function Notifications() {
-  const [filter, setFilter] = useState('ALL')
+  const [filter, setFilter]               = useState('ALL')
   const [notifications, setNotifications] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [clearAll, setClearAll] = useState(false)
+  const [loading, setLoading]             = useState(true)
+  const [clearAll, setClearAll]           = useState(false)
 
-  // TODO: Replace with real API call once GET /api/notifications endpoint is available
-  useEffect(() => {
-    // Simulate empty load from backend
-    setNotifications([])
-    setLoading(false)
+  /* ── Fetch ─────────────────────────────────────────────────────────────── */
+  const fetchNotifications = useCallback(async () => {
+    try {
+      const res = await notificationsApi.getNotifications()
+      // GET /api/notifications → { data: [...], total, limit, offset }
+      setNotifications(Array.isArray(res) ? res : (res.data ?? []))
+    } catch (err) {
+      toast.error(err.message || 'Failed to load notifications.')
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
-  const unreadCount = notifications.filter(n => !n.read).length
+  useEffect(() => { fetchNotifications() }, [fetchNotifications])
+
+  /* ── Derived values ────────────────────────────────────────────────────── */
+  // Backend uses `isRead` (boolean)
+  const unreadCount = notifications.filter(n => !n.isRead).length
 
   const filtered = notifications.filter(n => {
     if (filter === 'ALL')    return true
-    if (filter === 'UNREAD') return !n.read
-    return n.type === filter
+    if (filter === 'UNREAD') return !n.isRead
+    return n.entityType === filter   // CASE | CHAT | EVENT
   })
 
-  // Local state updates (will be wired to API later)
-  const markRead = (id) => {
-    setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n))
+  /* ── Mutations ─────────────────────────────────────────────────────────── */
+  const handleMarkRead = async (id) => {
+    // Optimistic update
+    setNotifications(prev => prev.map(n => n.id === id ? { ...n, isRead: true } : n))
+    try {
+      await notificationsApi.markRead(id)
+    } catch (err) {
+      toast.error(err.message || 'Failed to mark as read.')
+      fetchNotifications()
+    }
   }
 
-  const markAllRead = () => {
-    setNotifications(prev => prev.map(n => ({ ...n, read: true })))
+  const handleMarkAllRead = async () => {
+    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })))
+    try {
+      await notificationsApi.markAllRead()
+    } catch (err) {
+      toast.error(err.message || 'Failed to mark all as read.')
+      fetchNotifications()
+    }
   }
 
-  const deleteNotif = (id) => {
+  const handleDelete = async (id) => {
     setNotifications(prev => prev.filter(n => n.id !== id))
+    try {
+      await notificationsApi.deleteNotification(id)
+    } catch (err) {
+      toast.error(err.message || 'Failed to delete notification.')
+      fetchNotifications()
+    }
   }
 
-  const deleteAll = () => {
+  const handleDeleteAll = async () => {
+    const ids = notifications.map(n => n.id)
     setNotifications([])
-    toast.info('All notifications cleared.')
+    try {
+      await Promise.all(ids.map(id => notificationsApi.deleteNotification(id)))
+      toast.info('All notifications cleared.')
+    } catch (err) {
+      toast.error(err.message || 'Failed to clear all notifications.')
+      fetchNotifications()
+    }
   }
 
   return (
@@ -73,7 +142,7 @@ export default function Notifications() {
           <p className="text-on-surface-variant text-sm font-medium">Stay up to date with case activity.</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={markAllRead}
+          <button onClick={handleMarkAllRead}
             className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-outline-variant/50 text-sm font-semibold text-on-surface-variant hover:bg-white hover:shadow-sm transition-all">
             <span className="material-symbols-outlined text-base">done_all</span>Mark all read
           </button>
@@ -87,7 +156,7 @@ export default function Notifications() {
       {/* Filter Pills */}
       <div className="flex flex-wrap gap-2 mb-6">
         {FILTERS.map(f => {
-          const label = f === 'ALL' ? 'All' : f === 'UNREAD' ? `Unread (${unreadCount})` : f.charAt(0).toUpperCase() + f.slice(1)
+          const label = f === 'ALL' ? 'All' : f === 'UNREAD' ? `Unread (${unreadCount})` : f.charAt(0) + f.slice(1).toLowerCase()
           return (
             <button key={f} onClick={() => setFilter(f)}
               className={`px-4 py-1.5 rounded-full text-sm font-bold transition-all border ${filter === f ? 'bg-[#0D1F3C] text-white border-transparent shadow-md' : 'border-outline-variant/40 text-on-surface-variant bg-white hover:bg-surface-container-low'}`}>
@@ -116,34 +185,43 @@ export default function Notifications() {
         ) : (
           <div className="divide-y divide-surface-container-low">
             {filtered.map(n => {
-              const tc = TYPE_COLOR[n.type] || TYPE_COLOR.general
-              const ic = TYPE_ICON[n.type] || 'notifications'
+              // Backend fields: isRead, msg, notificationType, entityType, createdAt
+              const entityColor = ENTITY_COLOR[n.entityType] || 'bg-slate-100 text-slate-500'
+              const icon        = TYPE_ICON[n.notificationType] || 'notifications'
               return (
-                <div key={n.id} className={`flex items-start gap-4 px-6 py-4 hover:bg-surface-container-low/30 transition-colors group ${n.read ? 'opacity-70' : ''}`}>
+                <div key={n.id} className={`flex items-start gap-4 px-6 py-4 hover:bg-surface-container-low/30 transition-colors group ${n.isRead ? 'opacity-70' : ''}`}>
+                  {/* Unread dot */}
                   <div className="mt-1 flex-shrink-0 w-2">
-                    {!n.read && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
+                    {!n.isRead && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
                   </div>
-                  <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center ${tc}`}>
-                    <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>{ic}</span>
+                  {/* Icon */}
+                  <div className={`w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center ${entityColor}`}>
+                    <span className="material-symbols-outlined text-[18px]" style={{ fontVariationSettings: "'FILL' 1" }}>{icon}</span>
                   </div>
+                  {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-2 mb-0.5 flex-wrap">
-                      <p className={`text-sm ${n.read ? 'font-medium text-on-surface/80' : 'font-bold text-on-surface'}`}>{n.title}</p>
+                      <p className={`text-sm ${n.isRead ? 'font-medium text-on-surface/80' : 'font-bold text-on-surface'}`}>
+                        {n.msg}
+                      </p>
                       <span className="text-[10px] text-on-surface-variant font-medium flex-shrink-0">{relTime(n.createdAt)}</span>
                     </div>
-                    <p className="text-xs text-on-surface-variant leading-relaxed">{n.message}</p>
-                    <div className="flex items-center gap-1 mt-2">
-                      <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase ${tc}`}>{n.type}</span>
+                    <div className="flex items-center gap-1 mt-1.5">
+                      <span className={`inline-block px-2 py-0.5 rounded text-[10px] font-bold uppercase ${entityColor}`}>
+                        {n.entityType}
+                      </span>
+                      <span className="text-[10px] text-on-surface-variant/60 font-medium">{n.notificationType?.replace(/_/g, ' ')}</span>
                     </div>
                   </div>
+                  {/* Actions */}
                   <div className="flex items-center gap-1 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
-                    {!n.read && (
-                      <button onClick={() => markRead(n.id)} title="Mark as read"
+                    {!n.isRead && (
+                      <button onClick={() => handleMarkRead(n.id)} title="Mark as read"
                         className="p-2 rounded-lg hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-primary-container">
                         <span className="material-symbols-outlined text-[18px]">check_circle</span>
                       </button>
                     )}
-                    <button onClick={() => deleteNotif(n.id)} title="Delete"
+                    <button onClick={() => handleDelete(n.id)} title="Delete"
                       className="p-2 rounded-lg hover:bg-red-50 transition-colors text-on-surface-variant hover:text-red-600">
                       <span className="material-symbols-outlined text-[18px]">close</span>
                     </button>
@@ -164,7 +242,7 @@ export default function Notifications() {
       <ConfirmModal
         open={clearAll}
         onClose={() => setClearAll(false)}
-        onConfirm={deleteAll}
+        onConfirm={() => { setClearAll(false); handleDeleteAll() }}
         title="Clear All Notifications"
         message="This will permanently delete all notifications. This cannot be undone."
         confirmLabel="Clear All"

@@ -4,7 +4,7 @@
    as a Bearer token to every outgoing request.
 ═══════════════════════════════════════════════════════ */
 
-const BASE_URL = '/api'
+const BASE_URL = 'http://localhost:3000/api'
 
 /**
  * Thin wrapper around fetch that:
