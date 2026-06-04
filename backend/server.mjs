@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express from "express";
-
+import cors from "cors";
 import { initOllama } from "./config/ollama.mjs";
 import logger, { closeLogger } from "./config/logger.mjs";
 import { requestLogger } from "./middleware/request_log.middleware.mjs";
@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 // --- Middleware ---
 app.use(express.json());
+app.use(cors());
 app.use(requestLogger);         // log every request/response
 
 // --- Health Check ---

@@ -7,7 +7,8 @@
     "worker:dev": "node --watch workers/doc_ingestion.worker.mjs",
     "worker:reminders": "node workers/event_reminder.worker.mjs",
     "worker:reminders:dev": "node --watch workers/event_reminder.worker.mjs",
-    "db:init": "node config/init/init_db.mjs"
+    "db:init": "node config/init/init_db.mjs",
+    "redis": "docker run --rm --name lawlibra-redis -p 6379:6379 redis:alpine"
   },
   "dependencies": {
     "@google/genai": "^1.45.0",
@@ -18,6 +19,7 @@
     "@langchain/openai": "^1.2.10",
     "@langchain/textsplitters": "^1.0.1",
     "bullmq": "^5.70.1",
+    "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "ioredis": "^5.9.3",
