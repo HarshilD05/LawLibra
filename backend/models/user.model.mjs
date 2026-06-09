@@ -20,6 +20,7 @@ export class User {
         this.name      = row.name;
         this.email     = row.email;
         this.role      = row.role;
+        this.status    = row.status ?? 'ACTIVE';
         this.createdAt = row.created_at;
         this.updatedAt = row.updated_at ?? null;
 
@@ -41,6 +42,7 @@ export class User {
             name:      this.name,
             email:     this.email,
             role:      this.role,
+            status:    this.status,
             createdAt: this.createdAt,
         };
     }
@@ -138,6 +140,28 @@ export class User {
      * @param {string} salt         - New salt
      * @returns {Promise<boolean>} true if a row was updated
      */
+    /**
+     * Updates editable profile fields for a user (Admin operation).
+     * Only non-null / provided fields are updated.
+     * @param {string} id
+     * @param {{ name?: string, email?: string, role?: string, status?: string }} fields
+     * @returns {Promise<User | null>} updated User or null if not found
+     */
+    static async update(id, { name, email, role }) {
+        const result = await pool.query(
+            `UPDATE users
+             SET
+               name       = COALESCE($1, name),
+               email      = COALESCE($2, email),
+               role       = COALESCE($3, role),
+               updated_at = CURRENT_TIMESTAMP
+             WHERE id = $4
+             RETURNING id, name, email, role, created_at, updated_at`,
+            [name ?? null, email ?? null, role ?? null, id]
+        );
+        return result.rows[0] ? new User(result.rows[0]) : null;
+    }
+
     static async changePassword(id, passwordHash, salt) {
         const result = await pool.query(
             `UPDATE users

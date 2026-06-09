@@ -4,6 +4,99 @@ import * as chatApi from '../api/chat.js'
 import * as casesApi from '../api/cases.js'
 import { Markdown, toast } from '../components/UI.jsx'
 
+/* ─── Citation Slider ────────────────────────────────────────────────────────
+   Renders a horizontal scrollable strip of citation pills below an AI message.
+   Clicking a pill toggles its popover which shows the source excerpt.
+──────────────────────────────────────────────────────────────────────────── */
+function CitationSlider({ citations }) {
+  const [openIdx, setOpenIdx] = useState(null)
+
+  if (!citations?.length) return null
+
+  const toggle = (i) => setOpenIdx(prev => prev === i ? null : i)
+
+  // Truncate filename for pill display
+  const shortName = (name = '') => {
+    if (name.length <= 22) return name
+    const ext = name.includes('.') ? '.' + name.split('.').pop() : ''
+    return name.slice(0, 18 - ext.length) + '…' + ext
+  }
+
+  return (
+    <div style={{ maxWidth: '100%' }}>
+      {/* Horizontal pill rail */}
+      <div className="citation-rail">
+        {citations.map((c, i) => (
+          <button
+            key={c.chunkId || i}
+            className={`citation-pill${openIdx === i ? ' active' : ''}`}
+            onClick={() => toggle(i)}
+            title={c.documentName}
+          >
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: 13, fontVariationSettings: "'FILL' 1" }}
+            >
+              description
+            </span>
+            <span className="truncate" style={{ maxWidth: 140 }}>
+              {shortName(c.documentName)}
+            </span>
+            {c.pageNumber != null && (
+              <span style={{ opacity: 0.7, fontWeight: 600 }}>p.{c.pageNumber}</span>
+            )}
+            <span className="sim-badge">
+              {Math.round((c.similarity ?? 0) * 100)}%
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* Popover for the active pill */}
+      {openIdx !== null && citations[openIdx] && (
+        <div className="citation-popover">
+          {/* Header */}
+          <div className="citation-popover-header">
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: 18, fontVariationSettings: "'FILL' 1", flexShrink: 0 }}
+            >
+              menu_book
+            </span>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <p style={{ fontWeight: 700, fontSize: 12, lineHeight: 1.3 }} className="truncate">
+                {citations[openIdx].documentName}
+              </p>
+              <p style={{ fontSize: 10, opacity: 0.75, marginTop: 1 }}>
+                {citations[openIdx].pageNumber != null ? `Page ${citations[openIdx].pageNumber}` : ''}
+                {citations[openIdx].pageNumber != null && citations[openIdx].similarity != null ? '  ·  ' : ''}
+                {citations[openIdx].similarity != null
+                  ? `${Math.round(citations[openIdx].similarity * 100)}% match`
+                  : ''}
+              </p>
+            </div>
+            <button
+              onClick={() => setOpenIdx(null)}
+              style={{ flexShrink: 0, opacity: 0.7, lineHeight: 1 }}
+              className="hover:opacity-100 transition-opacity"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: 16 }}>close</span>
+            </button>
+          </div>
+
+          {/* Excerpt body */}
+          <div className="citation-popover-body">
+            {citations[openIdx].snippet
+              ? <>"{citations[openIdx].snippet}{citations[openIdx].snippet.length >= 400 ? '…' : '"'}</>
+              : <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>No excerpt available for this source.</span>
+            }
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 const relTime = (iso) => {
   if (!iso) return ''
   const diff = Date.now() - new Date(iso).getTime()
@@ -48,28 +141,38 @@ export default function AIAssistant() {
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages, loading])
 
-  // Load threads and cases on mount
+  // ── Load cases once on mount ──────────────────────────────────────────────
   useEffect(() => {
-    const load = async () => {
-      try {
-        const [casesData, threadsData] = await Promise.all([
-          casesApi.getCases(),
-          chatApi.getThreads({caseId: DEFAULT_CASE_ID }),
-        ])
-
-        // GET /api/chat/threads?caseId= → { data: [...] }
-        // GET /api/cases → { data: [...] }
-        setThreads(Array.isArray(threadsData) ? threadsData : (threadsData.data ?? []))
-        setCases(Array.isArray(casesData) ? casesData : (casesData.data ?? []))
-
-      } catch (err) {
-        toast.error(err.message || 'Failed to load chat history.')
-      } finally {
-        setThreadsLoading(false)
-      }
-    }
-    load()
+    casesApi.getCases()
+      .then(data => setCases(Array.isArray(data) ? data : (data.data ?? [])))
+      .catch(err => toast.error(err.message || 'Failed to load cases.'))
   }, [])
+
+  // ── Re-fetch threads whenever mode or selected case changes ──────────────
+  // General mode  → fetch threads for DEFAULT_CASE_ID
+  // Case mode + a case selected → fetch threads for that caseId
+  // Case mode + no case selected → clear thread list
+  useEffect(() => {
+    const targetCaseId =
+      chatMode === 'general'  ? DEFAULT_CASE_ID
+      : chatMode === 'case' && selectedCaseId ? selectedCaseId
+      : null
+
+    if (!targetCaseId) {
+      setThreads([])
+      setThreadsLoading(false)
+      return
+    }
+
+    setThreadsLoading(true)
+    setActiveThread(null)
+    setMessages([])
+
+    chatApi.getThreads({ caseId: targetCaseId })
+      .then(data => setThreads(Array.isArray(data) ? data : (data.data ?? [])))
+      .catch(err => toast.error(err.message || 'Failed to load threads.'))
+      .finally(() => setThreadsLoading(false))
+  }, [chatMode, selectedCaseId])
 
   const openThread = async (t) => {
     setActiveThread(t)
@@ -196,7 +299,7 @@ export default function AIAssistant() {
           </div>
 
           <div className="flex rounded-lg border border-outline-variant/40 overflow-hidden text-xs font-bold mb-3 bg-white">
-            <button onClick={() => { setChatMode('general'); setSelectedCaseId('') }}
+            <button onClick={() => { setChatMode('general'); setSelectedCaseId(''); setActiveThread(null); setMessages([]) }}
               className={`flex-1 py-2 transition-colors ${chatMode === 'general' ? 'bg-[#0D1F3C] text-white' : 'text-slate-500 hover:bg-slate-50'}`}>
               General
             </button>
@@ -207,7 +310,8 @@ export default function AIAssistant() {
           </div>
 
           {chatMode === 'case' && (
-            <select value={selectedCaseId} onChange={e => setSelectedCaseId(e.target.value)}
+            <select value={selectedCaseId}
+              onChange={e => { setSelectedCaseId(e.target.value); setActiveThread(null); setMessages([]) }}
               className="w-full mb-3 rounded-lg border border-outline-variant/40 px-2 py-1.5 text-xs outline-none focus:ring-2 focus:ring-secondary-container/50 bg-white">
               <option value="">— Select a case —</option>
               {cases.map(c => <option key={c.id} value={c.id}>{c.title.slice(0, 35)}</option>)}
@@ -221,7 +325,14 @@ export default function AIAssistant() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-2 space-y-0.5">
-          <p className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">Recent Chats</p>
+          {/* Dynamic label: shows which context the thread list belongs to */}
+          <p className="px-3 py-1.5 text-[10px] font-black uppercase tracking-widest text-on-surface-variant">
+            {chatMode === 'general'
+              ? 'General Chats'
+              : selectedCaseId
+                ? `${cases.find(c => c.id === selectedCaseId)?.title?.slice(0, 24) || 'Case'} Chats`
+                : 'Select a case'}
+          </p>
           {threadsLoading && (
             <div className="px-3 py-4 text-center">
               <svg className="animate-spin h-4 w-4 text-secondary mx-auto" viewBox="0 0 24 24" fill="none">
@@ -347,6 +458,8 @@ export default function AIAssistant() {
                     <div className={`px-5 py-4 text-sm leading-relaxed ${m.senderType === 'USER' ? 'msg-user' : 'msg-ai text-on-surface'}`}>
                       {m.senderType === 'AI' ? <Markdown text={m.content} /> : m.content}
                     </div>
+                    {/* Citation slider — visible only on AI messages that have citations */}
+                    {m.senderType === 'AI' && <CitationSlider citations={m.citations} />}
                   </div>
                 </div>
               ))}

@@ -4,6 +4,7 @@
  * All routes require a valid JWT. Access is further gated inside each
  * controller via case assignment checks.
  *
+ * POST   /api/chat/threads/query                — Semantic doc retrieval (no LLM)
  * POST   /api/chat/threads                      — Create a thread
  * GET    /api/chat/threads?caseId=              — List threads for a case
  * GET    /api/chat/threads/:id                  — Get a single thread
@@ -13,7 +14,7 @@
  * POST   /api/chat/threads/:id/messages         — Send a message + receive AI reply
  */
 
-import { Router }       from "express";
+import { Router } from "express";
 import { authenticate } from "../middleware/auth.middleware.mjs";
 import {
     createThread,
@@ -23,13 +24,15 @@ import {
     deleteThread,
     getMessages,
     sendMessage,
+    queryDocs,
 } from "../controllers/chat.controller.mjs";
 
 const router = Router();
 
 router.use(authenticate);
 
-// Thread CRUD
+// ── Semantic document retrieval (must be declared before /:id to avoid param collision)
+router.post("/query", queryDocs);
 router.post("/",     createThread);
 router.get("/",      getThreads);
 router.get("/:id",   getThreadById);

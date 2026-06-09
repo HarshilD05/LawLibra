@@ -24,7 +24,7 @@ CREATE TABLE cases (
     court_name VARCHAR(255),
     case_number VARCHAR(100), -- specific court case number
     metadata JSONB DEFAULT '{}', -- Flexible JSON for extra details (judge name, next hearing date, etc.)
-    created_by UUID REFERENCES users(id), -- Who opened the case
+    created_by UUID REFERENCES users(id) ON DELETE SET NULL, -- Who opened the case
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
@@ -57,7 +57,7 @@ CREATE TABLE documents (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     case_id UUID REFERENCES cases(id) ON DELETE CASCADE,
     folder_id UUID REFERENCES folders(id) ON DELETE SET NULL, -- specific folder, null means root of case
-    uploader_id UUID REFERENCES users(id),
+    uploader_id UUID REFERENCES users(id) ON DELETE SET NULL,
     
     file_name VARCHAR(255) NOT NULL,
     original_name VARCHAR(255) NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE doc_chunks (
 CREATE TABLE chat_threads (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     case_id UUID REFERENCES cases(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES users(id),
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
     title VARCHAR(255),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );

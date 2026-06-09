@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { getSession } from '../api/auth.js'
+import * as authApi from '../api/auth.js'
 import * as casesApi from '../api/cases.js'
 import * as documentsApi from '../api/documents.js'
 import * as foldersApi from '../api/folders.js'
@@ -113,6 +114,13 @@ export default function CaseDetail() {
   const [eventForm, setEventForm] = useState({ name: '', date: '', time: '09:00', type: 'HEARING', description: '' })
   const [eventSaving, setEventSaving] = useState(false)
   const todayStr = new Date().toISOString().slice(0, 10)
+
+  // Assign lawyer modal (Admin only)
+  const [showAssign,   setShowAssign]   = useState(false)
+  const [allUsers,     setAllUsers]     = useState([])   // all system users for the picker
+  const [usersLoading, setUsersLoading] = useState(false)
+  const [assignForm,   setAssignForm]   = useState({ lawyerId: '', accessLevel: 'VIEW' })
+  const [assigning,    setAssigning]    = useState(false)
 
   /* ── Flatten recursive folder tree into an array ─────────────────────────── */
   const flattenTree = useCallback((nodes, acc = []) => {
@@ -306,6 +314,57 @@ export default function CaseDetail() {
       toast.success('Folder deleted.')
     } catch (err) {
       toast.error(err.message || 'Failed to delete folder.')
+    }
+  }
+
+  /* ── Assign / Remove lawyers ─────────────────────────────────────────────── */
+  const openAssignModal = async () => {
+    setShowAssign(true)
+    setAssignForm({ lawyerId: '', accessLevel: 'VIEW' })
+    if (allUsers.length === 0) {
+      setUsersLoading(true)
+      try {
+        const data = await authApi.getAllUsers()
+        setAllUsers(Array.isArray(data) ? data : (data.data || []))
+      } catch { /* non-fatal */ }
+      finally { setUsersLoading(false) }
+    }
+  }
+
+  const submitAssign = async () => {
+    if (!assignForm.lawyerId) { toast.warning('Please select a team member.'); return }
+    setAssigning(true)
+    try {
+      await casesApi.assignLawyer(id, assignForm.lawyerId, assignForm.accessLevel)
+      // Refresh team list from server
+      const res = await casesApi.getAssignments(id)
+      setTeam(Array.isArray(res) ? res : (res.assignments ?? []))
+      toast.success('Lawyer assigned to case!')
+      setShowAssign(false)
+    } catch (err) {
+      toast.error(err.message || 'Failed to assign lawyer.')
+    } finally {
+      setAssigning(false)
+    }
+  }
+
+  const handleAccessLevelChange = async (lawyerId, newLevel) => {
+    try {
+      await casesApi.assignLawyer(id, lawyerId, newLevel)   // upsert
+      setTeam(prev => prev.map(m => m.lawyerId === lawyerId ? { ...m, accessLevel: newLevel } : m))
+      toast.success('Access level updated.')
+    } catch (err) {
+      toast.error(err.message || 'Failed to update access level.')
+    }
+  }
+
+  const handleRemoveMember = async (lawyerId, name) => {
+    try {
+      await casesApi.removeAssignment(id, lawyerId)
+      setTeam(prev => prev.filter(m => m.lawyerId !== lawyerId))
+      toast.success(`${name} removed from case.`)
+    } catch (err) {
+      toast.error(err.message || 'Failed to remove team member.')
     }
   }
 
@@ -633,27 +692,80 @@ export default function CaseDetail() {
       {tab === 'team' && (
         <div className="max-w-2xl">
           <div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
-            <div className="px-6 py-5 border-b border-surface-container-low">
-              <h3 className="font-headline font-bold text-primary-container">Assigned Team</h3>
-              <p className="text-xs text-on-surface-variant mt-1">{team.length} member{team.length !== 1 ? 's' : ''} assigned to this case</p>
+            {/* Tab header */}
+            <div className="px-6 py-5 border-b border-surface-container-low flex items-center justify-between gap-3">
+              <div>
+                <h3 className="font-headline font-bold text-primary-container">Assigned Team</h3>
+                <p className="text-xs text-on-surface-variant mt-1">{team.length} member{team.length !== 1 ? 's' : ''} assigned to this case</p>
+              </div>
+              {/* Only system-level ADMINs can assign lawyers (matches backend authorizeAdmin guard) */}
+              {session.role === 'ADMIN' && (
+                <button onClick={openAssignModal}
+                  className="ai-gradient text-white flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold shadow hover:opacity-90 transition-all flex-shrink-0">
+                  <span className="material-symbols-outlined text-base">person_add</span>Assign Lawyer
+                </button>
+              )}
             </div>
+
+            {/* Team list */}
             <div className="divide-y divide-surface-container-low">
               {team.length === 0 ? (
-                <p className="p-6 text-sm text-on-surface-variant italic">No team members assigned.</p>
-              ) : team.map(m => (
-                <div key={m.lawyerId || m.id} className="flex items-center gap-4 px-6 py-4">
-                  <div className="w-10 h-10 rounded-full ai-gradient flex items-center justify-center text-amber-400 font-bold text-sm flex-shrink-0">
-                    {initials(m.name)}
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-semibold text-sm text-on-surface">{m.name}</p>
-                    <p className="text-xs text-on-surface-variant">{m.email}</p>
-                  </div>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${m.accessLevel === 'ADMIN' ? 'bg-amber-100 text-amber-700' : m.accessLevel === 'EDIT' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-600'}`}>
-                    {m.accessLevel}
-                  </span>
+                <div className="py-12 text-center">
+                  <span className="material-symbols-outlined text-5xl text-slate-200 block mb-2">group_off</span>
+                  <p className="text-sm font-semibold text-on-surface-variant">No team members assigned.</p>
+                  {session.role === 'ADMIN' && (
+                    <p className="text-xs text-slate-400 mt-1">Click "Assign Lawyer" to add someone.</p>
+                  )}
                 </div>
-              ))}
+              ) : team.map(m => {
+                const isCurrentUser = m.email === session.email
+                return (
+                  <div key={m.lawyerId} className="flex items-center gap-4 px-6 py-4 group hover:bg-surface-container-low/30 transition-colors">
+                    {/* Avatar */}
+                    <div className="w-10 h-10 rounded-full ai-gradient flex items-center justify-center text-amber-400 font-bold text-sm flex-shrink-0">
+                      {initials(m.name)}
+                    </div>
+
+                    {/* Name / email */}
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm text-on-surface">
+                        {m.name}
+                        {isCurrentUser && <span className="ml-1.5 text-[10px] text-secondary font-bold">(you)</span>}
+                      </p>
+                      <p className="text-xs text-on-surface-variant truncate">{m.email}</p>
+                    </div>
+
+                    {/* Access level — editable by ADMIN, read-only for others */}
+                    {session.role === 'ADMIN' ? (
+                      <select
+                        value={m.accessLevel}
+                        onChange={e => handleAccessLevelChange(m.lawyerId, e.target.value)}
+                        className="text-xs font-bold px-2 py-1 rounded-lg border border-outline-variant/40 bg-white focus:outline-none focus:ring-2 focus:ring-secondary/30 cursor-pointer"
+                        title="Change access level">
+                        <option value="VIEW">VIEW</option>
+                        <option value="EDIT">EDIT</option>
+                        <option value="ADMIN">ADMIN</option>
+                      </select>
+                    ) : (
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                        m.accessLevel === 'ADMIN' ? 'bg-amber-100 text-amber-700' :
+                        m.accessLevel === 'EDIT'  ? 'bg-blue-100  text-blue-700'  :
+                                                    'bg-slate-100 text-slate-600'
+                      }`}>{m.accessLevel}</span>
+                    )}
+
+                    {/* Remove button (Admin only, cannot remove yourself) */}
+                    {session.role === 'ADMIN' && !isCurrentUser && (
+                      <button
+                        onClick={() => handleRemoveMember(m.lawyerId, m.name)}
+                        title="Remove from case"
+                        className="p-1.5 rounded-lg opacity-0 group-hover:opacity-100 hover:bg-red-50 text-slate-300 hover:text-red-500 transition-all">
+                        <span className="material-symbols-outlined text-[18px]">person_remove</span>
+                      </button>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>
@@ -758,6 +870,61 @@ export default function CaseDetail() {
           </div>
         </div>
       </Modal>
+      {/* ── Assign Lawyer Modal (Admin only) ──────────────────────────────────── */}
+      <Modal open={showAssign} onClose={() => setShowAssign(false)} title="Assign Lawyer to Case">
+        <div className="space-y-4">
+          {usersLoading ? (
+            <div className="py-6 text-center">
+              <svg className="animate-spin h-6 w-6 text-secondary mx-auto" viewBox="0 0 24 24" fill="none">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+              </svg>
+            </div>
+          ) : (
+            <Field label="Select Team Member">
+              <Select
+                value={assignForm.lawyerId}
+                onChange={e => setAssignForm(f => ({ ...f, lawyerId: e.target.value }))}>
+                <option value="">— Choose a user —</option>
+                {allUsers
+                  .filter(u => !team.some(m => m.lawyerId === u.id))  /* hide already-assigned */
+                  .map(u => (
+                    <option key={u.id} value={u.id}>
+                      {u.name} ({u.email}) · {u.role}
+                    </option>
+                  ))
+                }
+              </Select>
+            </Field>
+          )}
+
+          <Field label="Access Level">
+            <Select
+              value={assignForm.accessLevel}
+              onChange={e => setAssignForm(f => ({ ...f, accessLevel: e.target.value }))}>
+              <option value="VIEW">VIEW — Read-only access</option>
+              <option value="EDIT">EDIT — Can add documents &amp; notes</option>
+              <option value="ADMIN">ADMIN — Full case control</option>
+            </Select>
+          </Field>
+
+          {/* Access level legend */}
+          <div className="rounded-xl bg-blue-50 border border-blue-100 px-4 py-3 text-xs text-blue-700 space-y-1">
+            <p><span className="font-bold">VIEW</span> — Can read case info and documents</p>
+            <p><span className="font-bold">EDIT</span> — Can upload documents and add notes</p>
+            <p><span className="font-bold">ADMIN</span> — Can edit case details and manage the team</p>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <Btn variant="secondary" onClick={() => setShowAssign(false)}>Cancel</Btn>
+            <Btn variant="primary" onClick={submitAssign} disabled={assigning || !assignForm.lawyerId}>
+              <span className="material-symbols-outlined text-base">person_add</span>
+              {assigning ? 'Assigning…' : 'Assign'}
+            </Btn>
+          </div>
+        </div>
+      </Modal>
+
     </div>
   )
 }

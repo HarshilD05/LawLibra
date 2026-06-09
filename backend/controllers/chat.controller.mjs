@@ -17,19 +17,19 @@
  *   in DB. Surrounding transaction and response shape are unchanged.
  */
 
-import { ChatThread, ChatMessage }                    from "../models/chat.model.mjs";
-import { Case }                                        from "../models/case.model.mjs";
-import { HumanMessage, AIMessage, SystemMessage }      from "@langchain/core/messages";
-import db                                              from "../config/db.mjs";
-import { createEmbeddingService }                      from "../services/embedding_factory.mjs";
-import { createLLM }                                   from "../services/llm_factory.mjs";
-import logger                                          from "../config/logger.mjs";
+import { ChatThread, ChatMessage } from "../models/chat.model.mjs";
+import { Case } from "../models/case.model.mjs";
+import { HumanMessage, AIMessage, SystemMessage } from "@langchain/core/messages";
+import db from "../config/db.mjs";
+import { createEmbeddingService } from "../services/embedding_factory.mjs";
+import { createLLM } from "../services/llm_factory.mjs";
+import logger from "../config/logger.mjs";
 
 // ─── RAG singletons (lazy-initialized on first chat request) ─────────────────
 // _llm is created lazily so the HTTP server starts even if the API key is
 // missing — the error surfaces only when a message is actually sent.
-let _llm                = null;
-let _embeddingService   = null;
+let _llm = null;
+let _embeddingService = null;
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
 
@@ -77,14 +77,14 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
         _embeddingService = await createEmbeddingService();
     }
     const [queryVector] = await _embeddingService.embed([userContent], true); // true for QUESTION_ANSWERING
-    const pgVector    = `[${queryVector.join(",")}]`;
+    const pgVector = `[${queryVector.join(",")}]`;
 
     // ── 3. Similarity-thresholded vector search — case-scoped & global-scoped, max 10 ─────────
     // RAG_SIMILARITY_THRESHOLD: cosine similarity floor (0–1).
     // Only chunks with similarity >= threshold are returned, capped at 10.
     // Legal RAG benefits from broad, high-quality context — 10 sources at 0.65
     // strikes the right balance between precision and recall.
-    const threshold = parseFloat(process.env.RAG_SIMILARITY_THRESHOLD ?? "0.65");
+    const threshold = parseFloat(process.env.RAG_SIMILARITY_THRESHOLD ?? "0.6");
     const GLOBAL_CASE_ID = '00000000-0000-0000-0000-000000000000';
 
     const { rows: chunks } = await db.query(
@@ -154,7 +154,7 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
     ];
 
     // ── 6. Invoke LLM ─────────────────────────────────────────────────────────
-    const response  = await _llm.invoke(messages);
+    const response = await _llm.invoke(messages);
 
     // Normalize content — some providers return structured parts instead of a plain string
     const aiContent = typeof response.content === "string"
@@ -165,15 +165,125 @@ async function _generateAIResponse(userContent, caseId, conversationHistory) {
 
     // ── 7. Build citations array (stored in chat_messages.citations JSONB) ────
     const citations = chunks.map(c => ({
-        chunkId:      c.id,
-        documentId:   c.document_id,
+        chunkId: c.id,
+        documentId: c.document_id,
         documentName: c.original_name,
-        pageNumber:   c.page_number,
-        similarity:   parseFloat(parseFloat(c.similarity).toFixed(4)),
+        pageNumber: c.page_number,
+        similarity: parseFloat(parseFloat(c.similarity).toFixed(4)),
+        snippet: c.original_text?.slice(0, 400) ?? '',   // first 400 chars for UI preview
     }));
 
     return { aiContent, citations };
 }
+
+// ─── Query Docs ───────────────────────────────────────────────────────────────
+
+/**
+ * POST /api/chat/threads/query
+ * Body: { query, caseId, limit?, threshold? }
+ *
+ * Runs only the embedding + pgvector retrieval steps of the RAG pipeline
+ * WITHOUT invoking the LLM. Returns the ranked source chunks that are
+ * semantically relevant to the provided query.
+ *
+ * Use cases:
+ *   - Previewing which documents / pages the AI will cite before sending a message
+ *   - Building a document-search widget
+ *   - Debugging retrieval quality (similarity scores visible in response)
+ *
+ * Access control: caller must be an ADMIN or have any assignment on the case.
+ * The Global Legal Repository (DEFAULT_CASE_ID) is always searched alongside
+ * the provided caseId, matching the behaviour of _generateAIResponse.
+ *
+ * Query params / body:
+ *   query      {string}  Required. Natural-language search query.
+ *   caseId     {string}  Required. UUID of the case to scope the search to.
+ *   limit      {number}  Optional. Max results to return (default 10, max 20).
+ *   threshold  {number}  Optional. Similarity floor 0–1 (default from env or 0.6).
+ *
+ * Response 200:
+ *   { results: [ { chunkId, documentId, documentName, pageNumber, similarity, text } ], total, query, caseId }
+ */
+export const queryDocs = async (req, res) => {
+    try {
+        const { query, caseId, limit: rawLimit, threshold: rawThreshold } = req.body;
+
+        if (!query?.trim()) {
+            return res.status(400).json({ error: "query is required." });
+        }
+        if (!caseId?.trim()) {
+            return res.status(400).json({ error: "caseId is required." });
+        }
+
+        // Verify the caller has access to the case
+        const access = await resolveCaseAccess(caseId, req.user);
+        if (!access) {
+            return res.status(404).json({ error: "Case not found or access denied." });
+        }
+
+        const limit = Math.min(parseInt(rawLimit) || 10, 20);
+        const threshold = rawThreshold != null
+            ? Math.max(0, Math.min(1, parseFloat(rawThreshold)))
+            : parseFloat(process.env.RAG_SIMILARITY_THRESHOLD ?? "0.6");
+
+        // Lazy-init the shared embedding singleton
+        if (!_embeddingService) {
+            _embeddingService = await createEmbeddingService();
+        }
+
+        // Embed the query
+        const [queryVector] = await _embeddingService.embed([query.trim()], true);
+        const pgVector = `[${queryVector.join(",")}]`;
+
+        const GLOBAL_CASE_ID = "00000000-0000-0000-0000-000000000000";
+
+        // Similarity-thresholded pgvector search (case-scoped + global)
+        const { rows: chunks } = await db.query(
+            `SELECT
+                 dc.id,
+                 dc.original_text,
+                 dc.page_number,
+                 d.original_name,
+                 d.id                                  AS document_id,
+                 1 - (dc.embedding <=> $1::vector)     AS similarity
+             FROM doc_chunks dc
+             JOIN documents  d ON d.id = dc.document_id
+             WHERE d.case_id           IN ($2, $3)
+               AND d.processing_status = 'DONE'
+               AND 1 - (dc.embedding <=> $1::vector) >= $4
+             ORDER BY dc.embedding <=> $1::vector
+             LIMIT $5`,
+            [pgVector, caseId, GLOBAL_CASE_ID, threshold, limit],
+        );
+
+        logger.debug({
+            type: "chat", op: "queryDocs",
+            caseId, chunks: chunks.length, threshold, limit,
+            uid: req.user?.id,
+        });
+
+        const results = chunks.map(c => ({
+            chunkId: c.id,
+            documentId: c.document_id,
+            documentName: c.original_name,
+            pageNumber: c.page_number,
+            similarity: parseFloat(parseFloat(c.similarity).toFixed(4)),
+            text: c.original_text,          // full chunk text
+        }));
+
+        return res.status(200).json({
+            results,
+            total: results.length,
+            query: query.trim(),
+            caseId,
+            threshold,
+        });
+
+    } catch (err) {
+        logger.error({ type: "chat", op: "queryDocs", uid: req.user?.id, err: err.message });
+        return res.status(500).json({ error: "Internal server error." });
+    }
+};
 
 // ─── Thread CRUD ──────────────────────────────────────────────────────────────
 
@@ -212,8 +322,8 @@ export const getThreads = async (req, res) => {
         const access = await resolveCaseAccess(caseId, req.user);
         if (!access) return res.status(404).json({ error: "Case not found or access denied." });
 
-        const limit  = Math.min(parseInt(req.query.limit)  || 20, 100);
-        const offset = Math.max(parseInt(req.query.offset) || 0,  0);
+        const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+        const offset = Math.max(parseInt(req.query.offset) || 0, 0);
 
         const { threads, total } = await ChatThread.findByCaseId(caseId, { limit, offset });
 
@@ -317,8 +427,8 @@ export const getMessages = async (req, res) => {
         const access = await resolveCaseAccess(thread.caseId, req.user);
         if (!access) return res.status(403).json({ error: "Access denied." });
 
-        const limit  = Math.min(parseInt(req.query.limit)  || 50, 200);
-        const offset = Math.max(parseInt(req.query.offset) || 0,  0);
+        const limit = Math.min(parseInt(req.query.limit) || 50, 200);
+        const offset = Math.max(parseInt(req.query.offset) || 0, 0);
 
         const { messages, total } = await ChatMessage.findByThreadId(req.params.id, { limit, offset });
 
@@ -375,7 +485,7 @@ export const sendMessage = async (req, res) => {
 
         return res.status(201).json({
             userMessage: userMessage.toObject(),
-            aiMessage:   aiMessage.toObject(),
+            aiMessage: aiMessage.toObject(),
         });
 
     } catch (err) {

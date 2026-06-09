@@ -58,3 +58,91 @@
 /* Calendar grid */
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
 .day-cell { min-height: 130px; height: 130px; box-sizing: border-box; overflow: hidden; }
+
+/* ── Citation Slider ───────────────────────────────────────────────── */
+.citation-rail {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 2px 4px;
+  scrollbar-width: none;           /* Firefox */
+  -ms-overflow-style: none;        /* IE/Edge */
+}
+.citation-rail::-webkit-scrollbar { display: none; }
+
+.citation-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  padding: 6px 11px 6px 9px;
+  border-radius: 999px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, transform 0.1s;
+  white-space: nowrap;
+  max-width: 220px;
+}
+.citation-pill:hover {
+  border-color: #94a3b8;
+  background: #f8fafc;
+  color: #1e293b;
+  transform: translateY(-1px);
+}
+.citation-pill.active {
+  border-color: #3c475b;
+  background: linear-gradient(135deg, #101c2e, #3c475b);
+  color: #fff;
+}
+.citation-pill .sim-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.18);
+  color: inherit;
+  opacity: 0.85;
+}
+.citation-pill:not(.active) .sim-badge {
+  background: #e2e8f0;
+  color: #64748b;
+}
+
+/* Citation popover card */
+.citation-popover {
+  position: relative;
+  margin-top: 6px;
+  border-radius: 14px;
+  border: 1.5px solid #e2e8f0;
+  background: #fff;
+  box-shadow: 0 8px 32px rgba(16,28,46,0.10);
+  overflow: hidden;
+  animation: pop-in 0.18s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes pop-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+.citation-popover-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 10px;
+  background: linear-gradient(135deg, #101c2e 0%, #3c475b 100%);
+  color: #fff;
+}
+.citation-popover-body {
+  padding: 12px 14px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #334155;
+  max-height: 200px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+

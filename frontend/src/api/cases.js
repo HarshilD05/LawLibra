@@ -57,14 +57,16 @@ export async function deleteCase(id) {
 
 /**
  * POST /api/cases/:id/assignments   (Admin only)
- * Assigns a lawyer to a case.
+ * Assigns a lawyer to a case with a given access level.
+ * If already assigned, the access level is updated (upsert).
  * @param {string} caseId
  * @param {string} lawyerId
+ * @param {'VIEW'|'EDIT'|'ADMIN'} accessLevel
  */
-export async function assignLawyer(caseId, lawyerId) {
+export async function assignLawyer(caseId, lawyerId, accessLevel = 'VIEW') {
   return apiFetch(`/cases/${caseId}/assignments`, {
     method: 'POST',
-    body: JSON.stringify({ lawyerId }),
+    body: JSON.stringify({ lawyerId, accessLevel }),
   })
 }
 

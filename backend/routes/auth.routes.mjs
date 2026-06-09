@@ -5,6 +5,8 @@ import {
     getMe,
     getAllUsers,
     getUserById,
+    adminCreateUser,
+    updateUser,
     changePassword,
     deleteUser,
 } from "../controllers/auth.controller.mjs";
@@ -27,8 +29,14 @@ router.patch("/change-password", authenticate, changePassword);
 // GET  /api/auth/users            — List all users with pagination (Admin only)
 router.get("/users", authenticate, authorizeAdmin, getAllUsers);
 
+// POST /api/auth/users            — Admin creates a new user (authenticated, role-safe)
+router.post("/users", authenticate, authorizeAdmin, adminCreateUser);
+
 // GET  /api/auth/users/:id        — Get a single user by ID (Admin only)
 router.get("/users/:id", authenticate, authorizeAdmin, getUserById);
+
+// PATCH /api/auth/users/:id       — Update a user's name, email, role (Admin only)
+router.patch("/users/:id", authenticate, authorizeAdmin, updateUser);
 
 // DELETE /api/auth/users/:id      — Delete a user by ID (Admin only)
 router.delete("/users/:id", authenticate, authorizeAdmin, deleteUser);

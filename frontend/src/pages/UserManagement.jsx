@@ -43,7 +43,7 @@ export default function UserManagement() {
     const load = async () => {
       try {
         const data = await authApi.getAllUsers()
-        setUsers(Array.isArray(data) ? data : (data.users || []))
+        setUsers(Array.isArray(data) ? data : (data.data || []))
       } catch (err) {
         toast.error(err.message || 'Failed to load users.')
       } finally {
@@ -69,13 +69,14 @@ export default function UserManagement() {
 
   const createUser = async () => {
     if (!form.name || !form.email || !form.password) { toast.warning('Name, email and password are required.'); return }
+    if (form.password.length < 8) { toast.warning('Password must be at least 8 characters.'); return }
     setCreating(true)
     try {
-      // Uses the register endpoint since there's no separate admin create-user endpoint yet
-      await authApi.register({ name: form.name, email: form.email, password: form.password, role: form.role })
-      // Refetch the full list so we get the server-assigned ID
+      // Uses the admin-authenticated POST /auth/users endpoint so role is trusted
+      const result = await authApi.adminCreateUser({ name: form.name, email: form.email, password: form.password, role: form.role })
+      // Refetch the full list so we get the server-assigned ID and correct data
       const data = await authApi.getAllUsers()
-      setUsers(Array.isArray(data) ? data : (data.users || []))
+      setUsers(Array.isArray(data) ? data : (data.data || []))
       toast.success('User created successfully!')
       setShowNew(false)
       setForm(BLANK_FORM)
@@ -90,10 +91,14 @@ export default function UserManagement() {
     if (!editUser.name || !editUser.email) { toast.warning('Name and email are required.'); return }
     setSaving(true)
     try {
-      const updated = await authApi.getUserById(editUser.id)
-      // NOTE: PATCH /auth/users/:id not yet in routes, so we optimistically update local state
-      // Replace with real PATCH call once available
-      setUsers(prev => prev.map(u => u.id === editUser.id ? { ...u, name: editUser.name, email: editUser.email, role: editUser.role, status: editUser.status } : u))
+      const result = await authApi.updateUser(editUser.id, {
+        name:  editUser.name,
+        email: editUser.email,
+        role:  editUser.role,
+      })
+      // Replace the local record with the server-confirmed version
+      const serverUser = result.user
+      setUsers(prev => prev.map(u => u.id === editUser.id ? { ...u, ...serverUser } : u))
       toast.success('User updated.')
       setEditUser(null)
     } catch (err) {

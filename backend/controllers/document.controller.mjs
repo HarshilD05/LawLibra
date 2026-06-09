@@ -23,6 +23,7 @@ import Document, { PROCESSING_STATUS } from "../models/document.model.mjs";
 import { Case }                        from "../models/case.model.mjs";
 import Folder                          from "../models/folder.model.mjs";
 import { dispatchIngestion }            from "../services/ingestion_dispatcher.mjs";
+import { createEmbeddingService }       from "../services/embedding_factory.mjs";
 import {
     getDocumentDirPath,
     getStoragePath,
@@ -30,6 +31,9 @@ import {
     ensureDir,
 } from "../utils/storage.utils.mjs";
 import logger from "../config/logger.mjs";
+
+// ─── Embedding singleton (shared across embedText calls) ───────────────────────
+let _embeddingService = null;
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -48,6 +52,83 @@ async function resolveCaseAccess(caseId, reqUser) {
 
     return { kase, accessLevel };
 }
+
+// ─── Embed Text ────────────────────────────────────────────────────────────────
+
+/**
+ * POST /api/documents/embed
+ * Body: { texts, mode? }
+ *
+ * Computes embedding vectors for a list of text strings using the configured
+ * embedding service. No case or document scoping — pure computation.
+ *
+ * Fields:
+ *   texts  {string[]}  Required. Array of strings to embed (1–100 items).
+ *   mode   {string}    Optional. "RETRIEVAL_DOCUMENT" | "QUESTION_ANSWERING"
+ *                      RETRIEVAL_DOCUMENT — for content being indexed (default).
+ *                      QUESTION_ANSWERING — for search / query inputs.
+ *
+ * Response 200:
+ *   {
+ *     embeddings: number[][],   // one vector per input string, same order
+ *     count:      number,       // number of embeddings returned
+ *     dimensions: number,       // vector length (e.g. 768)
+ *     mode:       string
+ *   }
+ */
+export const embedText = async (req, res) => {
+    try {
+        const { texts, mode = "RETRIEVAL_DOCUMENT" } = req.body;
+
+        // Validate input is a non-empty array of strings
+        if (!Array.isArray(texts) || texts.length === 0) {
+            return res.status(400).json({ error: "texts must be a non-empty array of strings." });
+        }
+        if (texts.length > 100) {
+            return res.status(400).json({ error: "texts array must not exceed 100 items per request." });
+        }
+
+        const trimmed = texts.map((t, i) => {
+            if (typeof t !== "string" || !t.trim()) {
+                throw Object.assign(new Error(`texts[${i}] is empty or not a string.`), { status: 400 });
+            }
+            return t.trim();
+        });
+
+        const validModes = ["RETRIEVAL_DOCUMENT", "QUESTION_ANSWERING"];
+        const resolvedMode = validModes.includes(mode) ? mode : "RETRIEVAL_DOCUMENT";
+        // embed() second arg: true = QUESTION_ANSWERING, false = RETRIEVAL_DOCUMENT
+        const isQuery = resolvedMode === "QUESTION_ANSWERING";
+
+        // Lazy-init the shared embedding singleton
+        if (!_embeddingService) {
+            _embeddingService = await createEmbeddingService();
+        }
+
+        const vectors = await _embeddingService.embed(trimmed, isQuery);
+
+        logger.debug({
+            type: "doc", op: "embedText",
+            uid: req.user?.id, count: vectors.length,
+            dims: vectors[0]?.length, mode: resolvedMode,
+        });
+
+        return res.status(200).json({
+            embeddings: vectors,
+            count:      vectors.length,
+            dimensions: vectors[0]?.length ?? 0,
+            mode:       resolvedMode,
+        });
+
+    } catch (err) {
+        if (err.status === 400) {
+            return res.status(400).json({ error: err.message });
+        }
+        logger.error({ type: "doc", op: "embedText", uid: req.user?.id, err: err.message });
+        return res.status(500).json({ error: "Internal server error." });
+    }
+};
+
 
 // ─── Upload ────────────────────────────────────────────────────────────────────
 

@@ -128,3 +128,28 @@ export async function getUserById(id) {
 export async function deleteUser(id) {
   return apiFetch(`/auth/users/${id}`, { method: 'DELETE' })
 }
+
+/**
+ * POST /api/auth/users   (Admin only)
+ * Creates a new user with a verified admin token — role can be trusted.
+ * @param {{ name: string, email: string, password: string, role: string }} payload
+ */
+export async function adminCreateUser(payload) {
+  return apiFetch('/auth/users', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+/**
+ * PATCH /api/auth/users/:id   (Admin only)
+ * Updates a user's name, email, and/or role.
+ * @param {string} id
+ * @param {{ name?: string, email?: string, role?: string }} fields
+ */
+export async function updateUser(id, fields) {
+  return apiFetch(`/auth/users/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(fields),
+  })
+}
